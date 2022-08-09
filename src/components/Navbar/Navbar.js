@@ -42,7 +42,7 @@ const MenuContainer = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
-  `;
+`;
 
 const MenuContent = styled.div`
   display: flex;
