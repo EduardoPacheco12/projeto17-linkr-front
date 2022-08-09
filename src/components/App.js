@@ -6,6 +6,7 @@ import Trends from "./Users/Trends";
 
 import "../assets/reset.css";
 import "../assets/style.css";
+import Timeline from "./Timeline/Timeline";
 
 export default function App() {
   return (
@@ -14,6 +15,7 @@ export default function App() {
       <Routes>
         <Route path="/users/:1" element={ <UsersView /> } />
         <Route path="/trends" element={ <Trends /> } />
+        <Route path="/timeline" element={ <Timeline /> } />
       </Routes>
     </BrowserRouter>
   );
