@@ -4,6 +4,7 @@ import UsersView from "./Users/UsersView";
 import Navbar from "./Navbar/Navbar";
 import "../assets/reset.css";
 import "../assets/style.css";
+import Timeline from "./Timeline/Timeline";
 
 export default function App() {
   return (
@@ -11,6 +12,7 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/users/:1" element={ <UsersView /> } />
+        <Route path="/timeline" element={ <Timeline /> } />
       </Routes>
     </BrowserRouter>
   );
