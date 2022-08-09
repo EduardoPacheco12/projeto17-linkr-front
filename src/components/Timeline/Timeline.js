@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Post from "./Post";
 import Publish from "./Publish";
 
 function Timeline() {
@@ -7,6 +8,7 @@ function Timeline() {
       <Content>
         <h4>timeline</h4>
         <Publish />
+        <Post/>
       </Content>
     </Container>
   );
