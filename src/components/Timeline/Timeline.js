@@ -20,6 +20,7 @@ function Timeline() {
       <Content>
         <Title />
         <PublishBox />
+        <Post/>
         <Posts />
       </Content>
     </Container>
@@ -34,7 +35,7 @@ const Container = styled.div`
   display: flex;
   width: 100%;
   background-color: #333333;
-  height: calc(100vh - 72px);
+  height: 100%;
   align-items: center;
   flex-direction: column;
 
