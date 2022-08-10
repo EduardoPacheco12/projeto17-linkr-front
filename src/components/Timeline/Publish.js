@@ -1,5 +1,5 @@
 import styled from "styled-components";
-import {useState} from 'react';
+import { useState } from 'react';
 
 function Publish(){
     const [loading, setloading] = useState(false)

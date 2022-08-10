@@ -4,22 +4,39 @@ import { useToggle } from "../../hooks/useToggle";
 import { useAxios } from "../../hooks/useAxios";
 import { useState } from "react";
 import { useLocation } from "react-router-dom";
-import Posts from "../Users/Posts";
+import Posts, { SkeletonLoading } from "../Users/Posts";
+import { PostTrendContainer } from "../Users/UsersView";
+import Trends from "../Users/Trends";
 
 function Timeline() {
   const location = useLocation();
-  const [isTimeline, setIsTimeline] = useState(location.pathname === '/timeline' ? true : false);
-  const { response, error, loading } = useAxios({ path: 'test', method: 'get' });
+  const [isTimeline, setIsTimeline] = useState(
+    location.pathname === "/timeline" ? true : false
+  );
+  const { response, error, loading } = useAxios({
+    path: "test",
+    method: "get",
+  });
 
-  const Title = () => isTimeline ? <h4>timeline</h4> : <h4>{location.pathname.replace("/hashtag/","# ")}</h4>
-  const PublishBox = () => isTimeline ? <Publish /> : <></>;
+  const Title = () =>
+    isTimeline ? (
+      <h4>timeline</h4>
+    ) : (
+      <h4>{location.pathname.replace("/hashtag/", "# ")}</h4>
+    );
+  const PublishBox = () => (isTimeline ? <Publish /> : <></>);
+  const PageContent = () =>
+    loading ? <SkeletonLoading /> : <SkeletonLoading />;
 
   return (
     <Container>
       <Content>
         <Title />
-        <PublishBox />
-        <Posts />
+        <PostTrendContainer>
+          <PublishBox />
+          <Trends />
+        </PostTrendContainer>
+        <PageContent />
       </Content>
     </Container>
   );
@@ -36,17 +53,17 @@ const Container = styled.div`
   height: calc(100vh - 72px);
   align-items: center;
   flex-direction: column;
-
-  
 `;
 
 const Content = styled.div`
-
-    h4 {
-        margin-bottom: 40px;
-        font-family: "Oswald";
-        font-weight: 700;
-        font-size: 43px;
-        color: white;
-    }
+  width: 900px;
+  padding: 0 15%;
+  box-sizing: border-box;
+  h4 {
+    margin-bottom: 40px;
+    font-family: "Oswald";
+    font-weight: 700;
+    font-size: 43px;
+    color: white;
+  }
 `;

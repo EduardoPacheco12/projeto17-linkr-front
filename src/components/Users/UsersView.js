@@ -38,7 +38,7 @@ const MainContent = styled.div`
   width: 900px;
 `;
 
-const UserDataContainer = styled.div`
+export const UserDataContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
@@ -58,8 +58,9 @@ const UserDataContainer = styled.div`
   }
 `;
 
-const PostTrendContainer = styled.div`
+export const PostTrendContainer = styled.div`
   display: flex;
+  width: 100%;
   justify-content: space-between;
   align-items: flex-start;
   margin-top: 40px
