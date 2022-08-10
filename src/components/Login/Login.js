@@ -48,7 +48,7 @@ export default function Login() {
 
     //UI
     return(
-        <>
+        <All>
             <GlobalStyle/>
             <Title>
                 <h1>linkr</h1>
@@ -67,37 +67,48 @@ export default function Login() {
                 </Click>
             </Content>
             
-        </>
+        </All>
         
     )
 }
 
+const All = styled.div `
+    display: flex;
+    @media(max-width: 1023px) {
+        flex-direction: column;
+    }
+`
+
 const Title = styled.div `
-    @media(max-width: 767px) {
+    height: 100vh;
+    width: 60vw;
+    background-color: #151515;
+    display: flex;
+    flex-direction: column;
+    padding: 25vh 0 0 10vw;
+    h1 {
+        font-family: 'Passion One';
+        font-weight: 700;
+        font-size: 76px;
+        line-height: 84px;
+        letter-spacing: 0.05em;
+        color: #FFFFFF;
+    }
+    h3 {
+        font-family: 'Oswald';
+        font-weight: 700;
+        font-size: 23px;
+        line-height: 34px;
+        text-align: center;
+        color: #FFFFFF;
+        max-width: 237px;
+    }
+    @media(max-width: 1023px) {
         height: 28vh;
         width: 100%;
-        background-color: #151515;
-        display: flex;
-        flex-direction: column;
         justify-content: center;
         align-items: center;
-        h1 {
-            font-family: 'Passion One';
-            font-weight: 700;
-            font-size: 76px;
-            line-height: 84px;
-            letter-spacing: 0.05em;
-            color: #FFFFFF;
-        }
-        h3 {
-            font-family: 'Oswald';
-            font-weight: 700;
-            font-size: 23px;
-            line-height: 34px;
-            text-align: center;
-            color: #FFFFFF;
-            max-width: 237px;
-        }
+        padding: 0;
     }
 `;
 
@@ -108,11 +119,11 @@ const Content = styled.div `
 const Forms = styled.form `
     display: flex;
     flex-direction: column;
-    margin-top: 40px;
-    padding: 0 22px;
+    margin-top: 27vh;
+    padding: 0 5vw;
     input {
-        width: 100%;
-        height: 55px;
+        width: 380px;
+        height: 50px;
         margin-bottom: 14px;
         background: #FFFFFF;
         border: 1px solid #FFFFFF;
@@ -131,10 +142,9 @@ const Forms = styled.form `
             color: #9F9F9F;
         }
     }
-
     button {
         width: 100%;
-        height: 46px;
+        height: 40px;
         margin-bottom: 20px;
         display: flex;
         justify-content: center;
@@ -149,6 +159,18 @@ const Forms = styled.form `
         color: #FFFFFF;
         &:hover {
             cursor: pointer;
+        }
+    }
+    @media(max-width: 1023px) {
+        margin-top: 40px;
+        padding: 0 22px;
+        input {
+            width: 100%;
+            height: 55px;
+        }
+        button {
+            width: 100%;
+            height: 46px;
         }
     }
 `;
