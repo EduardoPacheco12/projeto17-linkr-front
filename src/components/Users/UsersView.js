@@ -35,7 +35,12 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+<<<<<<< HEAD
   width: 950px;
+=======
+  width: 900px;
+  margin: 84px;
+>>>>>>> ccd0fdfa70029b734d149346664767ee206f6c21
 `;
 
 const UserDataContainer = styled.div`

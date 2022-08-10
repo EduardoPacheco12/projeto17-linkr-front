@@ -1,5 +1,4 @@
 # See https://help.github.com/articles/ignoring-files/ for more about ignoring files.
-
 .git
 .gitignore
 package-lock.json
@@ -14,6 +13,7 @@ package-lock.json
 
 # production
 /build
+.wakatime-project
 
 # misc
 .DS_Store
