@@ -1,4 +1,5 @@
 import styled from "styled-components";
+import Post from "./Post";
 import Publish from "./Publish";
 import { useToggle } from "../../hooks/useToggle";
 import { useAxios } from "../../hooks/useAxios";
