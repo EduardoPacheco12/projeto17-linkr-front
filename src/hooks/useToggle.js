@@ -3,7 +3,7 @@ import { useState, useCallback } from "react";
 export function useToggle() {
     const [enable, setEnable] = useState(false);
 
-    const toggle = useCallback(() => setEnable(enable => !enable), []);
+    const toggle = useCallback(() => setTimeout(500, () => setEnable(enable => !enable)), []);
 
     return [enable, toggle]
 }

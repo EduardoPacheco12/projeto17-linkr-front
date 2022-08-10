@@ -15,24 +15,37 @@ const methods = {
 export function useAxios(props) {
   const [response, setResponse] = useState([]);
   const [error, setError] = useState([]);
-  const [loading, setLoading] =  useState(true);
+  const [loading, setLoading] = useState(true);
 
-  const axiosMethod = async() => {
+  const axiosMethod = async () => {
     try {
-        const method = methods[props.method];
-        const { path = undefined, header = undefined, body = undefined } = props;
-        const response = await method(`${BASE_URL}/${path}`,);
-        setResponse(response);
-      } catch (err) {
-        setError(err);
-      } finally {
-        setLoading(false);
-      }
-  }
+      const method = methods[props.method];
+      const {
+        path = undefined,
+        header = undefined,
+        body = undefined,
+        query = undefined,
+        params = undefined,
+      } = props;
+      const fullPath = params ? `${path}/${params}` : `${path}`;
+      const config = {
+        header: {
+          Authorization: `Bearer `,
+        },
+      };
+      const response = await method(`${BASE_URL}/${fullPath}`);
+      setResponse(response);
+    } catch (err) {
+      setError(err);
+    } finally {
+      setLoading(false);
+    }
+  };
 
   useEffect(() => {
-    axiosMethod()
-  }, [])
+    axiosMethod();
+    // eslint-disable-next-line
+  }, []);
 
   return { response, error, loading };
 }

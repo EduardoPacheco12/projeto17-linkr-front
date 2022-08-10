@@ -35,10 +35,10 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-  width: 900px;
+  width: 950px;
 `;
 
-export const UserDataContainer = styled.div`
+const UserDataContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;

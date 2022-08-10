@@ -2,21 +2,22 @@ import styled from "styled-components";
 import HashtagCard from "../shared/HashtagCard";
 import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
-import { useToggle } from "../../hooks/useToggle";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useContext, useState } from "react";
+import DataContext from "../../context/DataContext";
 
-function PostCard(props) {
+function PostCard({ props }) {
   const {
-    img,
+    pictureUrl,
     username,
     likeCount,
-    text = "Pellentesque #habitant morbi #tristique senectus et #netus et malesuada",
+    description,
   } = props;
   return (
     <Post>
       <LikePictureContainer>
-        <img src={img} alt={username && `${username}'s profile`} />
+        <img src={pictureUrl} alt={username && `${username}'s profile`} />
         <LikeContainer>
           <FaRegHeart color="#FFFFFF" fontSize={"20px"} />
           <p>{likeCount} likes</p>
@@ -24,7 +25,7 @@ function PostCard(props) {
       </LikePictureContainer>
       <PostDataContainer>
         <h3>{username}</h3>
-        <p>{text && <HashtagCard text={text} />}</p>
+        <p>{description && <HashtagCard text={description} />}</p>
       </PostDataContainer>
     </Post>
   );
@@ -59,37 +60,37 @@ export function SkeletonLoading() {
 }
 
 function Posts() {
+  const { setDoneLoading } = useContext(DataContext);
   const { response, error, loading } = useAxios({
     path: "timeline",
     method: "get",
   });
-  // const
-  // TEMPLATE PARA ADICAO DA REQUISICAO NO FUTURO, TEXT PASSA A SER ARRAY E IMPRIME OS POSTS NA TELA
 
-  const TimelineData = () =>
-    !loading &&
-    response.map((item, index) => <PostCard key={index} props={item} />);
+  const TimelineData = () => !loading ? response?.data.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
 
   return (
     <PostsList>
-      {/* <TimelineData /> */}
-      <SkeletonLoading />
+      <TimelineData />
     </PostsList>
   );
 }
 
 const PostsList = styled.ul`
-  width: 100%;
-  margin-right: 26px;
+  min-width: 611px;
+  max-width: 611px;
+  display: flex;
+  flex-direction: column;
+  flex-grow: 1;
 `;
 
 const Post = styled.li`
   display: flex;
-  width: 90%;
-  justify-content: space-between;
+  width: 100%;
+  flex-grow: 1;
   border-radius: 16px;
+  color: #FFFFFF;
   background-color: #171717;
-  padding: 18px;
+  padding: 18px 0;
   margin-bottom: 10px;
 `;
 
@@ -99,7 +100,8 @@ const LikePictureContainer = styled.div`
   align-items: center;
   justify-content: flex-start;
   min-height: 100%;
-  margin-right: 18px;
+  margin-left: 18px;
+  box-sizing: border-box;
 
   img {
     width: 50px;
@@ -114,6 +116,7 @@ const LikeContainer = styled.div`
   flex-direction: column;
   align-items: center;
   margin-top: 20px;
+  box-sizing: border-box;
 
   p {
     margin-top: 6px;
@@ -124,14 +127,16 @@ const LikeContainer = styled.div`
 
 const PostDataContainer = styled.div`
   display: flex;
+  height: 100%;
   flex-direction: column;
   align-items: flex-start;
   width: 100%;
+  padding: 0 20px;
 
   h3 {
-    height: 20px;
     width: 100%;
     font-size: 20px;
+    padding-right: 20px;
   }
 
   p {
@@ -140,6 +145,7 @@ const PostDataContainer = styled.div`
     margin-top: 18px;
     color: #b7b7b7;
     font-weight: 300;
+    padding-right: 20px;
   }
 `;
 

@@ -26,9 +26,8 @@ function Publish(){
 
 }
 
-
 const Container = styled.div`
-    width: 611px;
+    min-width: 611px;
     height: 209px;
     padding: 16px 20px;
     display: flex;

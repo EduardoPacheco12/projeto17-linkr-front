@@ -1,17 +1,17 @@
 import styled from "styled-components";
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import urlMetadata from 'url-metadata';
+// import urlMetadata from 'url-metadata';
 
 
 function Post(){
     const [dados, setdados] = useState('')
 
-    useEffect(()=>{
-        urlMetadata('https://cors-anywhere.herokuapp.com/'+'https://antoniamalchik.medium.com/why-gym-class-is-ineffective-8253a8c9aeb6')
-    .then((e)=>{setdados(e)})
-    .catch((erro)=>{console.log("PARA", erro)})
-    }, [])
+    // useEffect(()=>{
+    //     urlMetadata('https://cors-anywhere.herokuapp.com/'+'https://antoniamalchik.medium.com/why-gym-class-is-ineffective-8253a8c9aeb6')
+    // .then((e)=>{setdados(e)})
+    // .catch((erro)=>{console.log("PARA", erro)})
+    // }, [])
     
 
     return(
