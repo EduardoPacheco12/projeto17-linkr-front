@@ -27,12 +27,13 @@ export function useAxios(props) {
         params = undefined,
       } = props;
       const fullPath = params ? `${path}/${params}` : `${path}`;
-      const config = {
-        header: {
-          Authorization: `Bearer `,
-        },
-      };
-      const response = await method(`${BASE_URL}/${fullPath}`);
+      // const config = {
+      //   header: {
+      //     Authorization: `Bearer `,
+      //   },
+      // };
+      console.log(`${BASE_URL}/${fullPath}`);
+      const response = await method(`${BASE_URL}/${fullPath}`, body, header);
       setResponse(response);
     } catch (err) {
       setError(err);
