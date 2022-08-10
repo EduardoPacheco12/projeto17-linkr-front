@@ -1,8 +1,9 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import { useLocation } from "react-router-dom";
-import { AiOutlineDown } from "react-icons/ai";
 import SearchUser from "./SearchUser";
+import { GoSearch } from "react-icons/go";
+import { AiOutlineDown } from "react-icons/ai";
+import { useLocation } from "react-router-dom";
 
 function Navbar() {
   const [ showNavbar, setShowNavbar ] = useState(false);
