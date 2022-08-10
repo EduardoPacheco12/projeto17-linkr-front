@@ -3,16 +3,9 @@ import axios from 'axios';
 import {useEffect, useState} from 'react';
 import urlMetadata from 'url-metadata';
 
-
 function Post(){
     const [dados, setdados] = useState('')
 
-    useEffect(()=>{
-        urlMetadata('https://cors-anywhere.herokuapp.com/'+'https://antoniamalchik.medium.com/why-gym-class-is-ineffective-8253a8c9aeb6')
-    .then((e)=>{setdados(e)})
-    .catch((erro)=>{console.log("PARA", erro)})
-    }, [])
-    
 
     return(
         <Container>
@@ -20,7 +13,7 @@ function Post(){
             <div className="data">
                 <h5>Juvenal Juvêncio</h5>
                 <span>Muito maneiro esse tutorial de Material UI com React, deem uma olhada!</span>
-            <Link>
+            <Link >
                 <div>
                     <Attrib color="#CECECE" size="16px">{dados ?dados.title:'Como aplicar o Material UI em um projeto React'}</Attrib>
                     <Attrib color="#9B9595" size="11px">{dados ?dados.description:'Hey! I have moved this tutorial to my personal blog. Same content, new location. Sorry about making you click through to another page.'}</Attrib>
@@ -71,6 +64,8 @@ const Container = styled.div`
     flex-direction: column;
     justify-content: space-between;
   }
+
+
 
 `
 

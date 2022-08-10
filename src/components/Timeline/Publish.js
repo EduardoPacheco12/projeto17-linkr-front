@@ -1,15 +1,40 @@
 import styled from "styled-components";
 import {useState} from 'react';
+import { useAxios } from "../../hooks/useAxios";
+import axios from "axios";
 
 function Publish(){
-    const [loading, setloading] = useState(false)
+    const [carregando, setCarregando] = useState(false);
+    const [post, setPost] = useState({});
 
-    function sendPost(event){
+    /**
+    const postData = useAxios({
+        method: 'post',
+        path: 'publish'
+    })
+     */
+
+    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjYwMTY0MDk5LCJleHAiOjE2NjAxNjc2OTl9._3Io56yGhj2Fj8Qh6rpz5L23RSd_VISAUt7FP-m41bI"
+
+    function atribuirDados(event) {
+        setPost({ ...post, [event.target.name]: event.target.value });
+    }
+
+    async function sendPost(event){
         event.preventDefault();
-        setloading(true);
-        setTimeout(()=>{
-            setloading(false);
-        }, 5000)
+        console.log(post)
+        setCarregando(true);
+        axios.post('http://localhost:5000/publish', post, {headers:{Authorization:token}})
+        .then((e)=>{
+            setCarregando(false);
+            setPost({link:'', description:''})
+            return
+        }).catch(e=>{
+            setCarregando(false);
+            alert("Houve um erro ao publicar seu link");
+            return
+        })
+
     }
 
     return(
@@ -17,9 +42,9 @@ function Publish(){
             <img src="https://cdn.pixabay.com/photo/2017/01/01/22/04/crawl-1945633_960_720.jpg" alt="foca" />
             <Form onSubmit={(e)=>sendPost(e)}>
                 <h3>What are you going to share today?</h3>
-                <input required  disabled={loading} name="link" placeholder="http://..." />
-                <textarea name="text" disabled={loading} placeholder="Awesome article about #javascript" />
-                <input type="submit" value={loading ? "Publishing..." : "Publish"} disabled={loading}/>
+                <input required  disabled={carregando} name="link" placeholder="http://..." onChange={(e)=>{atribuirDados(e)}} value={post.link}/>
+                <textarea name="description" disabled={carregando} placeholder="Awesome article about #javascript" onChange={(e)=>{atribuirDados(e)}} value={post.description}/>
+                <input type="submit" value={carregando ? "Publishing..." : "Publish"} disabled={carregando}/>
             </Form>
         </Container>
     )
