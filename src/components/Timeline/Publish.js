@@ -7,12 +7,7 @@ function Publish(){
     const [carregando, setCarregando] = useState(false);
     const [post, setPost] = useState({});
 
-    /**
-    const postData = useAxios({
-        method: 'post',
-        path: 'publish'
-    })
-     */
+    const postData = useAxios();
 
     const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjYwMTY0MDk5LCJleHAiOjE2NjAxNjc2OTl9._3Io56yGhj2Fj8Qh6rpz5L23RSd_VISAUt7FP-m41bI"
 
@@ -24,16 +19,18 @@ function Publish(){
         event.preventDefault();
         console.log(post)
         setCarregando(true);
-        axios.post('http://localhost:5000/publish', post, {headers:{Authorization:token}})
-        .then((e)=>{
-            setCarregando(false);
-            setPost({link:'', description:''})
-            return
-        }).catch(e=>{
-            setCarregando(false);
-            alert("Houve um erro ao publicar seu link");
-            return
-        })
+        const config = { headers: { Authorization:token } }
+        const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
+        // axios.post('http://localhost:5000/publish', post, )
+        // .then((e)=>{
+        //     setCarregando(false);
+        //     setPost({link:'', description:''})
+        //     return
+        // }).catch(e=>{
+        //     setCarregando(false);
+        //     alert("Houve um erro ao publicar seu link");
+        //     return
+        // })
 
     }
 
