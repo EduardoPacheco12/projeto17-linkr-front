@@ -51,7 +51,6 @@ const Post = styled.li`
   padding: 18px;
 `;
 
-
 const LikePictureContainer = styled.div`
   display: flex;
   flex-direction: column;
