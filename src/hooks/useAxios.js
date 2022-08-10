@@ -1,6 +1,5 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
-import { useToggle } from "./useToggle";
 
 const BASE_URL = process.env.REACT_APP_BACKEND_URI;
 

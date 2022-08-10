@@ -4,8 +4,6 @@ import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useContext, useState } from "react";
-import DataContext from "../../context/DataContext";
 
 function PostCard({ props }) {
   const {
@@ -60,7 +58,6 @@ export function SkeletonLoading() {
 }
 
 function Posts() {
-  const { setDoneLoading } = useContext(DataContext);
   const { response, error, loading } = useAxios({
     path: "timeline",
     method: "get",

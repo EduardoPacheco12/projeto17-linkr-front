@@ -7,7 +7,6 @@ import { PostTrendContainer } from "../Users/UsersView";
 import Trends from "../Users/Trends";
 import DataContext from "../../context/DataContext";
 
-
 function Timeline() {
   const { doneLoading } = useContext(DataContext);
   const location = useLocation();
