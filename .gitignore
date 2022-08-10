@@ -14,6 +14,7 @@ package-lock.json
 
 # production
 /build
+.wakatime-project
 
 # misc
 .DS_Store
