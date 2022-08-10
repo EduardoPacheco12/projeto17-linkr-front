@@ -7,9 +7,11 @@ import SearchedUsers from "./SearchedUsers";
 
 function SearchUser() {
   const [ usersSearched, setUsersSearched ] = useState([]);
+  const [ searchInput, setSearchInput ] = useState("");
 
   async function searchApi(e) {
     const MIN_CARACTERS_TO_SEARCH = 3;
+    setSearchInput(e.target.value)
 
     if(e.target.value.length >= MIN_CARACTERS_TO_SEARCH) {
       try {
@@ -25,6 +27,7 @@ function SearchUser() {
     <SearchContainer>
       <SearchBar>
         <DebounceInput
+          value={ searchInput }
           minLength={3}
           debounceTimeout={300}
           placeholder="Search for people"
@@ -33,9 +36,12 @@ function SearchUser() {
         <GoSearch fontSize="30px" color="#C6C6C6" />
       </SearchBar>
       {
-        usersSearched.length !== 0
+        usersSearched.length !== 0 && searchInput.length >= 3
         ?
-        <SearchedUsers usersSearched={ usersSearched } />
+        <SearchedUsers
+          usersSearched={ usersSearched }
+          setSearchInput={ setSearchInput}
+        />
         :
         <></>
       }

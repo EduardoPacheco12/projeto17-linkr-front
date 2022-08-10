@@ -1,12 +1,22 @@
 import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
-function SearchedUsers({ usersSearched }) {
+function SearchedUsers({ usersSearched, setSearchInput }) {
+  const navigate = useNavigate();
+
+  function selectUser(id) {
+    setSearchInput("");
+    navigate(`/users/${id}`);
+  }
+
   return (
     <UsersList>
       {
-        usersSearched.map(user => {
+        usersSearched.map((user, index) => {
           return (
-            <UserIndentification>
+            <UserIndentification
+              key={ index }
+              onClick={ () => selectUser(user.id)}>
               <img  src={ user.pictureUrl } alt={ user.username } />
               <h3>{ user.username }</h3>
             </UserIndentification>
