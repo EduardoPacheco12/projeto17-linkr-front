@@ -1,11 +1,20 @@
 import styled from "styled-components";
 import axios from 'axios';
 import {useEffect, useState} from 'react';
-import urlMetadata from 'url-metadata';
+// import urlMetadata from 'url-metadata';
 
 function Post(){
     const [dados, setdados] = useState('')
 
+<<<<<<< HEAD
+    // useEffect(()=>{
+    //     urlMetadata('https://cors-anywhere.herokuapp.com/'+'https://antoniamalchik.medium.com/why-gym-class-is-ineffective-8253a8c9aeb6')
+    // .then((e)=>{setdados(e)})
+    // .catch((erro)=>{console.log("PARA", erro)})
+    // }, [])
+    
+=======
+>>>>>>> ccd0fdfa70029b734d149346664767ee206f6c21
 
     return(
         <Container>

@@ -1,6 +1,5 @@
 import ReactHashtag from "@mdnm/react-hashtag";
 import styled from "styled-components";
-import { useState } from "react";
 
 export default function HashtagCard(props) {
   const { text } = props;
