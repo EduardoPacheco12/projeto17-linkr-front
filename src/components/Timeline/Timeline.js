@@ -2,34 +2,30 @@ import styled from "styled-components";
 import Publish from "./Publish";
 import { useToggle } from "../../hooks/useToggle";
 import { useAxios } from "../../hooks/useAxios";
+import { useState } from "react";
+import { useLocation } from "react-router-dom";
+import Posts from "../Users/Posts";
 
 function Timeline() {
-  const { response, error } = useAxios({ path: 'test', method: 'get' });
-  console.log(response);
-  // console.log(useAxios({ path: 'test', method: 'get' }));
+  const location = useLocation();
+  const [isTimeline, setIsTimeline] = useState(location.pathname === '/timeline' ? true : false);
+  const { response, error, loading } = useAxios({ path: 'test', method: 'get' });
 
-  function Button() {
-    // Call the hook which returns, current value and the toggler function
-    const [isTextChanged, setIsTextChanged] = useToggle();
-    
-    return (
-        <button onClick={setIsTextChanged}>{isTextChanged ? 'Toggled' : 'Click to Toggle'}</button>
-    );
-  }
+  const Title = () => isTimeline ? <h4>timeline</h4> : <h4>{location.pathname.replace("/hashtag/","# ")}</h4>
+  const PublishBox = () => isTimeline ? <Publish /> : <></>;
 
   return (
     <Container>
       <Content>
-        <h4>timeline</h4>
-        <Publish />
+        <Title />
+        <PublishBox />
+        <Posts />
       </Content>
     </Container>
   );
 }
 
 export default Timeline;
-
-
 
 const Container = styled.div`
   padding-top: 78px;

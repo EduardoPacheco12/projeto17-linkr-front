@@ -14,7 +14,7 @@ export default function App() {
       <Navbar />
       <Routes>
         <Route path="/users/:1" element={ <UsersView /> } />
-        <Route path="/trends" element={ <Trends /> } />
+        <Route path="/hashtag/:id" element={ <Timeline /> } />
         <Route path="/timeline" element={ <Timeline /> } />
       </Routes>
     </BrowserRouter>

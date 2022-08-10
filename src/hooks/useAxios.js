@@ -1,5 +1,6 @@
 import axios from "axios";
 import { useEffect, useState } from "react";
+import { useToggle } from "./useToggle";
 
 const BASE_URL = process.env.REACT_APP_BACKEND_URI;
 
@@ -14,6 +15,7 @@ const methods = {
 export function useAxios(props) {
   const [response, setResponse] = useState([]);
   const [error, setError] = useState([]);
+  const [loading, setLoading] =  useState(true);
 
   const axiosMethod = async() => {
     try {
@@ -23,6 +25,8 @@ export function useAxios(props) {
         setResponse(response);
       } catch (err) {
         setError(err);
+      } finally {
+        setLoading(false);
       }
   }
 
@@ -30,5 +34,5 @@ export function useAxios(props) {
     axiosMethod()
   }, [])
 
-  return { response, error };
+  return { response, error, loading };
 }
