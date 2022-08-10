@@ -16,7 +16,40 @@ export default function Login() {
 
     function FinishSignUp(e) {
         e.preventDefault();
-        
+        setLoading(true);
+        const body = {
+            email,
+            password,
+            username,
+            pictureUrl
+        }
+        const promise = axios.post("http://localhost:5000/sign-up", body);
+        promise.then( () => {
+            setLoading(false);
+            navigate("/");
+        })
+        promise.catch( (error) => {
+            if(error.response.status === 409) {
+                alert("This email already exists, please try again")
+                setLoading(false);
+                setUsername("");
+                setEmail("");
+                setPassword("");
+                setPictureUrl("");
+            }
+            if(error.response.status === 422) {
+                alert("Please fill in all fields")
+                setLoading(false);
+            }
+            if(error.response.status === 500) {
+                alert("Server Error!!!")
+                setLoading(false);
+                setUsername("");
+                setEmail("");
+                setPassword("");
+                setPictureUrl("");
+            }
+        })
     }
 
     //UI
@@ -31,8 +64,8 @@ export default function Login() {
                 <Forms onSubmit={FinishSignUp}>
                     <input type="email" placeholder="e-mail" disabled={loading === true ? true : false} onChange={(e) => setEmail(e.target.value)} value={email} required/>
                     <input type="password" placeholder="password" max="20" disabled={loading === true ? true : false} onChange={(e) => setPassword(e.target.value)} value={password} required/>
-                    <input type="username" placeholder="username" max="20" disabled={loading === true ? true : false} onChange={(e) => setUsername(e.target.value)} value={username} required/>
-                    <input type="url" placeholder="picture url" max="20" disabled={loading === true ? true : false} onChange={(e) => setPictureUrl(e.target.value)} value={pictureUrl} required/>
+                    <input type="username" placeholder="username" disabled={loading === true ? true : false} onChange={(e) => setUsername(e.target.value)} value={username} required/>
+                    <input type="url" placeholder="picture url" disabled={loading === true ? true : false} onChange={(e) => setPictureUrl(e.target.value)} value={pictureUrl} required/>
                     <button type="submit" disabled={loading === true ? true : false}>
                         {loading === true ? <ThreeDots color="#FFFFFF" height={80} width={80} /> : "Sign Up"}
                     </button>

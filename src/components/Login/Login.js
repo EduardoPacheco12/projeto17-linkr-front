@@ -9,11 +9,41 @@ export default function Login() {
     //LOGIC
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
+    const [token, setToken] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
     function FinishLogin(e) {
         e.preventDefault();
+        setLoading(true);
+        const body = {
+            email,
+            password
+        }
+        const promise = axios.post("http://localhost:5000/", body);
+        promise.then( async (response) => {
+            setLoading(false);
+            setToken(response.data);
+            navigate("/timeline");
+        })
+        promise.catch( (error) => {
+            if(error.response.status === 401) {
+                alert("Email or password is incorrect, please try again")
+                setLoading(false);
+                setEmail("");
+                setPassword("");
+            }
+            if(error.response.status === 422) {
+                alert("Please fill in all fields")
+                setLoading(false);
+            }
+            if(error.response.status === 500) {
+                alert("Server Error!!!")
+                setLoading(false);
+                setEmail("");
+                setPassword("");
+            }
+        })
     }
 
     //UI
