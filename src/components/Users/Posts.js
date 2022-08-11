@@ -5,6 +5,7 @@ import { useAxios } from "../../hooks/useAxios";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import MetaData from "../Timeline/Metadata";
+import { useEffect, useState } from "react";
 
 
 function PostCard({ props }) {
@@ -62,13 +63,19 @@ export function SkeletonLoading() {
   );
 }
 
-function Posts({ path, method }) {
-  const { response, error, loading } = useAxios({
-    path: path,
-    method: method,
-  });
+function Posts() {
+  const { response, error, loading } = useAxios({ method: "get", path: "timeline" });
+  const [data, setData] = useState(null)
+  console.log(response);
 
-  const TimelineData = () => !loading ? response?.data.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
+
+  useEffect(() => {
+    if(response !== null) {
+      setData(response.data);
+    }
+  }, [response, loading])
+
+  const TimelineData = () => data !== null ? data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
 
   return (
     <PostsList>
