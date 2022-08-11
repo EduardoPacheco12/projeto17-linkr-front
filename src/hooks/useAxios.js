@@ -11,29 +11,22 @@ const methods = {
   patch: axios.patch,
 };
 
-export function useAxios(props) {
-  const [response, setResponse] = useState([]);
+export function useAxios({ path = '', method = '', config = null }) {
+  const [response, setResponse] = useState(null);
   const [error, setError] = useState([]);
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
 
   const axiosMethod = async () => {
     try {
-      const method = methods[props.method];
-      const {
-        path = undefined,
-        header = undefined,
-        body = undefined,
-        query = undefined,
-        params = undefined,
-      } = props;
-      const fullPath = params ? `${path}/${params}` : `${path}`;
-      // const config = {
-      //   header: {
-      //     Authorization: `Bearer `,
-      //   },
-      // };
-      console.log(`${BASE_URL}/${fullPath}`);
-      const response = await method(`${BASE_URL}/${fullPath}`, body, header);
+      // WHAT IF AXIOS METHOD CALLS RECEIVES ONLY 
+      // METHOD
+      // PATH AS A FULL PATH (WITH ROUTE, PARAMS AND QUERY) AND 
+      // CONFIG (WITH HEADER, BODY OR NEITHER)?
+      // THEN THIS CAN BE SET AS USEEFFECT UPDATE CONDITION ?
+      setLoading(true)
+      const axios = methods[method];
+      const response = await axios(`${BASE_URL}/${path}`, config);
+      console.log(response);
       setResponse(response);
     } catch (err) {
       setError(err);
@@ -43,9 +36,10 @@ export function useAxios(props) {
   };
 
   useEffect(() => {
-    axiosMethod();
-    // eslint-disable-next-line
-  }, []);
+    if(!(method === '')) {
+      axiosMethod();
+    }
+  }, [method, config]);
 
   return { response, error, loading };
 }
