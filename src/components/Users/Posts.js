@@ -4,6 +4,8 @@ import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import MetaData from "../Timeline/Metadata";
+
 
 function PostCard({ props }) {
   const {
@@ -11,7 +13,11 @@ function PostCard({ props }) {
     username,
     likeCount,
     description,
+    metadata
   } = props;
+
+  console.log("metadata, ", metadata)
+
   return (
     <Post>
       <LikePictureContainer>
@@ -24,6 +30,7 @@ function PostCard({ props }) {
       <PostDataContainer>
         <h3>{username}</h3>
         <p>{description && <HashtagCard text={description} />}</p>
+        <MetaData metadata={metadata}/>
       </PostDataContainer>
     </Post>
   );
