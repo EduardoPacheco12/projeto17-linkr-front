@@ -4,6 +4,8 @@ import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import MetaData from "../Timeline/Metadata";
+
 
 function PostCard({ props }) {
   const {
@@ -11,7 +13,9 @@ function PostCard({ props }) {
     username,
     likeCount,
     description,
+    metadata
   } = props;
+
   return (
     <Post>
       <LikePictureContainer>
@@ -24,6 +28,7 @@ function PostCard({ props }) {
       <PostDataContainer>
         <h3>{username}</h3>
         <p>{description && <HashtagCard text={description} />}</p>
+        <MetaData metadata={metadata}/>
       </PostDataContainer>
     </Post>
   );
@@ -57,10 +62,10 @@ export function SkeletonLoading() {
   );
 }
 
-function Posts() {
+function Posts({ path, method }) {
   const { response, error, loading } = useAxios({
-    path: "timeline",
-    method: "get",
+    path: path,
+    method: method,
   });
 
   const TimelineData = () => !loading ? response?.data.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;

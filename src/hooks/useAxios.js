@@ -13,7 +13,7 @@ const methods = {
 
 export function useAxios({ path = '', method = '', config = null }) {
   const [response, setResponse] = useState(null);
-  const [error, setError] = useState([]);
+  const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const axiosMethod = async () => {
@@ -26,12 +26,12 @@ export function useAxios({ path = '', method = '', config = null }) {
       setLoading(true)
       const axios = methods[method];
       const response = await axios(`${BASE_URL}/${path}`, config);
-      console.log(response);
       setResponse(response);
     } catch (err) {
       setError(err);
     } finally {
       setLoading(false);
+      setError(null);
     }
   };
 

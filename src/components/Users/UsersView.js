@@ -1,8 +1,12 @@
 import styled from "styled-components";
+import { useParams } from "react-router-dom";
 import Posts from "./Posts";
 import Trends from "./Trends";
 
 function UsersView() {
+  const { id } = useParams();
+  console.log(id);
+
   return (
     <MainContainer>
       <MainContent>
@@ -11,7 +15,7 @@ function UsersView() {
           <h2>{ `${"almost cleiton"}'s posts` }</h2>
         </UserDataContainer>
         <PostTrendContainer>
-          <Posts />
+          <Posts path={ `posts/${ id }` } method={ "get" } />
           <Trends />
         </PostTrendContainer>
       </MainContent>
@@ -35,12 +39,8 @@ const MainContent = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
-<<<<<<< HEAD
-  width: 950px;
-=======
   width: 900px;
   margin: 84px;
->>>>>>> ccd0fdfa70029b734d149346664767ee206f6c21
 `;
 
 const UserDataContainer = styled.div`

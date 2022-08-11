@@ -15,7 +15,7 @@ function SearchUser() {
 
     if(e.target.value.length >= MIN_CARACTERS_TO_SEARCH) {
       try {
-        const searchData = await axios.get(`http://localhost:3333/users/?name=${ e.target.value }`);
+        const searchData = await axios.get(`${ process.env.REACT_APP_BACKEND_URI }/users/?name=${ e.target.value }`);
         setUsersSearched(searchData.data);
       } catch(err) {
         console.log(err);

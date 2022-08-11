@@ -1,6 +1,5 @@
 import styled from "styled-components";
-import axios from "axios";
-import { useCallback, useEffect, useState } from "react";
+import { useEffect, useState } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import GlobalStyle from "../../assets/globalStyles";
@@ -17,23 +16,20 @@ export default function Login() {
   const navigate = useNavigate();
   
   useEffect(() => {
-    console.log(error, loading);
     handleError();
     if(response !== null) {
-      // setLoading(false);
       navigate('/');
     }
   // eslint-disable-next-line
-  } , [response, loading, error])
+  } , [response, loading])
 
   function handleError() {
     if (!loading) {
-      if (error?.response?.status) {
-        const status = error?.response?.status;
+      if (error?.response.status) {
+        const status = error?.response.status;
         switch (status) {
           case 409:
             alert("This email already exists, please try again");
-            // setLoading(false);
             setUsername("");
             setEmail("");
             setPassword("");
@@ -41,11 +37,9 @@ export default function Login() {
             break;
           case 422:
             alert("Please fill in all fields");
-            // setLoading(false);
             break;
           case 500:
             alert("Server Error!!!");
-            // setLoading(false);
             setUsername("");
             setEmail("");
             setPassword("");
@@ -60,7 +54,6 @@ export default function Login() {
 
   function FinishSignUp(e) {
     e.preventDefault();
-    // setLoading(true);
     const body = {
       email,
       password,
