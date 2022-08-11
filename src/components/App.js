@@ -19,7 +19,7 @@ export default function App() {
       <Routes>
         <Route path="/" element={<Login />}/>
         <Route path="/sign-up" element={<SignUp />}/>
-        <Route path="/users/:1" element={ <UsersView /> } />
+        <Route path="/users/:id" element={ <UsersView /> } />
         <Route path="/timeline" element={ <Timeline /> } />
         <Route path="/hashtag/:id" element={ <Timeline /> } />
       </Routes>

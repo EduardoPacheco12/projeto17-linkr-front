@@ -6,16 +6,6 @@ import {useEffect, useState} from 'react';
 function Post(){
     const [dados, setdados] = useState('')
 
-<<<<<<< HEAD
-    // useEffect(()=>{
-    //     urlMetadata('https://cors-anywhere.herokuapp.com/'+'https://antoniamalchik.medium.com/why-gym-class-is-ineffective-8253a8c9aeb6')
-    // .then((e)=>{setdados(e)})
-    // .catch((erro)=>{console.log("PARA", erro)})
-    // }, [])
-    
-=======
->>>>>>> ccd0fdfa70029b734d149346664767ee206f6c21
-
     return(
         <Container>
             <img src="https://cdn.pixabay.com/photo/2017/01/01/22/04/crawl-1945633_960_720.jpg" alt="foca" />

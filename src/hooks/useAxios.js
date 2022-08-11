@@ -32,7 +32,6 @@ export function useAxios(props) {
       //     Authorization: `Bearer `,
       //   },
       // };
-      console.log(`${BASE_URL}/${fullPath}`);
       const response = await method(`${BASE_URL}/${fullPath}`, body, header);
       setResponse(response);
     } catch (err) {
