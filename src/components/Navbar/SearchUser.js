@@ -33,7 +33,7 @@ function SearchUser() {
           placeholder="Search for people"
           onChange={ searchApi }
         />
-        <GoSearch fontSize="30px" color="#C6C6C6" />
+        <GoSearch color="#C6C6C6" />
       </SearchBar>
       {
         usersSearched.length !== 0 && searchInput.length >= 3
@@ -54,9 +54,9 @@ const SearchContainer = styled.div`
   flex-direction: column;
   width: 40%;
   margin: 14px;
-  padding: 0 24px 0 0;
   background-color: #E7E7E7;
-  border-radius: 8px;
+  border-radius: 10px;
+  font-size: 30px;
   position: absolute;
   top: 0;
   left: 0;
@@ -85,6 +85,16 @@ const SearchContainer = styled.div`
     font-family: "Lato";
     color: #C6C6C6;
     background-color: #FFFFFF;
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 94%;
+    top: 82px;
+    font-size: 24px;
+    
+    input {
+      font-size: 18px;
+    }
   }
 `;
 
