@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useAxios } from "../../hooks/useAxios";
+import DataContext from "../../context/DataContext";
 
 export default function Login() {
   //LOGIC
@@ -15,8 +16,6 @@ export default function Login() {
   const [token, setToken] = useState('');
   const localData = useLocalstorage({ key: 'linkrToken', value: token })
   const { response, loading, error } = useAxios(config);
-import axios from "axios";
-import DataContext from "../../context/DataContext";
 
   useEffect(() => {
     handleError();
