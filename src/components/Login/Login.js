@@ -1,15 +1,17 @@
 import styled from "styled-components";
 import axios from "axios";
-import { useState } from "react";
+import { useState, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThreeDots } from  "react-loader-spinner";
 import GlobalStyle from "../../assets/globalStyles";
+import DataContext from "../../context/DataContext";
 
 export default function Login() {
     //LOGIC
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
     const [loading, setLoading] = useState(false);
+    const {setToken} = useContext(DataContext);
     const navigate = useNavigate();
 
     function FinishLogin(e) {
@@ -19,10 +21,11 @@ export default function Login() {
             email,
             password
         }
-        const promise = axios.post("http://localhost:5000/", body);
+        const promise = axios.post("http://localhost:4000/", body);
         promise.then( async (response) => {
             setLoading(false);
             localStorage.setItem("token", response.data);
+            setToken(response.data)
             navigate("/timeline");
         })
         promise.catch( (error) => {
