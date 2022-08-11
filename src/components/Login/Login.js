@@ -13,21 +13,19 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState('');
-  const localData = useLocalstorage({ key: 'linkrToken', value: token })
+  const {token: userToken} = useLocalstorage({ key: 'linkrToken', value: token })
   const { response, loading, error } = useAxios(config);
-import axios from "axios";
-import DataContext from "../../context/DataContext";
 
   useEffect(() => {
     handleError();
     if(response !== null && !loading) {
       setToken(response.data);
     }
-    if(localData?.length !== 0) {
+    if(userToken) {
       navigate('/timeline');
     }
   // eslint-disable-next-line
-  } , [response, loading, localData]);
+  } , [response, loading, userToken]);
 
   function handleError() {
     if (!loading) {

@@ -29,7 +29,7 @@ function Publish(){
         event.preventDefault();
         console.log(post)
         setCarregando(true);
-        const config = { headers: { Authorization:token } }
+        //const config = { headers: { Authorization:token } }
         // const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
         // axios.post('http://localhost:5000/publish', post, )
         // .then((e)=>{
