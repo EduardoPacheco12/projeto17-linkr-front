@@ -1,24 +1,32 @@
+import { useContext } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import Posts from "./Posts";
 import Trends from "./Trends";
+import SearchedUserContext from "../../context/SearchedUserContext";
 
 function UsersView() {
   const { id } = useParams();
-  console.log(id);
+  const { searchedUser } = useContext(SearchedUserContext); 
 
   return (
     <MainContainer>
-      <MainContent>
-        <UserDataContainer>
-          <img src="https://cdn.pixabay.com/photo/2017/01/01/22/04/crawl-1945633_960_720.jpg" alt="foca" />
-          <h2>{ `${"almost cleiton"}'s posts` }</h2>
-        </UserDataContainer>
-        <PostTrendContainer>
-          <Posts path={ `posts/${ id }` } method={ "get" } />
-          <Trends />
-        </PostTrendContainer>
-      </MainContent>
+        {
+          searchedUser.username
+          ?
+          <MainContent>
+            <UserDataContainer>
+              <img src={ searchedUser.pictureUrl } alt="foca" />
+              <h2>{ `${ searchedUser.username }'s posts` }</h2>
+            </UserDataContainer>
+            <PostTrendContainer>
+              <Posts path={ `posts/${ id }` } method={ "get" } />
+              <Trends />
+            </PostTrendContainer>
+          </MainContent>
+          :
+          <></>
+        }
     </MainContainer>
   )
 }

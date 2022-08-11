@@ -15,6 +15,7 @@ function PostCard({ props }) {
     description,
     metadata
   } = props;
+  //console.table(props);
 
   return (
     <Post>
@@ -28,7 +29,7 @@ function PostCard({ props }) {
       <PostDataContainer>
         <h3>{username}</h3>
         <p>{description && <HashtagCard text={description} />}</p>
-        <MetaData metadata={metadata}/>
+        <MetaData metadata={metadata} />
       </PostDataContainer>
     </Post>
   );

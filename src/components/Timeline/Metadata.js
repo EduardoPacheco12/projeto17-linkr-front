@@ -4,12 +4,11 @@ import {useEffect, useState} from 'react';
 // import urlMetadata from 'url-metadata';
 
 function MetaData({metadata}){
-
     return(
         
          <Link href={metadata&&metadata.url} target="_blank" rel="noopener noreferrer">
                 <div>
-                    <Attrib className="title" >{metadata ?metadata.title:'Como aplicar o Material UI em um projeto React'}</Attrib>
+                    <Attrib className="title" >{metadata ? metadata.title:'Como aplicar o Material UI em um projeto React'}</Attrib>
                     <Attrib className="description" >{metadata ?metadata.description:'Hey! I have moved this tutorial to my personal blog. Same content, new location. Sorry about making you click through to another page.'}</Attrib>
                     <Attrib className="url">{metadata ?metadata.url:'https://medium.com/@pshrmn/a-simple-react-router'}</Attrib>
                 </div>
