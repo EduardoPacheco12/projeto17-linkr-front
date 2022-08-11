@@ -1,19 +1,28 @@
 import styled from "styled-components";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useAxios } from "../../hooks/useAxios";
 import { useNavigate } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import DataContext from "../../context/DataContext";
 
 function Publish() {
-  const token = useLocalstorage({ key: "linkrToken" });
   const [config, setConfig] = useState({ method: "", path: "", config: null });
-  const { response, loading, error } = useAxios(config);
   const [link, setLink] = useState('');
   const [description, setDescription] = useState('');
+  const { contextData, setContextData } = useContext(DataContext);
+  const { token } = useLocalstorage({ key: "linkrToken" });
+  const { response, loading, error } = useAxios(config);
   const navigate = useNavigate();
+  
   useEffect(() => {
     if (!token) {
       navigate("/");
+    }
+    if (response !== null) {
+      const newData = [...contextData, response.data];
+      setLink('');
+      setDescription('');
+      setContextData(newData);
     }
   }, [response, loading, token]);
 
@@ -23,7 +32,8 @@ function Publish() {
         link,
         description
     }
-    const config = [body, { headers: { Authorization: `Bearer ${token}` } }];
+    console.log(token);
+    const config = [body, { header: { headers: { Authorization: `Bearer ${token}` } } }];
     setConfig({ path: "publish", method: "post", config: config });
   }
 
