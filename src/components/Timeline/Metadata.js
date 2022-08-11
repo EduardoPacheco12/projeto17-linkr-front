@@ -1,6 +1,4 @@
 import styled from "styled-components";
-import axios from 'axios';
-import {useEffect, useState} from 'react';
 // import urlMetadata from 'url-metadata';
 
 function MetaData({metadata}){
@@ -12,7 +10,7 @@ function MetaData({metadata}){
                     <Attrib className="description" >{metadata ?metadata.description:'Hey! I have moved this tutorial to my personal blog. Same content, new location. Sorry about making you click through to another page.'}</Attrib>
                     <Attrib className="url">{metadata ?metadata.url:'https://medium.com/@pshrmn/a-simple-react-router'}</Attrib>
                 </div>
-                <img src={metadata ?metadata.image:'https://theclassicpw.com//assets/img/divulgacao/inauguracao.png'} alt="image" />
+                <img src={metadata ?metadata.image:'https://muhimasri.com/wp-content/uploads/2021/09/react-3-small-300x300.jpg'} alt="image" />
          </Link>
 
     )

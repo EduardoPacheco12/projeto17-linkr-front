@@ -1,16 +1,26 @@
 import styled from "styled-components";
-import {useState} from 'react';
+import {useEffect, useState, useContext} from 'react';
 import { useAxios } from "../../hooks/useAxios";
 import axios from "axios";
+import { useNavigate } from "react-router-dom";
+import DataContext from "../../context/DataContext";
 
 function Publish(){
+    const {header} = useContext(DataContext);
     const [carregando, setCarregando] = useState(false);
     const [post, setPost] = useState({});
-
+    // const postData = useAxios();
+    const navigate = useNavigate();
     const postData = useAxios();
 
-    const token = "Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpZCI6MiwiaWF0IjoxNjYwMTY0MDk5LCJleHAiOjE2NjAxNjc2OTl9._3Io56yGhj2Fj8Qh6rpz5L23RSd_VISAUt7FP-m41bI"
+    useEffect(()=>{
+        if(!header){
+            navigate("/")
+        }
+        console.log(header)
+    }, [])
 
+   
     function atribuirDados(event) {
         setPost({ ...post, [event.target.name]: event.target.value });
     }
@@ -20,7 +30,7 @@ function Publish(){
         console.log(post)
         setCarregando(true);
         const config = { headers: { Authorization:token } }
-        const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
+        // const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
         // axios.post('http://localhost:5000/publish', post, )
         // .then((e)=>{
         //     setCarregando(false);
