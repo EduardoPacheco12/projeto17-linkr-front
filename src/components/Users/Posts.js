@@ -66,16 +66,16 @@ export function SkeletonLoading() {
 function Posts() {
   const { response, error, loading } = useAxios({ method: "get", path: "timeline" });
   const [data, setData] = useState(null)
+  console.log(response);
+
 
   useEffect(() => {
-    console.log(response);
-    console.log(error);
     if(response !== null) {
       setData(response.data);
     }
   }, [response, loading])
 
-  const TimelineData = () => (!loading && data !== null) ? data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
+  const TimelineData = () => data !== null ? data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
 
   return (
     <PostsList>
