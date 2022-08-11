@@ -9,7 +9,6 @@ export default function Login() {
     //LOGIC
     const [email, setEmail] = useState("");
     const [password, setPassword] = useState("");
-    const [token, setToken] = useState("");
     const [loading, setLoading] = useState(false);
     const navigate = useNavigate();
 
@@ -23,7 +22,7 @@ export default function Login() {
         const promise = axios.post("http://localhost:5000/", body);
         promise.then( async (response) => {
             setLoading(false);
-            setToken(response.data);
+            localStorage.setItem("token", response.data);
             navigate("/timeline");
         })
         promise.catch( (error) => {
