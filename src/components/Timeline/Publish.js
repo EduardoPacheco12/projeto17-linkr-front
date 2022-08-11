@@ -9,6 +9,7 @@ function Publish(){
     const {header} = useContext(DataContext);
     const [carregando, setCarregando] = useState(false);
     const [post, setPost] = useState({});
+    // const postData = useAxios();
     const navigate = useNavigate();
     const postData = useAxios();
 
@@ -28,8 +29,8 @@ function Publish(){
         event.preventDefault();
         console.log(post)
         setCarregando(true);
-        const config = header
-        const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
+        const config = { headers: { Authorization:token } }
+        // const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
         // axios.post('http://localhost:5000/publish', post, )
         // .then((e)=>{
         //     setCarregando(false);
