@@ -18,9 +18,9 @@ export function useAxios({ path = '', method = '', config = null }) {
 
   const axiosMethod = async () => {
     try {
-      console.log('axios with ', path, method);
       setLoading(true)
       const axios = methods[method];
+      // console.log(`${BASE_URL}/${path}`, config?.[0], config?.[1]);
       const response = await axios(`${BASE_URL}/${path}`, config?.[0], config?.[1]);
       setResponse(response);
     } catch (err) {

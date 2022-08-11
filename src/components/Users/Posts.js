@@ -1,12 +1,12 @@
 import styled from "styled-components";
 import HashtagCard from "../shared/HashtagCard";
+import MetaData from "../Timeline/Metadata";
+import DataContext from "../../context/DataContext";
 import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
+import { useContext, useEffect, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import MetaData from "../Timeline/Metadata";
-import { useEffect, useState } from "react";
-
 
 function PostCard({ props }) {
   const {
@@ -55,7 +55,7 @@ export function SkeletonLoading() {
             <Skeleton width={"100%"} height={20} />
           </h3>
           <p>
-            <Skeleton width={"100%"} height={18} count={5} />
+            <Skeleton width={"100%"} height={160} count={1} />
           </p>
         </PostDataContainer>
       </Post>
@@ -66,16 +66,17 @@ export function SkeletonLoading() {
 function Posts() {
   const { response, error, loading } = useAxios({ method: "get", path: "timeline" });
   const [data, setData] = useState(null)
-  console.log(response);
+  const { setContextData } = useContext(DataContext);
 
 
   useEffect(() => {
     if(response !== null) {
       setData(response.data);
+      setContextData(response.data);
     }
   }, [response, loading])
 
-  const TimelineData = () => data !== null ? data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
+  const TimelineData = () => data !== null ? data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <SkeletonLoading />;
 
   return (
     <PostsList>
