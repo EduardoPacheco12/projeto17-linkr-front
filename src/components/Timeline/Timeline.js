@@ -21,7 +21,7 @@ function Timeline() {
     <h4>{location.pathname.replace("/hashtag/", "# ")}</h4>
   );
 
-  const PageContent = () => doneLoading ? <TrendsPosts ><Posts /></TrendsPosts> : <SkeletonLoading />;
+  const PageContent = () => doneLoading ? <TrendsPosts ><Posts path={ "timeline" } method={ "get" }  /></TrendsPosts> : <SkeletonLoading />;
   
   const PublishBox = () =>
   isTimeline ? (
@@ -30,7 +30,7 @@ function Timeline() {
         <Publish />
         <Trends />
       </PostTrendContainer>
-      <Posts />
+      <Posts path={ "timeline" } method={ "get" } />
     </>
   ) : (
     <PostTrendContainer>

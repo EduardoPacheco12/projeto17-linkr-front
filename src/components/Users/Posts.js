@@ -16,8 +16,6 @@ function PostCard({ props }) {
     metadata
   } = props;
 
-  console.log("metadata, ", metadata)
-
   return (
     <Post>
       <LikePictureContainer>
@@ -64,10 +62,10 @@ export function SkeletonLoading() {
   );
 }
 
-function Posts() {
+function Posts({ path, method }) {
   const { response, error, loading } = useAxios({
-    path: "timeline",
-    method: "get",
+    path: path,
+    method: method,
   });
 
   const TimelineData = () => !loading ? response?.data.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
