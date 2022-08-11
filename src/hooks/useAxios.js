@@ -18,11 +18,6 @@ export function useAxios({ path = '', method = '', config = null }) {
 
   const axiosMethod = async () => {
     try {
-      // WHAT IF AXIOS METHOD CALLS RECEIVES ONLY 
-      // METHOD
-      // PATH AS A FULL PATH (WITH ROUTE, PARAMS AND QUERY) AND 
-      // CONFIG (WITH HEADER, BODY OR NEITHER)?
-      // THEN THIS CAN BE SET AS USEEFFECT UPDATE CONDITION ?
       setLoading(true)
       const axios = methods[method];
       const response = await axios(`${BASE_URL}/${path}`, config);

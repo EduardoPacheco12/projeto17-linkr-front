@@ -1,24 +1,20 @@
 import styled from "styled-components";
-import {useEffect, useState, useContext} from 'react';
+import {useEffect, useState} from 'react';
 import { useAxios } from "../../hooks/useAxios";
-import axios from "axios";
 import { useNavigate } from "react-router-dom";
-import DataContext from "../../context/DataContext";
+import { useLocalstorage } from "../../hooks/useLocalstorage";
 
 function Publish(){
-    const {header} = useContext(DataContext);
+    const token = useLocalstorage({ key: 'linkrToken' });
     const [carregando, setCarregando] = useState(false);
     const [post, setPost] = useState({});
-    // const postData = useAxios();
     const navigate = useNavigate();
-    const postData = useAxios();
 
     useEffect(()=>{
-        if(!header){
+        if(!token){
             navigate("/")
         }
-        console.log(header)
-    }, [])
+    }, [token])
 
    
     function atribuirDados(event) {
