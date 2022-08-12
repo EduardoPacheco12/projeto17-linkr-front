@@ -59,8 +59,7 @@ export default function Login() {
       email,
       password,
     };
-
-    setConfig({ path: "", method: "post", config: body });
+    setConfig({ path: "", method: "post", config: [body] });
   }
 
   //UI
