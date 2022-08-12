@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { DebounceInput } from "react-debounce-input";
 import { GoSearch } from "react-icons/go";
 import SearchedUsers from "./SearchedUsers";
+import { useLocation } from "react-router-dom";
 
 function SearchUser() {
   const [ usersSearched, setUsersSearched ] = useState([]);
   const [ searchInput, setSearchInput ] = useState("");
+  const [ showSearchBar, setShowSearchBar ] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if(location.pathname === "/" || location.pathname === "/sign-up") {
+      setShowSearchBar(false);
+    } else {
+      setShowSearchBar(true);
+    }
+  }, [location.pathname]);
 
   async function searchApi(e) {
     const MIN_CARACTERS_TO_SEARCH = 3;
@@ -24,7 +35,7 @@ function SearchUser() {
   }
 
   return (
-    <SearchContainer>
+    <SearchContainer showSearchBar={ showSearchBar }>
       <SearchBar>
         <DebounceInput
           value={ searchInput }
@@ -33,7 +44,7 @@ function SearchUser() {
           placeholder="Search for people"
           onChange={ searchApi }
         />
-        <GoSearch fontSize="30px" color="#C6C6C6" />
+        <GoSearch color="#C6C6C6" />
       </SearchBar>
       {
         usersSearched.length !== 0 && searchInput.length >= 3
@@ -50,19 +61,20 @@ function SearchUser() {
 }
 
 const SearchContainer = styled.div`
-  display: flex;
+  display: ${({ showSearchBar }) => showSearchBar ? "flex" : "none"};
   flex-direction: column;
   width: 40%;
   margin: 14px;
-  padding: 0 24px 0 0;
   background-color: #E7E7E7;
-  border-radius: 8px;
-  position: absolute;
+  border-radius: 10px;
+  font-size: 30px;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
+  z-index: 2;
 
   input {
     width: 92%;
@@ -85,6 +97,18 @@ const SearchContainer = styled.div`
     font-family: "Lato";
     color: #C6C6C6;
     background-color: #FFFFFF;
+  }
+
+  @media screen and (max-width: 600px) {
+    width: 94%;
+    top: 82px;
+    font-size: 24px;
+    position: absolute;
+    z-index: 1;
+
+    input {
+      font-size: 18px;
+    }
   }
 `;
 

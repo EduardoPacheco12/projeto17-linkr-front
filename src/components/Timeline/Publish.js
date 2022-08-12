@@ -19,6 +19,24 @@ function Publish() {
     if (!token) {
       navigate("/");
     }
+    async function sendPost(event){
+        event.preventDefault();
+        //console.log(post)
+        //setCarregando(true);
+        //const config = { headers: { Authorization:token } }
+        // const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
+        // axios.post('http://localhost:5000/publish', post, )
+        // .then((e)=>{
+        //     setCarregando(false);
+        //     setPost({link:'', description:''})
+        //     return
+        // }).catch(e=>{
+        //     setCarregando(false);
+        //     alert("Houve um erro ao publicar seu link");
+        //     return
+        // })
+    }
+
     if (response !== null) {
       const newData = [...contextData, response.data];
       setLink("");
@@ -77,7 +95,7 @@ function Publish() {
 }
 
 const Container = styled.div`
-  min-width: 611px;
+  width: 612px;
   height: 209px;
   padding: 16px 20px;
   display: flex;
@@ -91,6 +109,10 @@ const Container = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 50%;
+  }
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
   }
 `;
 

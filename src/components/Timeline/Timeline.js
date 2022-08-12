@@ -33,9 +33,9 @@ function Timeline() {
   const PublishBox = () =>
     isTimeline ? (
       <>
+        <Title />
         <PostTrendContainer>
           <PublishPosts>
-            <Title />
             <Publish />
             <Posts path={"timeline"} method={"get"} />
           </PublishPosts>
@@ -43,13 +43,15 @@ function Timeline() {
         </PostTrendContainer>
       </>
     ) : (
-      <PostTrendContainer>
-        <PublishPosts>
+      <>
         <Title />
-        <PageContent />
-        </PublishPosts>
-        <Trends />
-      </PostTrendContainer>
+        <PostTrendContainer>
+          <PublishPosts>
+          <PageContent />
+          </PublishPosts>
+          <Trends />
+        </PostTrendContainer>
+      </>
     );
 
   return (
@@ -81,12 +83,16 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   h4 {
-    margin-bottom: 40px;
     font-family: "Oswald";
     font-weight: 700;
     font-size: 43px;
     color: white;
+  }
+
+  @media screen and (max-width: 950px) {
+    width: 100%;
   }
 `;
 
