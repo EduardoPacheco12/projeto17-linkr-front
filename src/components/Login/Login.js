@@ -14,18 +14,19 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState('');
-  const {token: userToken} = useLocalstorage({ key: 'linkrToken', value: token })
+  const { token: userToken } = useLocalstorage({ key: 'linkrToken', value: token })
   const { response, loading, error } = useAxios(config);
 
   useEffect(() => {
     handleError();
     if(response !== null && !loading) {
       setToken(response.data);
+      setEmail("");
+      setPassword("");
     }
     if(userToken) {
       navigate('/timeline');
     }
-  // eslint-disable-next-line
   } , [response, loading, userToken]);
 
   function handleError() {
@@ -59,6 +60,7 @@ export default function Login() {
       email,
       password,
     };
+
     setConfig({ path: "", method: "post", config: [body] });
   }
 

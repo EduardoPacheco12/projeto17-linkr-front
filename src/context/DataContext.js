@@ -1,14 +1,12 @@
-import { createContext, useEffect, useState } from "react"
+import { createContext, useState } from "react"
 
 const DataContext = createContext();
 
 export function DataContextProvider({ children }) {
-    const [doneLoading, setDoneLoading] = useState(false);
-    const [token , setToken] = useState(localStorage.token);
-    const header = (token)&&{'headers':{'Authorization':`Bearer ${token}`}};
+    const [contextData , setContextData] = useState();
 
     return(
-        <DataContext.Provider value={{ doneLoading, setDoneLoading, token, setToken, header }}>
+        <DataContext.Provider value={{ contextData, setContextData }}>
             { children }
         </DataContext.Provider>
     );

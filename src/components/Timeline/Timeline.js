@@ -1,10 +1,10 @@
 import styled from "styled-components";
 import Publish from "./Publish";
+import Trends from "../Users/Trends";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
-import Posts, { SkeletonLoading } from "../Users/Posts";
 import { PostTrendContainer } from "../Users/UsersView";
-import Trends from "../Users/Trends";
+import Posts, { SkeletonLoading } from "../Users/Posts";
 
 function Timeline() {
   const { pathname } = useLocation();

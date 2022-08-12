@@ -6,7 +6,7 @@ export default function HashtagCard(props) {
 
   return (
     <ReactHashtag
-      renderHashtag={(hashtagValue) => <Hashtag>{hashtagValue}</Hashtag>}
+      renderHashtag={(hashtagValue, index) => <Hashtag key={index} >{hashtagValue}</Hashtag>}
     >
       {text}
     </ReactHashtag>
