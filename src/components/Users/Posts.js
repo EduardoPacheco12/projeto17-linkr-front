@@ -5,25 +5,29 @@ import DataContext from "../../context/DataContext";
 import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useNavigate } from "react-router-dom";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
-  const {
-    creatorId,
-    pictureUrl,
-    username,
-    likeCount,
-    description,
-    metadata
+  const { 
+    creatorId, 
+    pictureUrl, 
+    username, 
+    likeCount, 
+    description, 
+    metadata 
   } = props;
 
   return (
     <Post>
       <LikePictureContainer>
-        <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={() => navigate(`/users/${creatorId}`)} />
+        <img
+          src={pictureUrl}
+          alt={username && `${username}'s profile`}
+          onClick={() => navigate(`/users/${creatorId}`)}
+        />
         <LikeContainer>
           <FaRegHeart color="#FFFFFF" fontSize={"20px"} />
           <p>{likeCount} likes</p>
@@ -32,7 +36,7 @@ function PostCard({ props }) {
       <PostDataContainer>
         <h3>{username}</h3>
         <p>{description && <HashtagCard text={description} />}</p>
-        <MetaData metadata={metadata}/>
+        <MetaData metadata={metadata} />
       </PostDataContainer>
     </Post>
   );
@@ -40,7 +44,7 @@ function PostCard({ props }) {
 
 export function SkeletonLoading() {
   return (
-    <SkeletonTheme baseColor="#202020" highlightColor="#5A5A5A" >
+    <SkeletonTheme baseColor="#202020" highlightColor="#5A5A5A">
       <Post>
         <LikePictureContainer>
           <div>
@@ -67,38 +71,46 @@ export function SkeletonLoading() {
 }
 
 function Posts() {
-  const { response, error, loading } = useAxios({ method: "get", path: "timeline" });
-  const [data, setData] = useState(null)
-  const { setContextData } = useContext(DataContext);
-
+  const { response, error, loading } = useAxios({
+    method: "get",
+    path: "timeline",
+  });
+  const [data, setData] = useState(null);
+  const { contextData, setContextData } = useContext(DataContext);
 
   useEffect(() => {
-    handleError()
-    if(response !== null) {
-      console.log("ALOU VAZIO", response.data.length)
+    handleError();
+    if (response !== null) {
       setData(response.data);
       setContextData(response.data);
     }
-  }, [response, loading])
+    if (contextData !== null) {
+      setData(contextData);
+      setContextData(null);
+    }
+  }, [response, loading]);
 
   function handleError() {
     if (!loading) {
       if (error) {
-          alert("An error occured while trying to fetch the posts, please refresh the page");
-        
+        alert(
+          "An error occured while trying to fetch the posts, please refresh the page"
+        );
       }
     }
   }
-  function TimelineData(){
-    if(data !== null){
-      if(data.length == 0){
-        return <h3>There are no posts yet</h3>
-      }else{
-        return data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />)
+  function TimelineData() {
+    if (data !== null) {
+      if (data.length === 0) {
+        return <h3>There are no posts yet</h3>;
+      } else {
+        return data?.map((item, index) => (
+          <PostCard key={index} id={item.id} props={item} />
+        ));
       }
     }
 
-    return <SkeletonLoading />
+    return <SkeletonLoading />;
   }
 
   return (
@@ -115,7 +127,7 @@ const PostsList = styled.ul`
   flex-direction: column;
   flex-grow: 1;
 
-  h3{
+  h3 {
     color: white;
     font-size: larger;
     font-weight: 700;
@@ -127,7 +139,7 @@ const Post = styled.li`
   width: 100%;
   flex-grow: 1;
   border-radius: 16px;
-  color: #FFFFFF;
+  color: #ffffff;
   background-color: #171717;
   padding: 18px 0;
   margin-bottom: 10px;
@@ -186,6 +198,14 @@ const PostDataContainer = styled.div`
     color: #b7b7b7;
     font-weight: 300;
     padding-right: 20px;
+  }
+
+  span {
+    font-weight: bold;
+
+    :hover {
+      cursor: pointer;
+    }
   }
 `;
 

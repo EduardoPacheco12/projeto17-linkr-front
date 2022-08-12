@@ -4,7 +4,7 @@ import Trends from "../Users/Trends";
 import { useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { PostTrendContainer } from "../Users/UsersView";
-import Posts, { SkeletonLoading } from "../Users/Posts";
+import Posts from "../Users/Posts";
 
 function Timeline() {
   const { pathname } = useLocation();
@@ -18,7 +18,7 @@ function Timeline() {
     isTimeline ? (
       <h4>timeline</h4>
     ) : (
-      <h4>{pathname.replace("/hashtag/", "# ")}</h4>
+      <h4>{ pathname.replace("/hashtag/", "# ") }</h4>
     );
 
   const PageContent = () =>
@@ -27,7 +27,7 @@ function Timeline() {
         <Posts />
       </TrendsPosts>
     ) : (
-      <SkeletonLoading />
+      <Posts />
     );
 
   const PublishBox = () =>
@@ -45,8 +45,8 @@ function Timeline() {
     ) : (
       <PostTrendContainer>
         <PublishPosts>
-        <Title />
-        <PageContent />
+         <Title />
+         <PageContent />
         </PublishPosts>
         <Trends />
       </PostTrendContainer>
