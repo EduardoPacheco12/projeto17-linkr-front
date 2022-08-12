@@ -1,15 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import SearchUser from "./SearchUser";
 import LogoutButton from "./LogoutButton";
-import { GoSearch } from "react-icons/go";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import LogoutContext from "../../context/LogoutContext";
 
 function Navbar() {
   const [ showNavbar, setShowNavbar ] = useState(false);
-  const[logout, setLogout] = useState(false);
+  const { logout, setLogout } = useContext(LogoutContext);
   const location = useLocation();
   const { pictureUrl } = useLocalstorage({ key: "linkrToken" });
 
@@ -26,10 +26,10 @@ function Navbar() {
   }
 
   return (
+  <>
     <MenuContainer showNavbar={ showNavbar }>
       <MenuContent>
         <BrandName>linkr</BrandName>
-        <SearchUser />
         <UserMenu onClick={showLogout}>
           {logout === false ? <AiOutlineDown fontSize="30px" color="#FFFFFF" /> : <AiOutlineUp fontSize="30px" color="#FFFFFF" />}
           <img src={pictureUrl} alt="foca" />
@@ -37,6 +37,8 @@ function Navbar() {
         {logout === false ? <></> : <LogoutButton/>}
       </MenuContent>
     </MenuContainer>
+    <SearchUser />
+  </>
   );
 }
 
@@ -51,7 +53,11 @@ const MenuContainer = styled.nav`
   position: fixed;
   top: 0;
   left: 0;
-  z-index:1;
+  z-index: 1;
+
+  @media screen and (max-width: 900px) {
+   z-index: 2;
+  }
 `;
 
 const MenuContent = styled.div`
@@ -60,7 +66,6 @@ const MenuContent = styled.div`
   align-items: center;
   width: 1440px;
   height: 82px;
-  position: relative;
 `;
 
 const BrandName = styled.h1`
@@ -69,6 +74,10 @@ const BrandName = styled.h1`
   font-weight: bold;
   color: #FFFFFF;
   font-family: 'Passion One', cursive;
+
+  @media screen and (max-width: 600px) {
+    font-size: 46px;
+  }
 `;
 
 const UserMenu = styled.div`
@@ -76,12 +85,22 @@ const UserMenu = styled.div`
   justify-content: space-between;
   align-items: center;
   margin: 14px 18px;
-
+  font-size: 30px;
+  
   img {
     width: 54px;
     height: 54px;
     margin-left: 12px;
     border-radius: 50%;
+  }
+
+  @media screen and (max-width: 600px){
+    font-size: 26px;
+
+    img {
+      width: 40px;
+      height: 40px;
+    }
   }
 `;
 

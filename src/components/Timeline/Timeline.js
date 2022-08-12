@@ -1,14 +1,16 @@
 import styled from "styled-components";
 import Publish from "./Publish";
 import Trends from "../Users/Trends";
-import { useEffect, useState } from "react";
+import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { PostTrendContainer } from "../Users/UsersView";
 import Posts from "../Users/Posts";
+import LogoutContext from "../../context/LogoutContext";
 
 function Timeline() {
   const { pathname } = useLocation();
   const [isTimeline, setIsTimeline] = useState(true);
+  const { setLogout } = useContext(LogoutContext);
 
   useEffect(() => {
     setIsTimeline(pathname === "/timeline" ? true : false);
@@ -33,9 +35,9 @@ function Timeline() {
   const PublishBox = () =>
     isTimeline ? (
       <>
+        <Title />
         <PostTrendContainer>
           <PublishPosts>
-            <Title />
             <Publish />
             <Posts path={"timeline"} method={"get"} />
           </PublishPosts>
@@ -43,18 +45,24 @@ function Timeline() {
         </PostTrendContainer>
       </>
     ) : (
-      <PostTrendContainer>
-        <PublishPosts>
-         <Title />
-         <PageContent />
-        </PublishPosts>
-        <Trends />
-      </PostTrendContainer>
+      <>
+        <Title />
+        <PostTrendContainer>
+          <PublishPosts>
+          <PageContent />
+          </PublishPosts>
+          <Trends />
+        </PostTrendContainer>
+      </>
     );
+    
+  function hideLogout() {
+    setLogout(false);
+  }
 
   return (
     <Container>
-      <Content>
+      <Content onClick={hideLogout}>
         <PublishBox />
       </Content>
     </Container>
@@ -81,12 +89,16 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   h4 {
-    margin-bottom: 40px;
     font-family: "Oswald";
     font-weight: 700;
     font-size: 43px;
     color: white;
+  }
+
+  @media screen and (max-width: 950px) {
+    width: 100%;
   }
 `;
 

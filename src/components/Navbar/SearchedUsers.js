@@ -1,10 +1,14 @@
 import styled from "styled-components";
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
+import SearchedUserContext from "../../context/SearchedUserContext";
 
 function SearchedUsers({ usersSearched, setSearchInput }) {
   const navigate = useNavigate();
+  const { setSearchedUser } = useContext(SearchedUserContext);
 
-  function selectUser(id) {
+  function selectUser({ id, username, pictureUrl }) {
+    setSearchedUser({username, pictureUrl});
     setSearchInput("");
     navigate(`/users/${id}`);
   }
@@ -16,7 +20,7 @@ function SearchedUsers({ usersSearched, setSearchInput }) {
           return (
             <UserIndentification
               key={ index }
-              onClick={ () => selectUser(user.id)}>
+              onClick={ () => selectUser(user)}>
               <img  src={ user.pictureUrl } alt={ user.username } />
               <h3>{ user.username }</h3>
             </UserIndentification>
