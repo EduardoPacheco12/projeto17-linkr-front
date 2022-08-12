@@ -7,9 +7,12 @@ import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useNavigate } from "react-router-dom";
 
 function PostCard({ props }) {
+  const navigate = useNavigate();
   const {
+    creatorId,
     pictureUrl,
     username,
     likeCount,
@@ -20,7 +23,7 @@ function PostCard({ props }) {
   return (
     <Post>
       <LikePictureContainer>
-        <img src={pictureUrl} alt={username && `${username}'s profile`} />
+        <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={() => navigate(`/users/${creatorId}`)} />
         <LikeContainer>
           <FaRegHeart color="#FFFFFF" fontSize={"20px"} />
           <p>{likeCount} likes</p>
@@ -70,13 +73,33 @@ function Posts() {
 
 
   useEffect(() => {
+    handleError()
     if(response !== null) {
+      console.log("ALOU VAZIO", response.data.length)
       setData(response.data);
       setContextData(response.data);
     }
   }, [response, loading])
 
-  const TimelineData = () => data !== null ? data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <SkeletonLoading />;
+  function handleError() {
+    if (!loading) {
+      if (error) {
+          alert("An error occured while trying to fetch the posts, please refresh the page");
+        
+      }
+    }
+  }
+  function TimelineData(){
+    if(data !== null){
+      if(data.length == 0){
+        return <h3>There are no posts yet</h3>
+      }else{
+        return data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />)
+      }
+    }
+
+    return <SkeletonLoading />
+  }
 
   return (
     <PostsList>
@@ -91,6 +114,12 @@ const PostsList = styled.ul`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+
+  h3{
+    color: white;
+    font-size: larger;
+    font-weight: 700;
+  }
 `;
 
 const Post = styled.li`
@@ -117,6 +146,7 @@ const LikePictureContainer = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    cursor: pointer;
   }
 `;
 
