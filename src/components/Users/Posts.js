@@ -2,6 +2,7 @@ import styled from "styled-components";
 import HashtagCard from "../shared/HashtagCard";
 import MetaData from "../Timeline/Metadata";
 import DataContext from "../../context/DataContext";
+import SearchedUserContext from "../../context/SearchedUserContext";
 import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
@@ -11,26 +12,32 @@ import "react-loading-skeleton/dist/skeleton.css";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
-  const { 
-    creatorId, 
-    pictureUrl, 
-    username, 
-    likeCount, 
-    description, 
-    metadata 
+  const { setSearchedUser } = useContext(SearchedUserContext); 
+
+  const {
+    id,
+    creatorId,
+    pictureUrl,
+    username,
+    likes,
+    description,
+    metadata
   } = props;
+
+  function selectUser() {
+    setSearchedUser({ username, pictureUrl});
+    navigate(`/users/${creatorId}`);
+  }
 
   return (
     <Post>
       <LikePictureContainer>
-        <img
-          src={pictureUrl}
-          alt={username && `${username}'s profile`}
-          onClick={() => navigate(`/users/${creatorId}`)}
-        />
+        <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={ selectUser } />
         <LikeContainer>
-          <FaRegHeart color="#FFFFFF" fontSize={"20px"} />
-          <p>{likeCount} likes</p>
+          <AddLike postId={id}>
+          
+          
+          </AddLike>
         </LikeContainer>
       </LikePictureContainer>
       <PostDataContainer>
@@ -40,7 +47,18 @@ function PostCard({ props }) {
       </PostDataContainer>
     </Post>
   );
+
+  function AddLike({postId}){
+    return  (<>
+    <FaRegHeart  fontSize={"20px"} />
+    <p>{likes} likes</p>
+    </>
+    )
+  
+  }
 }
+
+
 
 export function SkeletonLoading() {
   return (
@@ -113,6 +131,7 @@ function Posts() {
     return <SkeletonLoading />;
   }
 
+
   return (
     <PostsList>
       <TimelineData />
@@ -121,8 +140,7 @@ function Posts() {
 }
 
 const PostsList = styled.ul`
-  min-width: 611px;
-  max-width: 611px;
+  width: 612px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
@@ -131,6 +149,10 @@ const PostsList = styled.ul`
     color: white;
     font-size: larger;
     font-weight: 700;
+  }
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
   }
 `;
 
@@ -143,6 +165,11 @@ const Post = styled.li`
   background-color: #171717;
   padding: 18px 0;
   margin-bottom: 10px;
+
+  @media screen and (max-width: 900px) {
+    border-radius: 0;
+    padding: 10px 0 14px 0;
+  }
 `;
 
 const LikePictureContainer = styled.div`
@@ -160,6 +187,11 @@ const LikePictureContainer = styled.div`
     border-radius: 50%;
     cursor: pointer;
   }
+
+  @media screen and (max-width: 900px) {
+    width: 40px;
+    height: auto;
+  }
 `;
 
 const LikeContainer = styled.div`
@@ -175,6 +207,10 @@ const LikeContainer = styled.div`
     text-align: center;
     font-size: 10px;
   }
+
+  svg{
+    color: #fff;
+  }
 `;
 
 const PostDataContainer = styled.div`
@@ -188,16 +224,25 @@ const PostDataContainer = styled.div`
   h3 {
     width: 100%;
     font-size: 20px;
-    padding-right: 20px;
   }
 
   p {
     width: 100%;
     font-size: 18px;
-    margin-top: 18px;
+    margin: 18px 0 16px 0;
     color: #b7b7b7;
     font-weight: 300;
-    padding-right: 20px;
+  }
+
+  @media screen and (max-width: 900px) {
+    h3 {
+      font-size: 18px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-top: 8px;
+    }
   }
 
   span {

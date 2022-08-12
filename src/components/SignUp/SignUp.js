@@ -61,7 +61,8 @@ export default function Login() {
       pictureUrl,
     };
 
-    setConfig({ path: "sign-up", method: "post", config: [body]})
+
+    setConfig({ path: "sign-up", method: "post", config: [ body, null ]})
   }
 
   //UI

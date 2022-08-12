@@ -1,24 +1,38 @@
+import { useContext } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import Posts from "./Posts";
 import Trends from "./Trends";
+import SearchedUserContext from "../../context/SearchedUserContext";
+import LogoutContext from "../../context/LogoutContext";
 
 function UsersView() {
   const { id } = useParams();
-  console.log(id);
+  const { searchedUser } = useContext(SearchedUserContext);
+  const { setLogout } = useContext(LogoutContext);
+
+  function hideLogout() {
+    setLogout(false);
+  }
 
   return (
-    <MainContainer>
-      <MainContent>
-        <UserDataContainer>
-          <img src="https://cdn.pixabay.com/photo/2017/01/01/22/04/crawl-1945633_960_720.jpg" alt="foca" />
-          <h2>{ `${"almost cleiton"}'s posts` }</h2>
-        </UserDataContainer>
-        <PostTrendContainer>
-          <Posts path={ `posts/${ id }` } method={ "get" } />
-          <Trends />
-        </PostTrendContainer>
-      </MainContent>
+    <MainContainer onClick={hideLogout}>
+        {
+          searchedUser.username
+          ?
+          <MainContent>
+            <UserDataContainer>
+              <img src={ searchedUser.pictureUrl } alt="foca" />
+              <h2>{ `${ searchedUser.username }'s posts` }</h2>
+            </UserDataContainer>
+            <PostTrendContainer>
+              <Posts path={ `posts/${ id }` } id={ id } method={ "get" } />
+              <Trends />
+            </PostTrendContainer>
+          </MainContent>
+          :
+          <></>
+        }
     </MainContainer>
   )
 }
@@ -41,6 +55,11 @@ const MainContent = styled.div`
   align-items: flex-start;
   width: 900px;
   margin: 84px;
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
+    margin: 144px 0 40px 0 ;
+  }
 `;
 
 const UserDataContainer = styled.div`
@@ -60,6 +79,14 @@ const UserDataContainer = styled.div`
     font-family: 'Oswald', sans-serif;;
     font-size: 44px;
     font-weight: bold;
+  }
+
+  @media screen and (max-width: 900px) {
+    margin: 20px 0 0 10px;
+
+    h2 {
+      font-size: 34px;
+    }
   }
 `;
 
