@@ -6,13 +6,14 @@ import SearchedUserContext from "../../context/SearchedUserContext";
 import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { useNavigate, useLocation } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
-  const { setSearchedUser } = useContext(SearchedUserContext); 
+  const location = useLocation();
+  const { searchedUser, setSearchedUser } = useContext(SearchedUserContext); 
 
   const {
     id,
@@ -23,6 +24,10 @@ function PostCard({ props }) {
     description,
     metadata
   } = props;
+
+  if(location.pathname.includes("users") && searchedUser.username !== username) {
+    setSearchedUser({ username, pictureUrl });
+  }
 
   function selectUser() {
     setSearchedUser({ username, pictureUrl});
@@ -35,7 +40,6 @@ function PostCard({ props }) {
         <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={ selectUser } />
         <LikeContainer>
           <AddLike postId={id}>
-          
           
           </AddLike>
         </LikeContainer>
@@ -54,11 +58,8 @@ function PostCard({ props }) {
     <p>{likes} likes</p>
     </>
     )
-  
   }
 }
-
-
 
 export function SkeletonLoading() {
   return (
@@ -88,13 +89,11 @@ export function SkeletonLoading() {
   );
 }
 
-function Posts() {
-  const { response, error, loading } = useAxios({
-    method: "get",
-    path: "timeline",
-  });
+function Posts({ path, method }) {
+  const { response, error, loading } = useAxios({ method, path });
   const [data, setData] = useState(null);
   const { contextData, setContextData } = useContext(DataContext);
+  const { userId } = useContext(SearchedUserContext);
 
   useEffect(() => {
     handleError();
@@ -106,7 +105,7 @@ function Posts() {
       setData(contextData);
       setContextData(null);
     }
-  }, [response, loading]);
+  }, [response, loading, userId]);
 
   function handleError() {
     if (!loading) {
@@ -117,14 +116,13 @@ function Posts() {
       }
     }
   }
-  function TimelineData() {
-    if (data !== null) {
-      if (data.length === 0) {
-        return <h3>There are no posts yet</h3>;
-      } else {
-        return data?.map((item, index) => (
-          <PostCard key={index} id={item.id} props={item} />
-        ));
+
+  function TimelineData(){
+    if(data !== null && !loading){
+      if(data.length == 0){
+        return <h3>There are no posts yet</h3>
+      }else{
+        return data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />)
       }
     }
 

@@ -22,7 +22,7 @@ function SearchUser() {
 
   async function searchApi(e) {
     const MIN_CARACTERS_TO_SEARCH = 3;
-    setSearchInput(e.target.value)
+    setSearchInput(e.target.value);
 
     if(e.target.value.length >= MIN_CARACTERS_TO_SEARCH) {
       try {

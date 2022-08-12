@@ -26,7 +26,7 @@ function Timeline() {
   const PageContent = () =>
     !isTimeline ? (
       <TrendsPosts>
-        <Posts />
+        <Posts path={"timeline"} method={"get"} />
       </TrendsPosts>
     ) : (
       <Posts />
