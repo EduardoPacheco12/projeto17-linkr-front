@@ -4,13 +4,19 @@ import { useParams } from "react-router-dom";
 import Posts from "./Posts";
 import Trends from "./Trends";
 import SearchedUserContext from "../../context/SearchedUserContext";
+import LogoutContext from "../../context/LogoutContext";
 
 function UsersView() {
   const { id } = useParams();
-  const { searchedUser } = useContext(SearchedUserContext); 
+  const { searchedUser } = useContext(SearchedUserContext);
+  const { setLogout } = useContext(LogoutContext);
+
+  function hideLogout() {
+    setLogout(false);
+  }
 
   return (
-    <MainContainer>
+    <MainContainer onClick={hideLogout}>
         {
           searchedUser.username
           ?

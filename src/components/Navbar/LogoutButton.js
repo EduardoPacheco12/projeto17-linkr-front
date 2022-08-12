@@ -1,12 +1,16 @@
+import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
+import LogoutContext from "../../context/LogoutContext";
 
 function LogoutButton() {
     const navigate = useNavigate();
+    const { setLogout } = useContext(LogoutContext);
 
     function returnLoginScreen() {
         localStorage.removeItem("linkrToken");
         navigate("/");
+        setLogout(false);
     }
 
     return (
