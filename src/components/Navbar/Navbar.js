@@ -1,14 +1,15 @@
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import SearchUser from "./SearchUser";
 import LogoutButton from "./LogoutButton";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import LogoutContext from "../../context/LogoutContext";
 
 function Navbar() {
   const [ showNavbar, setShowNavbar ] = useState(false);
-  const[logout, setLogout] = useState(false);
+  const { logout, setLogout } = useContext(LogoutContext);
   const location = useLocation();
   const { pictureUrl } = useLocalstorage({ key: "linkrToken" });
 
