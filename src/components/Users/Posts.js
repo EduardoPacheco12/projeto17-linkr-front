@@ -9,16 +9,18 @@ import { useContext, useEffect, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useNavigate } from "react-router-dom";
+import axios from "axios";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
   const { setSearchedUser } = useContext(SearchedUserContext); 
 
   const {
+    id,
     creatorId,
     pictureUrl,
     username,
-    likeCount,
+    likes,
     description,
     metadata
   } = props;
@@ -33,8 +35,10 @@ function PostCard({ props }) {
       <LikePictureContainer>
         <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={ selectUser } />
         <LikeContainer>
-          <FaRegHeart color="#FFFFFF" fontSize={"20px"} />
-          <p>{likeCount} likes</p>
+          <AddLike postId={id}>
+          
+          
+          </AddLike>
         </LikeContainer>
       </LikePictureContainer>
       <PostDataContainer>
@@ -44,7 +48,18 @@ function PostCard({ props }) {
       </PostDataContainer>
     </Post>
   );
+
+  function AddLike({postId}){
+    return  (<>
+    <FaRegHeart  fontSize={"20px"} />
+    <p>{likes} likes</p>
+    </>
+    )
+  
+  }
 }
+
+
 
 export function SkeletonLoading() {
   return (
@@ -108,6 +123,7 @@ function Posts() {
 
     return <SkeletonLoading />
   }
+
 
   return (
     <PostsList>
@@ -183,6 +199,10 @@ const LikeContainer = styled.div`
     margin-top: 6px;
     text-align: center;
     font-size: 10px;
+  }
+
+  svg{
+    color: #fff;
   }
 `;
 
