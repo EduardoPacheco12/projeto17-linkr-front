@@ -5,11 +5,13 @@ import LogoutButton from "./LogoutButton";
 import { GoSearch } from "react-icons/go";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
+import { useLocalstorage } from "../../hooks/useLocalstorage";
 
 function Navbar() {
   const [ showNavbar, setShowNavbar ] = useState(false);
   const[logout, setLogout] = useState(false);
   const location = useLocation();
+  const { pictureUrl } = useLocalstorage({ key: "linkrToken" });
 
   useEffect(() => {
     if(location.pathname === "/" || location.pathname === "/sign-up") {
@@ -30,7 +32,7 @@ function Navbar() {
         <SearchUser />
         <UserMenu onClick={showLogout}>
           {logout === false ? <AiOutlineDown fontSize="30px" color="#FFFFFF" /> : <AiOutlineUp fontSize="30px" color="#FFFFFF" />}
-          <img src="https://cdn.pixabay.com/photo/2017/01/01/22/04/crawl-1945633_960_720.jpg" alt="foca" />
+          <img src={pictureUrl} alt="foca" />
         </UserMenu>
         {logout === false ? <></> : <LogoutButton/>}
       </MenuContent>

@@ -46,12 +46,15 @@ const TrendBorder = styled.div`
   border-radius: 16px;
   margin-left: 25px;
   box-sizing: border-box;
-
+  margin-top: 80px;
   h3 {
     margin: 18px 0 14px 18px;
     font-size: 28px;
     font-weight: bold;
     font-family: "Oswald";
+  }
+  @media (max-width: 1000px) {
+    display: none;
   }
 `;
 

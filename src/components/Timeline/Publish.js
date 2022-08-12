@@ -7,21 +7,22 @@ import DataContext from "../../context/DataContext";
 
 function Publish() {
   const [config, setConfig] = useState({ method: "", path: "", config: null });
-  const [link, setLink] = useState('');
-  const [description, setDescription] = useState('');
+  const [link, setLink] = useState("");
+  const [description, setDescription] = useState("");
   const { contextData, setContextData } = useContext(DataContext);
-  const { token } = useLocalstorage({ key: "linkrToken" });
+  const { token, pictureUrl } = useLocalstorage({ key: "linkrToken" });
+  const {} = useLocalstorage({ key: "linkrToken" });
   const { response, loading, error } = useAxios(config);
   const navigate = useNavigate();
-  
+
   useEffect(() => {
     if (!token) {
       navigate("/");
     }
     if (response !== null) {
       const newData = [...contextData, response.data];
-      setLink('');
-      setDescription('');
+      setLink("");
+      setDescription("");
       setContextData(newData);
     }
   }, [response, loading, token]);
@@ -29,47 +30,48 @@ function Publish() {
   async function submit(event) {
     event.preventDefault();
     const body = {
-        link,
-        description
-    }
-    console.log(token);
-    const config = [body, { header: { headers: { Authorization: `Bearer ${token}` } } }];
+      link,
+      description,
+    };
+    const config = [
+      body,
+      { header: { headers: { Authorization: `Bearer ${token}` } } },
+    ];
+    console.log(config);
+
     setConfig({ path: "publish", method: "post", config: config });
   }
 
   return (
     <Container>
-      <img
-        src="https://cdn.pixabay.com/photo/2017/01/01/22/04/crawl-1945633_960_720.jpg"
-        alt="foca"
-      />
-    <Form onSubmit={(e) => submit(e)}>
-      <h3>What are you going to share today?</h3>
-      <input
-        required
-        disabled={loading}
-        name="link"
-        placeholder="http://..."
-        onChange={(e) => {
-          setLink(e.target.value);
-        }}
-        value={link}
-      />
-      <textarea
-        name="description"
-        disabled={loading}
-        placeholder="Awesome article about #javascript"
-        onChange={(e) => {
-          setDescription(e.target.value);
-        }}
-        value={description}
-      />
-      <input
-        type="submit"
-        value={loading ? "Publishing..." : "Publish"}
-        disabled={loading}
-      />
-    </Form>
+      <img src={pictureUrl} alt="foca" />
+      <Form onSubmit={(e) => submit(e)}>
+        <h3>What are you going to share today?</h3>
+        <input
+          required
+          disabled={loading}
+          name="link"
+          placeholder="http://..."
+          onChange={(e) => {
+            setLink(e.target.value);
+          }}
+          value={link}
+        />
+        <textarea
+          name="description"
+          disabled={loading}
+          placeholder="Awesome article about #javascript"
+          onChange={(e) => {
+            setDescription(e.target.value);
+          }}
+          value={description}
+        />
+        <input
+          type="submit"
+          value={loading ? "Publishing..." : "Publish"}
+          disabled={loading}
+        />
+      </Form>
     </Container>
   );
 }
