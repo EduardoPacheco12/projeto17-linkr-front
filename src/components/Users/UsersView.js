@@ -20,7 +20,7 @@ function UsersView() {
               <h2>{ `${ searchedUser.username }'s posts` }</h2>
             </UserDataContainer>
             <PostTrendContainer>
-              <Posts path={ `posts/${ id }` } method={ "get" } />
+              <Posts path={ `posts/${ id }` } id={ id } method={ "get" } />
               <Trends />
             </PostTrendContainer>
           </MainContent>
@@ -49,6 +49,11 @@ const MainContent = styled.div`
   align-items: flex-start;
   width: 900px;
   margin: 84px;
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
+    margin: 144px 0 40px 0 ;
+  }
 `;
 
 const UserDataContainer = styled.div`
@@ -68,6 +73,14 @@ const UserDataContainer = styled.div`
     font-family: 'Oswald', sans-serif;;
     font-size: 44px;
     font-weight: bold;
+  }
+
+  @media screen and (max-width: 900px) {
+    margin: 20px 0 0 10px;
+
+    h2 {
+      font-size: 34px;
+    }
   }
 `;
 

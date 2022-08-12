@@ -18,16 +18,18 @@ function Navbar() {
   }, [location.pathname]);
 
   return (
+  <>
     <MenuContainer showNavbar={ showNavbar }>
       <MenuContent>
         <BrandName>linkr</BrandName>
-        <SearchUser />
         <UserMenu>
           <AiOutlineDown color="#FFFFFF" />
           <img src="https://cdn.pixabay.com/photo/2017/01/01/22/04/crawl-1945633_960_720.jpg" alt="foca" />
         </UserMenu>
       </MenuContent>
     </MenuContainer>
+    <SearchUser />
+  </>
   );
 }
 
@@ -43,6 +45,10 @@ const MenuContainer = styled.nav`
   top: 0;
   left: 0;
   z-index: 1;
+
+  @media screen and (max-width: 900px) {
+   z-index: 2;
+  }
 `;
 
 const MenuContent = styled.div`
@@ -51,7 +57,6 @@ const MenuContent = styled.div`
   align-items: center;
   width: 1440px;
   height: 82px;
-  position: relative;
 `;
 
 const BrandName = styled.h1`

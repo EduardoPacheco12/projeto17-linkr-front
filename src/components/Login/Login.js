@@ -15,8 +15,6 @@ export default function Login() {
   const [token, setToken] = useState('');
   const localData = useLocalstorage({ key: 'linkrToken', value: token })
   const { response, loading, error } = useAxios(config);
-import axios from "axios";
-import DataContext from "../../context/DataContext";
 
   useEffect(() => {
     handleError();

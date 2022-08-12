@@ -57,12 +57,13 @@ const SearchContainer = styled.div`
   background-color: #E7E7E7;
   border-radius: 10px;
   font-size: 30px;
-  position: absolute;
+  position: fixed;
   top: 0;
   left: 0;
   right: 0;
   margin-left: auto;
   margin-right: auto;
+  z-index: 2;
 
   input {
     width: 92%;
@@ -91,7 +92,9 @@ const SearchContainer = styled.div`
     width: 94%;
     top: 82px;
     font-size: 24px;
-    
+    position: absolute;
+    z-index: 1;
+
     input {
       font-size: 18px;
     }

@@ -53,6 +53,10 @@ const TrendBorder = styled.div`
     font-weight: bold;
     font-family: "Oswald";
   }
+
+  @media screen and (max-width: 900px) {
+    display: none;
+  }
 `;
 
 const TopTrendsList = styled.ul`

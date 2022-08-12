@@ -5,6 +5,8 @@ import { useAxios } from "../../hooks/useAxios";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import MetaData from "../Timeline/Metadata";
+import { useEffect, useState } from "react";
+import axios from "axios";
 
 
 function PostCard({ props }) {
@@ -15,7 +17,7 @@ function PostCard({ props }) {
     description,
     metadata
   } = props;
-  //console.table(props);
+  console.table(props);
 
   return (
     <Post>
@@ -63,27 +65,54 @@ export function SkeletonLoading() {
   );
 }
 
-function Posts({ path, method }) {
-  const { response, error, loading } = useAxios({
-    path: path,
-    method: method,
-  });
 
-  const TimelineData = () => !loading ? response?.data.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
+function Posts({ path, method, id }) {
+  const [ posts, setPosts ] = useState([]);
+  
+  async function getPosts() {
+    try {
+      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URI}/posts/${id}`);
+
+      setPosts(response.data);
+    } catch(err) {
+      console.log(err);
+    }
+  }
+
+  useEffect(() => {
+    getPosts();
+  }, []);
+
+  // const { response, error, loading } = useAxios({
+  //   path: path,
+  //   method: method,
+  // });
+
+  // const TimelineData = () => !loading ? response?.data.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
+  const TimelineData = () => posts.length !== 0 ? posts.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
 
   return (
     <PostsList>
-      <TimelineData />
+      {
+        posts
+        ?
+        <TimelineData />
+        :
+        <></>
+      }
     </PostsList>
   );
 }
 
 const PostsList = styled.ul`
-  min-width: 611px;
-  max-width: 611px;
+  width: 612px;
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+
+  @media screen and (max-width: 900px) {
+    width: 100%;
+  }
 `;
 
 const Post = styled.li`
@@ -95,6 +124,11 @@ const Post = styled.li`
   background-color: #171717;
   padding: 18px 0;
   margin-bottom: 10px;
+
+  @media screen and (max-width: 900px) {
+    border-radius: 0;
+    padding: 10px 0 14px 0;
+  }
 `;
 
 const LikePictureContainer = styled.div`
@@ -110,6 +144,11 @@ const LikePictureContainer = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 50%;
+  }
+
+  @media screen and (max-width: 900px) {
+    width: 40px;
+    height: auto;
   }
 `;
 
@@ -139,16 +178,25 @@ const PostDataContainer = styled.div`
   h3 {
     width: 100%;
     font-size: 20px;
-    padding-right: 20px;
   }
 
   p {
     width: 100%;
     font-size: 18px;
-    margin-top: 18px;
+    margin: 18px 0 16px 0;
     color: #b7b7b7;
     font-weight: 300;
-    padding-right: 20px;
+  }
+
+  @media screen and (max-width: 900px) {
+    h3 {
+      font-size: 18px;
+    }
+
+    p {
+      font-size: 16px;
+      margin-top: 8px;
+    }
   }
 `;
 
