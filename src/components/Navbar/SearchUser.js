@@ -1,13 +1,24 @@
-import { useState } from "react";
+import { useState, useEffect } from "react";
 import axios from "axios";
 import styled from "styled-components";
 import { DebounceInput } from "react-debounce-input";
 import { GoSearch } from "react-icons/go";
 import SearchedUsers from "./SearchedUsers";
+import { useLocation } from "react-router-dom";
 
 function SearchUser() {
   const [ usersSearched, setUsersSearched ] = useState([]);
   const [ searchInput, setSearchInput ] = useState("");
+  const [ showSearchBar, setShowSearchBar ] = useState(false);
+  const location = useLocation();
+
+  useEffect(() => {
+    if(location.pathname === "/" || location.pathname === "/sign-up") {
+      setShowSearchBar(false);
+    } else {
+      setShowSearchBar(true);
+    }
+  }, [location.pathname]);
 
   async function searchApi(e) {
     const MIN_CARACTERS_TO_SEARCH = 3;
@@ -24,7 +35,7 @@ function SearchUser() {
   }
 
   return (
-    <SearchContainer>
+    <SearchContainer showSearchBar={ showSearchBar }>
       <SearchBar>
         <DebounceInput
           value={ searchInput }
@@ -50,7 +61,7 @@ function SearchUser() {
 }
 
 const SearchContainer = styled.div`
-  display: flex;
+  display: ${({ showSearchBar }) => showSearchBar ? "flex" : "none"};
   flex-direction: column;
   width: 40%;
   margin: 14px;

@@ -1,48 +1,62 @@
 import styled from "styled-components";
 import Publish from "./Publish";
-import { useContext, useEffect, useState } from "react";
-import { useLocation } from "react-router-dom";
-import Posts, { SkeletonLoading } from "../Users/Posts";
-import { PostTrendContainer } from "../Users/UsersView";
 import Trends from "../Users/Trends";
-import DataContext from "../../context/DataContext";
+import { useEffect, useState } from "react";
+import { useLocation } from "react-router-dom";
+import { PostTrendContainer } from "../Users/UsersView";
+import Posts, { SkeletonLoading } from "../Users/Posts";
 
 function Timeline() {
-  const { doneLoading } = useContext(DataContext);
-  const location = useLocation();
+  const { pathname } = useLocation();
   const [isTimeline, setIsTimeline] = useState(true);
 
-  useEffect(() => setIsTimeline(location.pathname === "/timeline" ? true : false), []);
+  useEffect(() => {
+    setIsTimeline(pathname === "/timeline" ? true : false);
+  }, [isTimeline]);
 
   const Title = () =>
-  isTimeline ? (
-    <h4>timeline</h4>
-  ) : (
-    <h4>{location.pathname.replace("/hashtag/", "# ")}</h4>
-  );
+    isTimeline ? (
+      <h4>timeline</h4>
+    ) : (
+      <h4>{pathname.replace("/hashtag/", "# ")}</h4>
+    );
 
-  const PageContent = () => doneLoading ? <TrendsPosts ><Posts path={ "timeline" } method={ "get" }  /></TrendsPosts> : <SkeletonLoading />;
-  
+  const PageContent = () =>
+    !isTimeline ? (
+      <TrendsPosts>
+        <Posts />
+      </TrendsPosts>
+    ) : (
+      <SkeletonLoading />
+    );
+
   const PublishBox = () =>
-  isTimeline ? (
-    <>
-      <PostTrendContainer>
-        <Publish />
-        <Trends />
-      </PostTrendContainer>
-      <Posts path={ "timeline" } method={ "get" } />
-    </>
-  ) : (
-    <PostTrendContainer>
-      <PageContent />
-      <Trends />
-    </PostTrendContainer>
-  );
+    isTimeline ? (
+      <>
+        <Title />
+        <PostTrendContainer>
+          <PublishPosts>
+            <Publish />
+            <Posts path={"timeline"} method={"get"} />
+          </PublishPosts>
+          <Trends />
+        </PostTrendContainer>
+      </>
+    ) : (
+      <>
+        <Title />
+        <PostTrendContainer>
+          <PublishPosts>
+          <PageContent />
+          </PublishPosts>
+          <Trends />
+        </PostTrendContainer>
+      </>
+    );
 
   return (
     <Container>
-      <Content >
-        <Title />
+      <Content>
         <PublishBox />
       </Content>
     </Container>
@@ -69,12 +83,23 @@ const Content = styled.div`
   display: flex;
   flex-direction: column;
   align-items: flex-start;
+
   h4 {
-    margin-bottom: 40px;
     font-family: "Oswald";
     font-weight: 700;
     font-size: 43px;
     color: white;
+  }
+
+  @media screen and (max-width: 950px) {
+    width: 100%;
+  }
+`;
+
+const PublishPosts = styled.div`
+
+  div{
+    display:flex
   }
 `;
 
@@ -82,4 +107,4 @@ const TrendsPosts = styled(PostTrendContainer)`
   flex-direction: column;
   max-width: 611px;
   margin-top: 0px;
-`
+`;

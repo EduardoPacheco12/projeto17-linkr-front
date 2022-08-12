@@ -38,7 +38,7 @@ function Trends() {
 
 const TrendBorder = styled.div`
   display: flex;
-  max-width: 300pxa;
+  max-width: 300px;
   flex-grow: 1;
   flex-direction: column;
   background-color: #171717;
@@ -54,7 +54,7 @@ const TrendBorder = styled.div`
     font-family: "Oswald";
   }
 
-  @media screen and (max-width: 900px) {
+  @media screen and (max-width: 1000px) {
     display: none;
   }
 `;

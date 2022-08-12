@@ -5,6 +5,7 @@ import { Link, useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useAxios } from "../../hooks/useAxios";
+import DataContext from "../../context/DataContext";
 
 export default function Login() {
   //LOGIC
@@ -13,19 +14,20 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState('');
-  const localData = useLocalstorage({ key: 'linkrToken', value: token })
+  const { token: userToken } = useLocalstorage({ key: 'linkrToken', value: token })
   const { response, loading, error } = useAxios(config);
 
   useEffect(() => {
     handleError();
     if(response !== null && !loading) {
       setToken(response.data);
+      setEmail("");
+      setPassword("");
     }
-    if(localData?.length !== 0) {
+    if(userToken) {
       navigate('/timeline');
     }
-  // eslint-disable-next-line
-  } , [response, loading, localData]);
+  } , [response, loading, userToken]);
 
   function handleError() {
     if (!loading) {
@@ -59,7 +61,7 @@ export default function Login() {
       password,
     };
 
-    setConfig({ path: "", method: "post", config: body });
+    setConfig({ path: "", method: "post", config: [body] });
   }
 
   //UI

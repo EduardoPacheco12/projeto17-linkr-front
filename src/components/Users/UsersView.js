@@ -87,9 +87,9 @@ const UserDataContainer = styled.div`
 export const PostTrendContainer = styled.div`
   display: flex;
   width: 100%;
-  justify-content: space-between;
+  justify-content: space-around;
   align-items: flex-start;
-  margin-top: 40px
+  margin-top: 40px;
 `;
 
 export default UsersView;

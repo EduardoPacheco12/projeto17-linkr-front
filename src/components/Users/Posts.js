@@ -1,28 +1,37 @@
 import styled from "styled-components";
 import HashtagCard from "../shared/HashtagCard";
+import MetaData from "../Timeline/Metadata";
+import DataContext from "../../context/DataContext";
+import SearchedUserContext from "../../context/SearchedUserContext";
 import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
+import { useContext, useEffect, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import MetaData from "../Timeline/Metadata";
-import { useEffect, useState } from "react";
-import axios from "axios";
-
+import { useNavigate } from "react-router-dom";
 
 function PostCard({ props }) {
+  const navigate = useNavigate();
+  const { setSearchedUser } = useContext(SearchedUserContext); 
+
   const {
+    creatorId,
     pictureUrl,
     username,
     likeCount,
     description,
     metadata
   } = props;
-  console.table(props);
+
+  function selectUser() {
+    setSearchedUser({ username, pictureUrl});
+    navigate(`/users/${creatorId}`);
+  }
 
   return (
     <Post>
       <LikePictureContainer>
-        <img src={pictureUrl} alt={username && `${username}'s profile`} />
+        <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={ selectUser } />
         <LikeContainer>
           <FaRegHeart color="#FFFFFF" fontSize={"20px"} />
           <p>{likeCount} likes</p>
@@ -57,7 +66,7 @@ export function SkeletonLoading() {
             <Skeleton width={"100%"} height={20} />
           </h3>
           <p>
-            <Skeleton width={"100%"} height={18} count={5} />
+            <Skeleton width={"100%"} height={160} count={1} />
           </p>
         </PostDataContainer>
       </Post>
@@ -65,41 +74,44 @@ export function SkeletonLoading() {
   );
 }
 
+function Posts() {
+  const { response, error, loading } = useAxios({ method: "get", path: "timeline" });
+  const [data, setData] = useState(null)
+  const { setContextData } = useContext(DataContext);
 
-function Posts({ path, method, id }) {
-  const [ posts, setPosts ] = useState([]);
-  
-  async function getPosts() {
-    try {
-      const response = await axios.get(`${process.env.REACT_APP_BACKEND_URI}/posts/${id}`);
-
-      setPosts(response.data);
-    } catch(err) {
-      console.log(err);
-    }
-  }
 
   useEffect(() => {
-    getPosts();
-  }, []);
+    handleError()
+    if(response !== null) {
+      console.log("ALOU VAZIO", response.data.length)
+      setData(response.data);
+      setContextData(response.data);
+    }
+  }, [response, loading])
 
-  // const { response, error, loading } = useAxios({
-  //   path: path,
-  //   method: method,
-  // });
+  function handleError() {
+    if (!loading) {
+      if (error) {
+          alert("An error occured while trying to fetch the posts, please refresh the page");
+        
+      }
+    }
+  }
+  function TimelineData(){
+    if(data !== null){
+      if(data.length == 0){
+        return <h3>There are no posts yet</h3>
+      }else{
+        return data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />)
+      }
+    }
 
-  // const TimelineData = () => !loading ? response?.data.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
-  const TimelineData = () => posts.length !== 0 ? posts.map((item, index) => <PostCard key={index} id={item.id} props={item} />) : <></>;
+    return <SkeletonLoading />
+  }
 
   return (
     <PostsList>
-      {
-        posts
-        ?
-        <TimelineData />
-        :
-        <></>
-      }
+      <TimelineData />
     </PostsList>
   );
 }
@@ -109,6 +121,12 @@ const PostsList = styled.ul`
   display: flex;
   flex-direction: column;
   flex-grow: 1;
+
+  h3{
+    color: white;
+    font-size: larger;
+    font-weight: 700;
+  }
 
   @media screen and (max-width: 900px) {
     width: 100%;
@@ -144,6 +162,7 @@ const LikePictureContainer = styled.div`
     width: 50px;
     height: 50px;
     border-radius: 50%;
+    cursor: pointer;
   }
 
   @media screen and (max-width: 900px) {
