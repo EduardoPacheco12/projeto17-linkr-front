@@ -1,12 +1,14 @@
 import { useState, useEffect } from "react";
 import styled from "styled-components";
-import UserMenu from "./UserMenu";
 import SearchUser from "./SearchUser";
+import LogoutButton from "./LogoutButton";
 import { GoSearch } from "react-icons/go";
+import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
 
 function Navbar() {
   const [ showNavbar, setShowNavbar ] = useState(false);
+  const[logout, setLogout] = useState(false);
   const location = useLocation();
 
   useEffect(() => {
@@ -17,12 +19,20 @@ function Navbar() {
     }
   }, [location.pathname]);
 
+  function showLogout() {
+    setLogout(!logout); 
+  }
+
   return (
     <MenuContainer showNavbar={ showNavbar }>
       <MenuContent>
         <BrandName>linkr</BrandName>
         <SearchUser />
-        <UserMenu />
+        <UserMenu onClick={showLogout}>
+          {logout === false ? <AiOutlineDown fontSize="30px" color="#FFFFFF" /> : <AiOutlineUp fontSize="30px" color="#FFFFFF" />}
+          <img src="https://cdn.pixabay.com/photo/2017/01/01/22/04/crawl-1945633_960_720.jpg" alt="foca" />
+        </UserMenu>
+        {logout === false ? <></> : <LogoutButton/>}
       </MenuContent>
     </MenuContainer>
   );
@@ -40,7 +50,7 @@ const MenuContainer = styled.nav`
   top: 0;
   left: 0;
   z-index:1;
-  `;
+`;
 
 const MenuContent = styled.div`
   display: flex;
@@ -57,6 +67,20 @@ const BrandName = styled.h1`
   font-weight: bold;
   color: #FFFFFF;
   font-family: 'Passion One', cursive;
+`;
+
+const UserMenu = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin: 14px 18px;
+
+  img {
+    width: 54px;
+    height: 54px;
+    margin-left: 12px;
+    border-radius: 50%;
+  }
 `;
 
 export default Navbar;

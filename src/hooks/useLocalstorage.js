@@ -1,6 +1,7 @@
 import { useState, useEffect } from "react";
 
 export function useLocalstorage({ key = 'linkrToken', value = ''}) {
+
   const [localData, setLocalData] = useState(() => getLocalData());
   
   function getLocalData() {
