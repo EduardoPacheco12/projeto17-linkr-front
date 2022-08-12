@@ -8,12 +8,12 @@ import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useNavigate } from "react-router-dom";
-import axios from "axios";
+import { useNavigate, useLocation } from "react-router-dom";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
-  const { setSearchedUser } = useContext(SearchedUserContext); 
+  const location = useLocation();
+  const { searchedUser, setSearchedUser } = useContext(SearchedUserContext); 
 
   const {
     id,
@@ -24,6 +24,10 @@ function PostCard({ props }) {
     description,
     metadata
   } = props;
+
+  if(location.pathname.includes("users") && searchedUser.username !== username) {
+    setSearchedUser({ username, pictureUrl });
+  }
 
   function selectUser() {
     setSearchedUser({ username, pictureUrl});
@@ -36,7 +40,6 @@ function PostCard({ props }) {
         <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={ selectUser } />
         <LikeContainer>
           <AddLike postId={id}>
-          
           
           </AddLike>
         </LikeContainer>
@@ -58,8 +61,6 @@ function PostCard({ props }) {
   
   }
 }
-
-
 
 export function SkeletonLoading() {
   return (
@@ -89,20 +90,20 @@ export function SkeletonLoading() {
   );
 }
 
-function Posts() {
-  const { response, error, loading } = useAxios({ method: "get", path: "timeline" });
-  const [data, setData] = useState(null)
+function Posts({ path, method }) {
+  const { response, error, loading } = useAxios({ method, path });
+  const [data, setData] = useState(null);
   const { setContextData } = useContext(DataContext);
-
+  const { userId } = useContext(SearchedUserContext);
 
   useEffect(() => {
-    handleError()
+    handleError();
     if(response !== null) {
       console.log("ALOU VAZIO", response.data.length)
       setData(response.data);
       setContextData(response.data);
     }
-  }, [response, loading])
+  }, [response, loading, userId])
 
   function handleError() {
     if (!loading) {
@@ -112,8 +113,9 @@ function Posts() {
       }
     }
   }
+
   function TimelineData(){
-    if(data !== null){
+    if(data !== null && !loading){
       if(data.length == 0){
         return <h3>There are no posts yet</h3>
       }else{

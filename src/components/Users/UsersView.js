@@ -8,8 +8,12 @@ import LogoutContext from "../../context/LogoutContext";
 
 function UsersView() {
   const { id } = useParams();
-  const { searchedUser } = useContext(SearchedUserContext);
+  const { searchedUser, userId, setUserId } = useContext(SearchedUserContext);
   const { setLogout } = useContext(LogoutContext);
+
+  if(userId !== id) {
+    setUserId(id);
+  }
 
   function hideLogout() {
     setLogout(false);
@@ -17,22 +21,27 @@ function UsersView() {
 
   return (
     <MainContainer onClick={hideLogout}>
-        {
-          searchedUser.username
-          ?
-          <MainContent>
-            <UserDataContainer>
-              <img src={ searchedUser.pictureUrl } alt="foca" />
-              <h2>{ `${ searchedUser.username }'s posts` }</h2>
-            </UserDataContainer>
-            <PostTrendContainer>
-              <Posts path={ `posts/${ id }` } id={ id } method={ "get" } />
-              <Trends />
-            </PostTrendContainer>
-          </MainContent>
-          :
-          <></>
-        }
+      <MainContent>
+        <UserDataContainer>
+          <img
+            src={ searchedUser.pictureUrl ? searchedUser.pictureUrl : "" }
+            alt={ searchedUser.username ? searchedUser.username : "" }
+          />
+          <h2>
+            {
+              searchedUser.username
+              ?
+              `${ searchedUser.username }'s posts`
+              :
+              "Carregando"
+            }
+          </h2>
+        </UserDataContainer>
+        <PostTrendContainer>
+          <Posts path={ `posts/${ id }` } method={ "get" } />
+          <Trends />
+        </PostTrendContainer>
+      </MainContent>
     </MainContainer>
   )
 }
