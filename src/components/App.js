@@ -14,10 +14,11 @@ import "../assets/style.css";
 
 export default function App() {
   const [ searchedUser, setSearchedUser ] = useState({});
+  const [ userId, setUserId ] = useState(null);
   const [logout, setLogout] = useState(false);
 
   return (
-    <SearchedUserContext.Provider value={{ searchedUser, setSearchedUser}} >
+    <SearchedUserContext.Provider value={{ searchedUser, setSearchedUser, userId, setUserId}} >
       <LogoutContext.Provider value={ { logout, setLogout }} >
         <BrowserRouter>
         <DataContextProvider >

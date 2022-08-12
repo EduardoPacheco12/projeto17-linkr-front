@@ -15,6 +15,7 @@ export function useAxios({ path = '', method = '', config = null }) {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
+  console.log(path);
 
   const axiosMethod = async () => {
     try {
@@ -32,10 +33,11 @@ export function useAxios({ path = '', method = '', config = null }) {
   };
 
   useEffect(() => {
+    console.log("no useEffect")
     if(!(method === '')) {
       axiosMethod();
     }
-  }, [method, config]);
+  }, [ path, method, config ]);
 
   return { response, error, loading };
 }
