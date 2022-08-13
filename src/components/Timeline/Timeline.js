@@ -14,48 +14,39 @@ function Timeline() {
 
   useEffect(() => {
     setIsTimeline(pathname === "/timeline" ? true : false);
+    console.log(isTimeline);
+    console.log(pathname);
   }, [isTimeline]);
 
   const Title = () =>
     isTimeline ? (
       <h4>timeline</h4>
-    ) : (
-      <h4>{ pathname.replace("/hashtag/", "# ") }</h4>
-    );
-
-  const PageContent = () =>
-    !isTimeline ? (
-      <TrendsPosts>
-        <Posts path={"timeline"} method={"get"} />
-      </TrendsPosts>
-    ) : (
-      <Posts />
-    );
+  ) : (
+      <h4>{pathname.replace("/hashtag/", "# ")}</h4>
+  );
 
   const PublishBox = () =>
     isTimeline ? (
       <>
-        <Title />
-        <PostTrendContainer>
-          <PublishPosts>
-            <Publish />
-            <Posts path={"timeline"} method={"get"} />
-          </PublishPosts>
-          <Trends />
-        </PostTrendContainer>
+        <PublishPosts>
+          <Publish />
+          <Posts path={"timeline"} method={"get"} />
+        </PublishPosts>
       </>
-    ) : (
+  ) : (
       <>
-        <Title />
-        <PostTrendContainer>
-          <PublishPosts>
+        <PublishPosts>
           <PageContent />
-          </PublishPosts>
-          <Trends />
-        </PostTrendContainer>
+        </PublishPosts>
       </>
-    );
-    
+  );
+
+  const PageContent = () => (
+    <TrendsPosts>
+      <Posts path={pathname.replace("/","")} method={"get"} />
+    </TrendsPosts>
+  );
+
   function hideLogout() {
     setLogout(false);
   }
@@ -63,7 +54,11 @@ function Timeline() {
   return (
     <Container>
       <Content onClick={hideLogout}>
-        <PublishBox />
+        <Title />
+        <PostTrendContainer>
+          <PublishBox />
+          <Trends />
+        </PostTrendContainer>
       </Content>
     </Container>
   );
@@ -103,9 +98,8 @@ const Content = styled.div`
 `;
 
 const PublishPosts = styled.div`
-
-  div{
-    display:flex
+  div {
+    display: flex;
   }
 `;
 

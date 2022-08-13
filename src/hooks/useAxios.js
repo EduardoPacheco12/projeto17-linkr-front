@@ -15,13 +15,11 @@ export function useAxios({ path = '', method = '', config = null }) {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
-  console.log(path);
 
   const axiosMethod = async () => {
     try {
       setLoading(true)
       const axios = methods[method];
-      // console.log(`${BASE_URL}/${path}`, config?.[0], config?.[1]);
       const response = await axios(`${BASE_URL}/${path}`, config?.[0], config?.[1]);
       setResponse(response);
     } catch (err) {
@@ -29,11 +27,11 @@ export function useAxios({ path = '', method = '', config = null }) {
     } finally {
       setLoading(false);
       setError(null);
+      setResponse(null);
     }
   };
 
   useEffect(() => {
-    console.log("no useEffect")
     if(!(method === '')) {
       axiosMethod();
     }

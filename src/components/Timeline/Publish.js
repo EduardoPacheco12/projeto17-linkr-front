@@ -19,23 +19,6 @@ function Publish() {
     if (!token) {
       navigate("/");
     }
-    async function sendPost(event){
-        event.preventDefault();
-        //console.log(post)
-        //setCarregando(true);
-        //const config = { headers: { Authorization:token } }
-        // const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
-        // axios.post('http://localhost:5000/publish', post, )
-        // .then((e)=>{
-        //     setCarregando(false);
-        //     setPost({link:'', description:''})
-        //     return
-        // }).catch(e=>{
-        //     setCarregando(false);
-        //     alert("Houve um erro ao publicar seu link");
-        //     return
-        // })
-    }
 
     if (response !== null) {
       const newData = [response.data, ...contextData];
