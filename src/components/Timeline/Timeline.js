@@ -33,6 +33,7 @@ function Timeline() {
           <Posts path={"timeline"} method={"get"} />
         </PublishPosts>
       </>
+<<<<<<< HEAD
   ) : (
       <>
         <PublishPosts>
@@ -47,6 +48,20 @@ function Timeline() {
     </TrendsPosts>
   );
 
+=======
+    ) : (
+      <>
+        <Title />
+        <PostTrendContainer>
+          <PublishPosts>
+          <PageContent />
+          </PublishPosts>
+          <Trends />
+        </PostTrendContainer>
+      </>
+    );
+    
+>>>>>>> 43047c5c726a4919a499da36cc54b1d760a1e472
   function hideLogout() {
     setLogout(false);
   }
