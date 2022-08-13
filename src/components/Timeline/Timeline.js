@@ -14,9 +14,7 @@ function Timeline() {
 
   useEffect(() => {
     setIsTimeline(pathname === "/timeline" ? true : false);
-    console.log(isTimeline);
-    console.log(pathname);
-  }, [isTimeline]);
+  }, [isTimeline, pathname]);
 
   const Title = () =>
     isTimeline ? (
