@@ -10,10 +10,12 @@ import { useNavigate, useLocation } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import { addOrRemoveLike, getLikes } from "../../services/api";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
   const location = useLocation();
+  const { token } = useLocalstorage({ key: "linkrToken" });
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { id, creatorId, pictureUrl, username, likes, description, metadata } =
     props;
@@ -24,6 +26,8 @@ function PostCard({ props }) {
   ) {
     setSearchedUser({ username, pictureUrl });
   }
+
+
 
   function selectUser() {
     setSearchedUser({ username, pictureUrl });
@@ -50,11 +54,28 @@ function PostCard({ props }) {
     </Post>
   );
 
-  function AddLike({ postId }) {
+  function AddLike() {
+    const [color, setColor] = useState(false)
+    const [likesC, setLike] = useState(likes)
+
+    function addLiked(){
+      addOrRemoveLike(id, token).then(e => {
+        console.log(e)
+        if(e.status === 201){
+          setColor(true);
+        }else{
+          setColor(false)
+        }
+        getLikes(id).then(e=>{setLike(e.data.length)})
+      })
+    }
+     
+
+
     return (
       <>
-        <FaRegHeart fontSize={"20px"} />
-        <p>{likes} likes</p>
+        <FaRegHeart color={color?"red": "while"} fontSize={"20px"} onClick={()=>{addLiked(id)}}/>
+        <p>{likesC} likes</p>
       </>
     );
   }
