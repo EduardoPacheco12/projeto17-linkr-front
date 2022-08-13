@@ -11,41 +11,49 @@ function Publish() {
   const [description, setDescription] = useState("");
   const { contextData, setContextData } = useContext(DataContext);
   const { token, pictureUrl } = useLocalstorage({ key: "linkrToken" });
-  const {} = useLocalstorage({ key: "linkrToken" });
   const { response, loading, error } = useAxios(config);
   const navigate = useNavigate();
 
   useEffect(() => {
+    handleError();
     if (!token) {
       navigate("/");
     }
-    async function sendPost(event){
-        event.preventDefault();
-        //console.log(post)
-        //setCarregando(true);
-        //const config = { headers: { Authorization:token } }
-        // const { response, error, loading } = postData({ method: 'post', path: 'publish', body: post, header: config })
-        // axios.post('http://localhost:5000/publish', post, )
-        // .then((e)=>{
-        //     setCarregando(false);
-        //     setPost({link:'', description:''})
-        //     return
-        // }).catch(e=>{
-        //     setCarregando(false);
-        //     alert("Houve um erro ao publicar seu link");
-        //     return
-        // })
-    }
 
     if (response !== null) {
-      const newData = [...contextData, response.data];
+      const newData = [response.data, ...contextData];
+      if(newData.length > 20) {
+        newData.pop();
+      }
       setLink("");
       setDescription("");
       setContextData(newData);
     }
   }, [response, loading, token]);
 
-  async function submit(event) {
+  function handleError() {
+    if (!loading) {
+      if (error?.response.status) {
+        const status = error?.response.status;
+        switch (status) {
+          case 401:
+            alert("Session expired, please try again");
+            // limpa o local storage e desloga
+            break;
+          case 422:
+            alert("Please fill in all fields");
+            break;
+          case 500:
+            alert("Server Error!!!");
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  function submit(event) {
     event.preventDefault();
     const body = {
       link,
@@ -53,9 +61,8 @@ function Publish() {
     };
     const config = [
       body,
-      { header: { headers: { Authorization: `Bearer ${token}` } } },
+      { headers: { Authorization: `Bearer ${token}` } } ,
     ];
-    console.log(config);
 
     setConfig({ path: "publish", method: "post", config: config });
   }

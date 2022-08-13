@@ -6,42 +6,40 @@ import SearchedUserContext from "../../context/SearchedUserContext";
 import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
+import { useNavigate, useLocation } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useNavigate, useLocation } from "react-router-dom";
+import { useLocalstorage } from "../../hooks/useLocalstorage";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { searchedUser, setSearchedUser } = useContext(SearchedUserContext); 
+  const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
+  const { id, creatorId, pictureUrl, username, likes, description, metadata } =
+    props;
 
-  const {
-    id,
-    creatorId,
-    pictureUrl,
-    username,
-    likes,
-    description,
-    metadata
-  } = props;
-
-  if(location.pathname.includes("users") && searchedUser.username !== username) {
+  if (
+    location.pathname.includes("users") &&
+    searchedUser.username !== username
+  ) {
     setSearchedUser({ username, pictureUrl });
   }
 
   function selectUser() {
-    setSearchedUser({ username, pictureUrl});
+    setSearchedUser({ username, pictureUrl });
     navigate(`/users/${creatorId}`);
   }
 
   return (
     <Post>
       <LikePictureContainer>
-        <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={ selectUser } />
+        <img
+          src={pictureUrl}
+          alt={username && `${username}'s profile`}
+          onClick={selectUser}
+        />
         <LikeContainer>
-          <AddLike postId={id}>
-          
-          </AddLike>
+          <AddLike postId={id}></AddLike>
         </LikeContainer>
       </LikePictureContainer>
       <PostDataContainer>
@@ -52,19 +50,19 @@ function PostCard({ props }) {
     </Post>
   );
 
-  function AddLike({postId}){
-    return  (<>
-    <FaRegHeart  fontSize={"20px"} />
-    <p>{likes} likes</p>
-    </>
-    )
-  
+  function AddLike({ postId }) {
+    return (
+      <>
+        <FaRegHeart fontSize={"20px"} />
+        <p>{likes} likes</p>
+      </>
+    );
   }
 }
 
 export function SkeletonLoading() {
   return (
-    <SkeletonTheme baseColor="#202020" highlightColor="#5A5A5A" >
+    <SkeletonTheme baseColor="#202020" highlightColor="#5A5A5A">
       <Post>
         <LikePictureContainer>
           <div>
@@ -91,42 +89,47 @@ export function SkeletonLoading() {
 }
 
 function Posts({ path, method }) {
-  const { response, error, loading } = useAxios({ method, path });
+  const { token } = useLocalstorage({ key: 'linkrToken' });
+  const [config, setConfig] = useState({ method: method, path: path, config: { headers: { Authorization: `Bearer ${token}` } }});
+  const { response, error, loading } = useAxios(config);
   const [data, setData] = useState(null);
-  const { setContextData } = useContext(DataContext);
+  const { contextData, setContextData } = useContext(DataContext);
   const { userId } = useContext(SearchedUserContext);
 
   useEffect(() => {
     handleError();
-    if(response !== null) {
-      console.log("ALOU VAZIO", response.data.length)
+    if (response !== null) {
       setData(response.data);
       setContextData(response.data);
     }
-  }, [response, loading, userId])
+    if (contextData !== null) {
+      setData(contextData);
+      setContextData(null);
+    }
+  }, [response, loading, userId]);
 
   function handleError() {
     if (!loading) {
       if (error) {
-          alert("An error occured while trying to fetch the posts, please refresh the page");
-        
+        alert(
+          "An error occured while trying to fetch the posts, please refresh the page"
+        );
       }
     }
   }
 
-  function TimelineData(){
-    if(data !== null && !loading){
-      if(data.length == 0){
-        return <h3>There are no posts yet</h3>
-      }else{
-        return data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />)
+  function TimelineData() {
+    if (data !== null && !loading) {
+      if (data.length === 0) {
+        return <h3>There are no posts yet</h3>;
+      } else {
+        return data?.map((item, index) => (
+          <PostCard key={index} id={item.id} props={item} />
+        ));
       }
     }
-
-    return <SkeletonLoading />
+    return <SkeletonLoading />;
   }
-
-
   return (
     <PostsList>
       <TimelineData />
@@ -140,7 +143,7 @@ const PostsList = styled.ul`
   flex-direction: column;
   flex-grow: 1;
 
-  h3{
+  h3 {
     color: white;
     font-size: larger;
     font-weight: 700;
@@ -156,7 +159,7 @@ const Post = styled.li`
   width: 100%;
   flex-grow: 1;
   border-radius: 16px;
-  color: #FFFFFF;
+  color: #ffffff;
   background-color: #171717;
   padding: 18px 0;
   margin-bottom: 10px;
@@ -203,7 +206,7 @@ const LikeContainer = styled.div`
     font-size: 10px;
   }
 
-  svg{
+  svg {
     color: #fff;
   }
 `;
@@ -237,6 +240,14 @@ const PostDataContainer = styled.div`
     p {
       font-size: 16px;
       margin-top: 8px;
+    }
+  }
+
+  span {
+    font-weight: bold;
+
+    :hover {
+      cursor: pointer;
     }
   }
 `;

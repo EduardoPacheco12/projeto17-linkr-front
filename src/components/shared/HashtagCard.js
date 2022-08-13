@@ -1,22 +1,14 @@
 import ReactHashtag from "@mdnm/react-hashtag";
-import styled from "styled-components";
+import { useNavigate } from "react-router-dom";
 
-export default function HashtagCard(props) {
-  const { text } = props;
+export default function HashtagCard({ text }) {
+  const navigate = useNavigate();
 
   return (
     <ReactHashtag
-      renderHashtag={(hashtagValue, index) => <Hashtag key={index} >{hashtagValue}</Hashtag>}
+      onHashtagClick={(val) => navigate(`/hashtag/${val.replace("#", "")}`)}
     >
-      {text}
+      { text }
     </ReactHashtag>
   );
 }
-
-const Hashtag = styled.span`
-  font-weight: bold;
-
-  :hover {
-    cursor: pointer;
-  }
-`;

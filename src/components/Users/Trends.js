@@ -1,35 +1,65 @@
 import styled from "styled-components";
+import { useLocalstorage } from "../../hooks/useLocalstorage";
+import { useEffect, useState } from "react";
 import { useAxios } from "../../hooks/useAxios";
+import { useNavigate } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useEffect, useState } from "react";
-import { useLoading } from "../../hooks/useLoading";
 
 function Trends() {
-  // const { response, error, loading } = useAxios({
-  //   path: "test",
-  //   method: "get",
-  // });
-  const [doneLoading, setDoneLoading] = useLoading(false);
+  const navigate = useNavigate();
+  const { token } = useLocalstorage({ key: 'linkrToken' });
+  const [config, setConfig] = useState({ method: 'get', path: 'hashtag', config: { headers: { Authorization: `Bearer ${token}` } }});
+  const [data, setData] = useState(null);
+  const { response, error, loading } = useAxios(config);
 
+  useEffect(() => {
+    handleError();
+    if(response !== null) {
+      setData(response.data);
+    } 
+  }, [response, loading])
 
-  const Trending = () =>
-  doneLoading ? (
-      <li>
+  function handleError() {
+    if (!loading) {
+      if (error?.response.status) {
+        const status = error?.response.status;
+        switch (status) {
+          case 401:
+            alert("Session expired, please try again");
+            // limpa o local storage e desloga
+            break;
+          case 500:
+            alert("Server Error!!!");
+            break;
+          default:
+            break;
+        }
+      }
+    }
+  }
+
+  const Trending = () => {
+    if(data === null || loading) {
+      return (
+        <li>
         <Skeleton width={"95%"} height={20} />
       </li>
-    ) : (
-      <li>
-        <Skeleton width={"95%"} height={20} />
-      </li>
-    );
+      )
+    }
+    if(data?.length === 0) {
+      return <li>There are no trends yet</li>
+    } else {
+      return data.map((i, id) => <li key={id} onClick={() => navigate(`/hashtag/${i.hashtag}`)}>#{i.hashtag}</li>)
+    }
+  }
 
   return (
     <SkeletonTheme baseColor="#202020" highlightColor="#5A5A5A">
       <TrendBorder>
         <h3>trending</h3>
         <TopTrendsList>
-          {/* <Trending /> */}
+          <Trending />
         </TopTrendsList>
       </TrendBorder>
     </SkeletonTheme>
@@ -67,9 +97,11 @@ const TopTrendsList = styled.ul`
 
   li {
     margin: 10px 0 0 18px;
+    padding-bottom: 5px;
     font-size: 20px;
     font-family: "Lato";
     font-weight: bold;
+    cursor: pointer;
   }
 `;
 
