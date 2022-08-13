@@ -9,7 +9,6 @@ import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-<<<<<<< HEAD
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 
 function PostCard({ props }) {
@@ -25,22 +24,6 @@ function PostCard({ props }) {
   ) {
     setSearchedUser({ username, pictureUrl });
   }
-=======
-
-function PostCard({ props }) {
-  const navigate = useNavigate();
-  const { setSearchedUser } = useContext(SearchedUserContext); 
-
-  const {
-    id,
-    creatorId,
-    pictureUrl,
-    username,
-    likes,
-    description,
-    metadata
-  } = props;
->>>>>>> 43047c5c726a4919a499da36cc54b1d760a1e472
 
   function selectUser() {
     setSearchedUser({ username, pictureUrl });
@@ -50,15 +33,11 @@ function PostCard({ props }) {
   return (
     <Post>
       <LikePictureContainer>
-<<<<<<< HEAD
         <img
           src={pictureUrl}
           alt={username && `${username}'s profile`}
           onClick={selectUser}
         />
-=======
-        <img src={pictureUrl} alt={username && `${username}'s profile`} onClick={ selectUser } />
->>>>>>> 43047c5c726a4919a499da36cc54b1d760a1e472
         <LikeContainer>
           <AddLike postId={id}></AddLike>
         </LikeContainer>
