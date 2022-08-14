@@ -189,21 +189,25 @@ function Posts({ path, method }) {
     path: path,
     config: { headers: { Authorization: `Bearer ${token}` } },
   });
+
   const { response, error, loading } = useAxios(config);
   const [data, setData] = useState(null);
   const { contextData, setContextData } = useContext(DataContext);
   const { userId } = useContext(SearchedUserContext);
+  const { newPost, setNewPost } = useContext(PostContext);
 
   useEffect(() => {
     handleError();
-    if (response !== null) {
+    if (response !== null && !loading) {
       setData(response.data);
       setContextData(response.data);
     }
     if (contextData !== null) {
       setData(contextData);
       setContextData(null);
+      setNewPost(undefined)
     }
+
     setConfig({
       method: "",
       path: "",
