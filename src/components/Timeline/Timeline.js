@@ -9,41 +9,30 @@ import LogoutContext from "../../context/LogoutContext";
 
 function Timeline() {
   const { pathname } = useLocation();
-  const [isTimeline, setIsTimeline] = useState(true);
+  const [isTimeline, setIsTimeline] = useState(pathname === "/timeline" ? true : false);
   const { setLogout } = useContext(LogoutContext);
 
   useEffect(() => {
-    setIsTimeline(pathname === "/timeline" ? true : false);
   }, [isTimeline, pathname]);
 
   const Title = () =>
     isTimeline ? (
       <h4>timeline</h4>
-  ) : (
-      <h4>{ pathname.replace("/hashtag/", "# ") }</h4>
-  );
+    ) : (
+      <h4>{pathname.replace("/hashtag/", "# ")}</h4>
+    );
 
   const PublishBox = () =>
     isTimeline ? (
       <>
-        <PublishPosts>
-          <Publish />
-          <Posts path={ "timeline" } method={ "get" } />
-        </PublishPosts>
+        <Publish />
+        <Posts path={"timeline"} method={"get"} />
       </>
-  ) : (
-      <>
-        <PublishPosts>
-          <PageContent />
-        </PublishPosts>
-      </>
-  );
-
-  const PageContent = () => (
-    <TrendsPosts>
-      <Posts path={ pathname.replace("/","" ) } method={ "get" } />
-    </TrendsPosts>
-  );
+    ) : (
+      <TrendsPosts>
+        <Posts path={pathname.replace("/", "")} method={"get"} />
+      </TrendsPosts>
+    );
 
   function hideLogout() {
     setLogout(false);
@@ -54,7 +43,9 @@ function Timeline() {
       <Content onClick={hideLogout}>
         <Title />
         <PostTrendContainer>
-          <PublishBox />
+          <PublishPosts>
+            <PublishBox />
+          </PublishPosts>
           <Trends />
         </PostTrendContainer>
       </Content>
