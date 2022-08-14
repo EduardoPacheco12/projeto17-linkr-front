@@ -30,10 +30,10 @@ function PostCard({ props }) {
   const [config, setConfig] = useState({
     method: "",
     path: "",
-    config: { headers: { Authorization: `Bearer ${token}` } },
+    config: [null, { headers: { Authorization: `Bearer ${token}` } }],
   });
   const [liked, setLiked] = useState(usersWhoLiked?.includes(userId) ? true: false || false);
-  const [likesC, setLike] = useState(Number(likes));
+  const [likesC, setLike] = useState(Number(likes) || 0);
   const { response, loading, error } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   let settings;
@@ -46,14 +46,14 @@ function PostCard({ props }) {
         setLike(Number(likesC + 1));
       } else {
         setLiked(false);
-        usersWhoLiked.filter((i) => i === userId);
+        usersWhoLiked?.filter((i) => i === userId);
         setLike(Number(likesC - 1));
       }
     }
     setConfig({
       method: "",
       path: "",
-      config: { headers: { Authorization: `Bearer ${token}` } },
+      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
     });
   }, [response]);
 
@@ -117,7 +117,6 @@ function PostCard({ props }) {
       const data = { ...config };
       data.path = `likes/${id}`;
       data.method = "post";
-      data.config = [null, data.config];
       setConfig(data);
     }
 
@@ -187,7 +186,7 @@ function Posts({ path, method }) {
   const [config, setConfig] = useState({
     method: method,
     path: path,
-    config: { headers: { Authorization: `Bearer ${token}` } },
+    config: [{ headers: { Authorization: `Bearer ${token}` } }],
   });
 
   const { response, error, loading } = useAxios(config);
