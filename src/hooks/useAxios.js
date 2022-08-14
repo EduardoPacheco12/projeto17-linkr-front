@@ -35,6 +35,7 @@ export function useAxios({ path = '', method = '', config = null }) {
     if(!(method === '')) {
       axiosMethod();
     }
+    // eslint-disable-next-line
   }, [ path, method, config ]);
 
   return { response, error, loading };
