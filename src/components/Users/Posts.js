@@ -5,6 +5,7 @@ import HashtagCard from "../shared/HashtagCard";
 import MetaData from "../Timeline/Metadata";
 import DataContext from "../../context/DataContext";
 import SearchedUserContext from "../../context/SearchedUserContext";
+import PostContext from "../../context/PostContext";
 import { FaRegHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
@@ -125,23 +126,29 @@ export function SkeletonLoading() {
 
 function Posts({ path, method }) {
   const { token } = useLocalstorage({ key: 'linkrToken' });
-  const [config, setConfig] = useState({ method: method, path: path, config: { headers: { Authorization: `Bearer ${token}` } }});
+  const [config, setConfig] = useState({ method: method, path: path, config: [{ headers: { Authorization: `Bearer ${token}` } }]});
   const { response, error, loading } = useAxios(config);
   const [data, setData] = useState(null);
   const { contextData, setContextData } = useContext(DataContext);
   const { userId } = useContext(SearchedUserContext);
+  const { newPost, setNewPost } = useContext(PostContext);
 
   useEffect(() => {
     handleError();
-    if (response !== null) {
+    if (response !== null && !loading) {
       setData(response.data);
       setContextData(response.data);
     }
     if (contextData !== null) {
       setData(contextData);
       setContextData(null);
+      setNewPost(undefined)
     }
-  }, [response, loading, userId]);
+
+    if(path !== config.path || newPost !== undefined) {
+      setConfig({ ...config, path, method })
+    }
+  }, [response, loading, userId, newPost ]);
 
   function handleError() {
     if (!loading) {

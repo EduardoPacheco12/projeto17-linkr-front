@@ -20,7 +20,7 @@ function Timeline() {
     isTimeline ? (
       <h4>timeline</h4>
   ) : (
-      <h4>{pathname.replace("/hashtag/", "# ")}</h4>
+      <h4>{ pathname.replace("/hashtag/", "# ") }</h4>
   );
 
   const PublishBox = () =>
@@ -28,7 +28,7 @@ function Timeline() {
       <>
         <PublishPosts>
           <Publish />
-          <Posts path={"timeline"} method={"get"} />
+          <Posts path={ "timeline" } method={ "get" } />
         </PublishPosts>
       </>
   ) : (
@@ -41,7 +41,7 @@ function Timeline() {
 
   const PageContent = () => (
     <TrendsPosts>
-      <Posts path={pathname.replace("/","")} method={"get"} />
+      <Posts path={ pathname.replace("/","" ) } method={ "get" } />
     </TrendsPosts>
   );
 
