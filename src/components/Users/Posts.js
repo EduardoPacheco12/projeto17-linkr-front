@@ -1,28 +1,61 @@
 import styled from "styled-components";
-import { IoMdTrash } from "react-icons/io";
-import { BsPencilFill } from "react-icons/bs";
 import HashtagCard from "../shared/HashtagCard";
 import MetaData from "../Timeline/Metadata";
 import DataContext from "../../context/DataContext";
 import SearchedUserContext from "../../context/SearchedUserContext";
-import { FaRegHeart } from "react-icons/fa";
+import { IoMdTrash } from "react-icons/io";
+import { BsPencilFill } from "react-icons/bs";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
+import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { useLocalstorage } from "../../hooks/useLocalstorage";
-import { addOrRemoveLike, getLikes } from "../../services/api";
 
 function PostCard({ props }) {
+  const {
+    id,
+    creatorId,
+    pictureUrl,
+    username,
+    likes,
+    description,
+    metadata,
+    usersWhoLiked,
+  } = props;
   const navigate = useNavigate();
   const location = useLocation();
-  const storage = useLocalstorage({ key: "linkrToken" });
-  const token = storage.token;
-  const userId = storage.id;
+  const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
+  const [config, setConfig] = useState({
+    method: "",
+    path: "",
+    config: { headers: { Authorization: `Bearer ${token}` } },
+  });
+  const [liked, setLiked] = useState(usersWhoLiked.includes(userId) ? true: false);
+  const [likesC, setLike] = useState(Number(likes));
+  const { response, loading, error } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
-  const { id, creatorId, pictureUrl, username, likes, description, metadata } = props;
   let settings;
+
+  useEffect(() => {
+    if (response !== null) {
+      if (response.status === 201) {
+        setLiked(true);
+        usersWhoLiked.push(userId);
+        setLike(Number(likesC + 1));
+      } else {
+        setLiked(false);
+        usersWhoLiked.filter((i) => i === userId);
+        setLike(Number(likesC - 1));
+      }
+    }
+    setConfig({
+      method: "",
+      path: "",
+      config: { headers: { Authorization: `Bearer ${token}` } },
+    });
+  }, [response]);
 
   if (
     location.pathname.includes("users") &&
@@ -31,7 +64,7 @@ function PostCard({ props }) {
     setSearchedUser({ username, pictureUrl });
   }
 
-  if(userId === creatorId) {
+  if (userId === creatorId) {
     settings = true;
   } else {
     settings = false;
@@ -42,9 +75,7 @@ function PostCard({ props }) {
     navigate(`/users/${creatorId}`);
   }
 
-  function deletePost() {
-
-  }
+  function deletePost() {}
 
   return (
     <Post>
@@ -63,33 +94,61 @@ function PostCard({ props }) {
         <p>{description && <HashtagCard text={description} />}</p>
         <MetaData metadata={metadata} />
       </PostDataContainer>
-      {settings === true ? <BsPencilFill style={{ position: "absolute", right: "60px", top: "15px"}} fontSize="20px" color="#FFFFFF" /> : null}
-      {settings === true ? <IoMdTrash style={{ position: "absolute", right: "20px", top: "15px"}} fontSize="25px" color="#FFFFFF" onClick={deletePost}/> : null}
+      {settings === true ? (
+        <BsPencilFill
+          style={{ position: "absolute", right: "60px", top: "15px" }}
+          fontSize="20px"
+          color="#FFFFFF"
+        />
+      ) : null}
+      {settings === true ? (
+        <IoMdTrash
+          style={{ position: "absolute", right: "20px", top: "15px" }}
+          fontSize="25px"
+          color="#FFFFFF"
+          onClick={deletePost}
+        />
+      ) : null}
     </Post>
   );
 
   function AddLike() {
-    const [color, setColor] = useState(false)
-    const [likesC, setLike] = useState(likes)
-
-    function addLiked(){
-      addOrRemoveLike(id, token).then(e => {
-        console.log(e)
-        if(e.status === 201){
-          setColor(true);
-        }else{
-          setColor(false)
-        }
-        getLikes(id).then(e=>{setLike(e.data.length)})
-      })
+    function addLiked() {
+      const data = { ...config };
+      data.path = `likes/${id}`;
+      data.method = "post";
+      data.config = [null, data.config];
+      setConfig(data);
     }
-     
 
+    const LikeHeart = () =>
+    liked ? (
+        <>
+          <FaHeart
+            color="red"
+            fontSize={"20px"}
+            onClick={() => {
+              addLiked();
+            }}
+          />
+          <p>{likesC} likes</p>
+        </>
+      ) : (
+        <>
+          <FaRegHeart
+            color={"while"}
+            fontSize={"20px"}
+            onClick={() => {
+              addLiked();
+            }}
+          />
+          <p>{likesC} likes</p>
+        </>
+      );
 
     return (
       <>
-        <FaRegHeart color={color?"red": "while"} fontSize={"20px"} onClick={()=>{addLiked(id)}}/>
-        <p>{likesC} likes</p>
+        <LikeHeart />
       </>
     );
   }
@@ -124,8 +183,12 @@ export function SkeletonLoading() {
 }
 
 function Posts({ path, method }) {
-  const { token } = useLocalstorage({ key: 'linkrToken' });
-  const [config, setConfig] = useState({ method: method, path: path, config: { headers: { Authorization: `Bearer ${token}` } }});
+  const { token } = useLocalstorage({ key: "linkrToken" });
+  const [config, setConfig] = useState({
+    method: method,
+    path: path,
+    config: { headers: { Authorization: `Bearer ${token}` } },
+  });
   const { response, error, loading } = useAxios(config);
   const [data, setData] = useState(null);
   const { contextData, setContextData } = useContext(DataContext);
@@ -141,6 +204,11 @@ function Posts({ path, method }) {
       setData(contextData);
       setContextData(null);
     }
+    setConfig({
+      method: "",
+      path: "",
+      config: { headers: { Authorization: `Bearer ${token}` } },
+    });
   }, [response, loading, userId]);
 
   function handleError() {
@@ -159,7 +227,7 @@ function Posts({ path, method }) {
         return <h3>There are no posts yet</h3>;
       } else {
         return data?.map((item, index) => (
-          <PostCard key={index} id={item.id} props={item}/>
+          <PostCard key={index} id={item.id} props={item} />
         ));
       }
     }
