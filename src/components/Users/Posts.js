@@ -1,4 +1,6 @@
 import styled from "styled-components";
+import { IoMdTrash } from "react-icons/io";
+import { BsPencilFill } from "react-icons/bs";
 import HashtagCard from "../shared/HashtagCard";
 import MetaData from "../Timeline/Metadata";
 import DataContext from "../../context/DataContext";
@@ -15,10 +17,12 @@ import { addOrRemoveLike, getLikes } from "../../services/api";
 function PostCard({ props }) {
   const navigate = useNavigate();
   const location = useLocation();
-  const { token } = useLocalstorage({ key: "linkrToken" });
+  const storage = useLocalstorage({ key: "linkrToken" });
+  const token = storage.token;
+  const userId = storage.id;
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
-  const { id, creatorId, pictureUrl, username, likes, description, metadata } =
-    props;
+  const { id, creatorId, pictureUrl, username, likes, description, metadata } = props;
+  let settings;
 
   if (
     location.pathname.includes("users") &&
@@ -27,11 +31,19 @@ function PostCard({ props }) {
     setSearchedUser({ username, pictureUrl });
   }
 
-
+  if(userId === creatorId) {
+    settings = true;
+  } else {
+    settings = false;
+  }
 
   function selectUser() {
     setSearchedUser({ username, pictureUrl });
     navigate(`/users/${creatorId}`);
+  }
+
+  function deletePost() {
+
   }
 
   return (
@@ -51,6 +63,8 @@ function PostCard({ props }) {
         <p>{description && <HashtagCard text={description} />}</p>
         <MetaData metadata={metadata} />
       </PostDataContainer>
+      {settings === true ? <BsPencilFill style={{ position: "absolute", right: "60px", top: "15px"}} fontSize="20px" color="#FFFFFF" /> : null}
+      {settings === true ? <IoMdTrash style={{ position: "absolute", right: "20px", top: "15px"}} fontSize="25px" color="#FFFFFF" onClick={deletePost}/> : null}
     </Post>
   );
 
@@ -145,7 +159,7 @@ function Posts({ path, method }) {
         return <h3>There are no posts yet</h3>;
       } else {
         return data?.map((item, index) => (
-          <PostCard key={index} id={item.id} props={item} />
+          <PostCard key={index} id={item.id} props={item}/>
         ));
       }
     }
@@ -184,6 +198,7 @@ const Post = styled.li`
   background-color: #171717;
   padding: 18px 0;
   margin-bottom: 10px;
+  position: relative;
 
   @media screen and (max-width: 900px) {
     border-radius: 0;
