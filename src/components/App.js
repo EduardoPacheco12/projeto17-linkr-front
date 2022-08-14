@@ -8,7 +8,9 @@ import SignUp from "./SignUp/SignUp";
 import SearchedUserContext from "../context/SearchedUserContext";
 import LogoutContext from "../context/LogoutContext";
 import { DataContextProvider } from "../context/DataContext";
+import { ModalContextProvider } from "../context/ModalContext";
 import PostContext from "../context/PostContext";
+import DeleteAlert from "./Users/DeleteAlert";
 
 import "../assets/reset.css";
 import "../assets/style.css";
@@ -23,18 +25,21 @@ export default function App() {
     <SearchedUserContext.Provider value={{ searchedUser, setSearchedUser, userId, setUserId}} >
       <LogoutContext.Provider value={ { logout, setLogout }} >
         <PostContext.Provider value={{ newPost, setNewPost }} >
-          <BrowserRouter>
-          <DataContextProvider >
-            <Navbar />
-            <Routes>
-              <Route path="/" element={<Login />}/>
-              <Route path="/sign-up" element={<SignUp />}/>
-              <Route path="/users/:id" element={ <UsersView /> } />
-              <Route path="/timeline" element={ <Timeline /> } />
-              <Route path="/hashtag/:id" element={ <Timeline /> } />
-            </Routes>
-          </DataContextProvider>
-          </BrowserRouter>
+          <ModalContextProvider>
+            <DeleteAlert/>
+            <BrowserRouter>
+            <DataContextProvider >
+              <Navbar />
+              <Routes>
+                <Route path="/" element={<Login />}/>
+                <Route path="/sign-up" element={<SignUp />}/>
+                <Route path="/users/:id" element={ <UsersView /> } />
+                <Route path="/timeline" element={ <Timeline /> } />
+                <Route path="/hashtag/:id" element={ <Timeline /> } />
+              </Routes>
+            </DataContextProvider>
+            </BrowserRouter>
+          </ModalContextProvider>
         </PostContext.Provider>
       </LogoutContext.Provider>
     </SearchedUserContext.Provider>

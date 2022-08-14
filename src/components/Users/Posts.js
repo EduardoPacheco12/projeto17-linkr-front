@@ -13,6 +13,8 @@ import { useLocalstorage } from "../../hooks/useLocalstorage";
 import PostContext from "../../context/PostContext";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useLocalstorage } from "../../hooks/useLocalstorage";
+import ModalContext from "../../context/ModalContext";
 
 function AddLike({ addLiked, liked, likesC }) {
   if (liked)
@@ -54,6 +56,7 @@ function PostCard({ props }) {
     usersWhoLiked,
   } = props;
   const navigate = useNavigate();
+  const { showModal, setShowModal } = useContext(ModalContext);
   const location = useLocation();
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
   const [config, setConfig] = useState({
@@ -127,7 +130,9 @@ function PostCard({ props }) {
     navigate(`/users/${creatorId}`);
   }
 
-  function deletePost() {}
+  function deletePost() {
+    setShowModal(true);
+  }
 
   return (
     <Post>
