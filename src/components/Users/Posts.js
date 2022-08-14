@@ -2,6 +2,7 @@ import styled from "styled-components";
 import { IoMdTrash } from "react-icons/io";
 import { BsPencilFill } from "react-icons/bs";
 import HashtagCard from "../shared/HashtagCard";
+import EditPostCard from "./EditPostCard";
 import MetaData from "../Timeline/Metadata";
 import DataContext from "../../context/DataContext";
 import SearchedUserContext from "../../context/SearchedUserContext";
@@ -21,6 +22,7 @@ function PostCard({ props }) {
   const storage = useLocalstorage({ key: "linkrToken" });
   const token = storage.token;
   const userId = storage.id;
+  const [ canEditPost, setCanEditPost ] = useState(false);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { id, creatorId, pictureUrl, username, likes, description, metadata } = props;
   let settings;
@@ -47,6 +49,10 @@ function PostCard({ props }) {
 
   }
 
+  function editPost() {
+    setCanEditPost(!canEditPost);
+  }
+
   return (
     <Post>
       <LikePictureContainer>
@@ -61,11 +67,17 @@ function PostCard({ props }) {
       </LikePictureContainer>
       <PostDataContainer>
         <h3>{username}</h3>
-        <p>{description && <HashtagCard text={description} />}</p>
+        {
+          canEditPost
+          ?
+          <EditPostCard postDescription={ description } postId={ id } />
+          :
+          <p>{description && <HashtagCard text={description} />}</p>
+        }
         <MetaData metadata={metadata} />
       </PostDataContainer>
-      {settings === true ? <BsPencilFill style={{ position: "absolute", right: "60px", top: "15px"}} fontSize="20px" color="#FFFFFF" /> : null}
-      {settings === true ? <IoMdTrash style={{ position: "absolute", right: "20px", top: "15px"}} fontSize="25px" color="#FFFFFF" onClick={deletePost}/> : null}
+      {settings === true ? <BsPencilFill style={{ position: "absolute", right: "60px", top: "15px"}} fontSize="20px" color="#FFFFFF" onClick={ editPost } /> : null}
+      {settings === true ? <IoMdTrash style={{ position: "absolute", right: "20px", top: "15px"}} fontSize="25px" color="#FFFFFF" onClick={deletePost} /> : null}
     </Post>
   );
 
