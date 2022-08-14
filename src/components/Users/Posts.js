@@ -12,6 +12,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { useLocalstorage } from "../../hooks/useLocalstorage";
+import ModalContext from "../../context/ModalContext";
 
 function PostCard({ props }) {
   const {
@@ -25,6 +27,7 @@ function PostCard({ props }) {
     usersWhoLiked,
   } = props;
   const navigate = useNavigate();
+  const { showModal, setShowModal } = useContext(ModalContext);
   const location = useLocation();
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
   const [config, setConfig] = useState({
@@ -75,41 +78,32 @@ function PostCard({ props }) {
     navigate(`/users/${creatorId}`);
   }
 
-  function deletePost() {}
+  function deletePost() {
+    setShowModal(true);
+  }
 
   return (
-    <Post>
-      <LikePictureContainer>
-        <img
-          src={pictureUrl}
-          alt={username && `${username}'s profile`}
-          onClick={selectUser}
-        />
-        <LikeContainer>
-          <AddLike postId={id}></AddLike>
-        </LikeContainer>
-      </LikePictureContainer>
-      <PostDataContainer>
-        <h3>{username}</h3>
-        <p>{description && <HashtagCard text={description} />}</p>
-        <MetaData metadata={metadata} />
-      </PostDataContainer>
-      {settings === true ? (
-        <BsPencilFill
-          style={{ position: "absolute", right: "60px", top: "15px" }}
-          fontSize="20px"
-          color="#FFFFFF"
-        />
-      ) : null}
-      {settings === true ? (
-        <IoMdTrash
-          style={{ position: "absolute", right: "20px", top: "15px" }}
-          fontSize="25px"
-          color="#FFFFFF"
-          onClick={deletePost}
-        />
-      ) : null}
-    </Post>
+    <>
+      <Post>
+        <LikePictureContainer>
+          <img
+            src={pictureUrl}
+            alt={username && `${username}'s profile`}
+            onClick={selectUser}
+          />
+          <LikeContainer>
+            <AddLike postId={id}></AddLike>
+          </LikeContainer>
+        </LikePictureContainer>
+        <PostDataContainer>
+          <h3>{username}</h3>
+          <p>{description && <HashtagCard text={description} />}</p>
+          <MetaData metadata={metadata} />
+        </PostDataContainer>
+        {settings === true ? <BsPencilFill style={{ position: "absolute", right: "60px", top: "15px"}} fontSize="20px" color="#FFFFFF" /> : null}
+        {settings === true ? <IoMdTrash style={{ position: "absolute", right: "20px", top: "15px"}} fontSize="25px" color="#FFFFFF" onClick={deletePost}/> : null}
+      </Post>
+    </>
   );
 
   function AddLike() {
