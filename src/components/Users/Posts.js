@@ -32,7 +32,7 @@ function PostCard({ props }) {
     path: "",
     config: { headers: { Authorization: `Bearer ${token}` } },
   });
-  const [liked, setLiked] = useState(usersWhoLiked.includes(userId) ? true: false);
+  const [liked, setLiked] = useState(usersWhoLiked?.includes(userId) ? true: false || false);
   const [likesC, setLike] = useState(Number(likes));
   const { response, loading, error } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
@@ -228,7 +228,7 @@ function Posts({ path, method }) {
       } else {
         return data?.map((item, index) => (
           <PostCard key={index} id={item.id} props={item} />
-        ));
+        )) || <SkeletonLoading />;
       }
     }
     return <SkeletonLoading />;
