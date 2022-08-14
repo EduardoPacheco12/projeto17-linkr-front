@@ -8,8 +8,8 @@ import SignUp from "./SignUp/SignUp";
 import SearchedUserContext from "../context/SearchedUserContext";
 import LogoutContext from "../context/LogoutContext";
 import { DataContextProvider } from "../context/DataContext";
+import { ModalContextProvider } from "../context/ModalContext";
 import PostContext from "../context/PostContext";
-import ModalContext from "../context/ModalContext";
 import DeleteAlert from "./Users/DeleteAlert";
 
 import "../assets/reset.css";
@@ -20,14 +20,12 @@ export default function App() {
   const [ userId, setUserId ] = useState(null);
   const [logout, setLogout] = useState(false);
   const [ newPost, setNewPost ] = useState(undefined);
-  const [ showModal, setShowModal ] = useState(false);
-  console.log(showModal);
 
   return (
     <SearchedUserContext.Provider value={{ searchedUser, setSearchedUser, userId, setUserId}} >
       <LogoutContext.Provider value={ { logout, setLogout }} >
         <PostContext.Provider value={{ newPost, setNewPost }} >
-          <ModalContext.Provider value={ { showModal, setShowModal } }>
+          <ModalContextProvider>
             <DeleteAlert/>
             <BrowserRouter>
             <DataContextProvider >
@@ -41,7 +39,7 @@ export default function App() {
               </Routes>
             </DataContextProvider>
             </BrowserRouter>
-          </ModalContext.Provider>
+          </ModalContextProvider>
         </PostContext.Provider>
       </LogoutContext.Provider>
     </SearchedUserContext.Provider>
