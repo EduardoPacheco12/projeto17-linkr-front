@@ -14,9 +14,11 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { addOrRemoveLike, getLikes } from "../../services/api";
+import ModalContext from "../../context/ModalContext";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
+  const { showModal, setShowModal } = useContext(ModalContext);
   const location = useLocation();
   const storage = useLocalstorage({ key: "linkrToken" });
   const token = storage.token;
@@ -44,29 +46,31 @@ function PostCard({ props }) {
   }
 
   function deletePost() {
-
+    setShowModal(true);
   }
 
   return (
-    <Post>
-      <LikePictureContainer>
-        <img
-          src={pictureUrl}
-          alt={username && `${username}'s profile`}
-          onClick={selectUser}
-        />
-        <LikeContainer>
-          <AddLike postId={id}></AddLike>
-        </LikeContainer>
-      </LikePictureContainer>
-      <PostDataContainer>
-        <h3>{username}</h3>
-        <p>{description && <HashtagCard text={description} />}</p>
-        <MetaData metadata={metadata} />
-      </PostDataContainer>
-      {settings === true ? <BsPencilFill style={{ position: "absolute", right: "60px", top: "15px"}} fontSize="20px" color="#FFFFFF" /> : null}
-      {settings === true ? <IoMdTrash style={{ position: "absolute", right: "20px", top: "15px"}} fontSize="25px" color="#FFFFFF" onClick={deletePost}/> : null}
-    </Post>
+    <>
+      <Post>
+        <LikePictureContainer>
+          <img
+            src={pictureUrl}
+            alt={username && `${username}'s profile`}
+            onClick={selectUser}
+          />
+          <LikeContainer>
+            <AddLike postId={id}></AddLike>
+          </LikeContainer>
+        </LikePictureContainer>
+        <PostDataContainer>
+          <h3>{username}</h3>
+          <p>{description && <HashtagCard text={description} />}</p>
+          <MetaData metadata={metadata} />
+        </PostDataContainer>
+        {settings === true ? <BsPencilFill style={{ position: "absolute", right: "60px", top: "15px"}} fontSize="20px" color="#FFFFFF" /> : null}
+        {settings === true ? <IoMdTrash style={{ position: "absolute", right: "20px", top: "15px"}} fontSize="25px" color="#FFFFFF" onClick={deletePost}/> : null}
+      </Post>
+    </>
   );
 
   function AddLike() {
