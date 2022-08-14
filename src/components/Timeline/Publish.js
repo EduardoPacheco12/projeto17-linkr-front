@@ -3,14 +3,14 @@ import { useContext, useEffect, useState } from "react";
 import { useAxios } from "../../hooks/useAxios";
 import { useNavigate } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
-import DataContext from "../../context/DataContext";
+import PostContext from "../../context/PostContext";
 
 function Publish() {
   const [config, setConfig] = useState({ method: "", path: "", config: null });
   const [link, setLink] = useState("");
   const [description, setDescription] = useState("");
-  const { contextData, setContextData } = useContext(DataContext);
-  const { token, pictureUrl } = useLocalstorage({ key: "linkrToken" });
+  const { setNewPost } = useContext(PostContext);
+  const { token, pictureUrl, username } = useLocalstorage({ key: "linkrToken" });
   const { response, loading, error } = useAxios(config);
   const navigate = useNavigate();
 
@@ -21,13 +21,9 @@ function Publish() {
     }
 
     if (response !== null) {
-      const newData = [response.data, ...contextData];
-      if(newData.length > 20) {
-        newData.pop();
-      }
       setLink("");
       setDescription("");
-      setContextData(newData);
+      setNewPost(response.data);
     }
   }, [response, loading, token]);
 
@@ -69,7 +65,7 @@ function Publish() {
 
   return (
     <Container>
-      <img src={pictureUrl} alt="foca" />
+      <img src={pictureUrl} alt={ username } />
       <Form onSubmit={(e) => submit(e)}>
         <h3>What are you going to share today?</h3>
         <input
