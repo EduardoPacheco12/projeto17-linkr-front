@@ -16,9 +16,8 @@ export function useLocalstorage({ key = 'linkrToken', value = ''}) {
     if(value !== '') {
       setLocalData(value);
       localStorage.setItem(key, JSON.stringify(value));
-    } else {
-    }
-  }, [localData, value])
+    } 
+  }, [key, localData, value])
   
   return localData
 }

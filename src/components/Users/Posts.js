@@ -10,8 +10,37 @@ import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import PostContext from "../../context/PostContext";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+
+function AddLike({ addLiked, liked, likesC }) {
+  if (liked)
+    return (
+      <>
+        <FaHeart
+          color={"red"}
+          fontSize={"20px"}
+          onClick={() => {
+            addLiked();
+          }}
+        />
+        <p>{likesC} likes</p>
+      </>
+    );
+  return (
+    <>
+      <FaRegHeart
+        color={"while"}
+        fontSize={"20px"}
+        onClick={() => {
+          addLiked();
+        }}
+      />
+      <p>{likesC} likes</p>
+    </>
+  );
+}
 
 function PostCard({ props }) {
   const {
@@ -32,11 +61,12 @@ function PostCard({ props }) {
     path: "",
     config: [null, { headers: { Authorization: `Bearer ${token}` } }],
   });
-  const [liked, setLiked] = useState(usersWhoLiked?.includes(userId) ? true: false || false);
+  const [liked, setLiked] = useState(
+    usersWhoLiked?.includes(userId) ? true : false || false
+  );
   const [likesC, setLike] = useState(Number(likes) || 0);
   const { response, loading, error } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
-  let settings;
 
   useEffect(() => {
     if (response !== null) {
@@ -57,6 +87,13 @@ function PostCard({ props }) {
     });
   }, [response]);
 
+  function addLiked() {
+    const data = { ...config };
+    data.path = `likes/${id}`;
+    data.method = "post";
+    setConfig(data);
+  }
+
   if (
     location.pathname.includes("users") &&
     searchedUser.username !== username
@@ -64,11 +101,26 @@ function PostCard({ props }) {
     setSearchedUser({ username, pictureUrl });
   }
 
-  if (userId === creatorId) {
-    settings = true;
-  } else {
-    settings = false;
-  }
+  const AuxButtons = () => {
+    if (userId === creatorId) {
+      return (
+        <>
+          <BsPencilFill
+            style={{ position: "absolute", right: "60px", top: "15px" }}
+            fontSize="20px"
+            color="#FFFFFF"
+          />
+          <IoMdTrash
+            style={{ position: "absolute", right: "20px", top: "15px" }}
+            fontSize="25px"
+            color="#FFFFFF"
+            onClick={deletePost}
+          />
+        </>
+      );
+    }
+    return <></>;
+  };
 
   function selectUser() {
     setSearchedUser({ username, pictureUrl });
@@ -86,7 +138,7 @@ function PostCard({ props }) {
           onClick={selectUser}
         />
         <LikeContainer>
-          <AddLike postId={id}></AddLike>
+          <AddLike postId={id} addLiked={addLiked} likesC={likesC}></AddLike>
         </LikeContainer>
       </LikePictureContainer>
       <PostDataContainer>
@@ -94,63 +146,9 @@ function PostCard({ props }) {
         <p>{description && <HashtagCard text={description} />}</p>
         <MetaData metadata={metadata} />
       </PostDataContainer>
-      {settings === true ? (
-        <BsPencilFill
-          style={{ position: "absolute", right: "60px", top: "15px" }}
-          fontSize="20px"
-          color="#FFFFFF"
-        />
-      ) : null}
-      {settings === true ? (
-        <IoMdTrash
-          style={{ position: "absolute", right: "20px", top: "15px" }}
-          fontSize="25px"
-          color="#FFFFFF"
-          onClick={deletePost}
-        />
-      ) : null}
+      <AuxButtons />
     </Post>
   );
-
-  function AddLike() {
-    function addLiked() {
-      const data = { ...config };
-      data.path = `likes/${id}`;
-      data.method = "post";
-      setConfig(data);
-    }
-
-    const LikeHeart = () =>
-    liked ? (
-        <>
-          <FaHeart
-            color="red"
-            fontSize={"20px"}
-            onClick={() => {
-              addLiked();
-            }}
-          />
-          <p>{likesC} likes</p>
-        </>
-      ) : (
-        <>
-          <FaRegHeart
-            color={"while"}
-            fontSize={"20px"}
-            onClick={() => {
-              addLiked();
-            }}
-          />
-          <p>{likesC} likes</p>
-        </>
-      );
-
-    return (
-      <>
-        <LikeHeart />
-      </>
-    );
-  }
 }
 
 export function SkeletonLoading() {
@@ -204,7 +202,7 @@ function Posts({ path, method }) {
     if (contextData !== null) {
       setData(contextData);
       setContextData(null);
-      setNewPost(undefined)
+      setNewPost(undefined);
     }
 
     setConfig({
@@ -229,9 +227,11 @@ function Posts({ path, method }) {
       if (data.length === 0) {
         return <h3>There are no posts yet</h3>;
       } else {
-        return data?.map((item, index) => (
-          <PostCard key={index} id={item.id} props={item} />
-        )) || <SkeletonLoading />;
+        return (
+          data?.map((item, index) => (
+            <PostCard key={index} id={item.id} props={item} />
+          )) || <SkeletonLoading />
+        );
       }
     }
     return <SkeletonLoading />;
