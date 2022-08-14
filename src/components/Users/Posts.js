@@ -187,7 +187,7 @@ function Posts({ path, method }) {
   const [config, setConfig] = useState({
     method: method,
     path: path,
-    config: { headers: { Authorization: `Bearer ${token}` } },
+    config: [{ headers: { Authorization: `Bearer ${token}` } }],
   });
   const { response, error, loading } = useAxios(config);
   const [data, setData] = useState(null);

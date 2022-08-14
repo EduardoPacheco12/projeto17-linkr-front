@@ -9,11 +9,8 @@ import LogoutContext from "../../context/LogoutContext";
 
 function Timeline() {
   const { pathname } = useLocation();
-  const [isTimeline, setIsTimeline] = useState(pathname === "/timeline" ? true : false);
+  const [isTimeline, ] = useState(pathname === "/timeline" ? true : false);
   const { setLogout } = useContext(LogoutContext);
-
-  useEffect(() => {
-  }, [isTimeline, pathname]);
 
   const Title = () =>
     isTimeline ? (
