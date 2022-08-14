@@ -77,7 +77,7 @@ export default function Login() {
           <input
             type="email"
             placeholder="e-mail"
-            disabled={loading === true ? true : false}
+            disabled={loading ? true : false}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             required
@@ -86,13 +86,13 @@ export default function Login() {
             type="password"
             placeholder="password"
             max="20"
-            disabled={loading === true ? true : false}
+            disabled={loading ? true : false}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
           />
-          <button type="submit" disabled={loading === true ? true : false}>
-            {loading === true ? (
+          <button type="submit" disabled={loading ? true : false}>
+            {loading ? (
               <ThreeDots color="#FFFFFF" height={80} width={80} />
             ) : (
               "Log In"
