@@ -2,7 +2,6 @@ import styled from "styled-components";
 import DataContext from "../../context/DataContext";
 import SearchedUserContext from "../../context/SearchedUserContext";
 import PostContext from "../../context/PostContext";
-import ModalContext from "../../context/ModalContext";
 import { useContext, useEffect, useState } from "react";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useAxios } from "../../hooks/useAxios";
@@ -18,30 +17,25 @@ function Posts({ path, method }) {
 
   const { response, error, loading } = useAxios(config);
   const [data, setData] = useState(null);
-  const { contextData, setContextData } = useContext(DataContext);
+  const { setContextData } = useContext(DataContext);
   const { userId } = useContext(SearchedUserContext);
-  const { newPost, setNewPost, setPostId } = useContext(PostContext);
+  const { newPost, setNewPost } = useContext(PostContext);
 
   useEffect(() => {
     handleError();
-    if (contextData !== null) {
-      setData(contextData);
-      setContextData(null);
-      setNewPost(undefined);
+    // if (contextData !== null) {
+    //   setData(contextData);
+    //   setContextData(null);
+    //   setNewPost(undefined);
+    // } 
+    if (data !== null) {
+      setContextData(data);
+      setNewPost(false);
     } 
-    // else {
-    //   setConfig({
-    //     method: 'get',
-    //     path: '/timeline',
-    //     config: [{ headers: { Authorization: `Bearer ${token}` } }],
-    //   })
-    // }
     if (response !== null && !loading) {
-      setData(response.data);
-      setContextData(response.data);
-      setPostId(response.data.id)
+      const data = response.data
+      setData(data);
     }
-
     setConfig({
       method: "",
       path: "",
