@@ -165,7 +165,13 @@ export function PostCard({ props }) {
     );
 
   return (
-    <Post>
+    <>
+    {
+      id === null
+      ?
+      <h3>There are no posts yet</h3>
+      :
+      <Post>
       <LikePictureContainer>
         <img
           src={pictureUrl}
@@ -188,6 +194,8 @@ export function PostCard({ props }) {
         <MetaData metadata={metadata} />
       </PostDataContainer>
     </Post>
+    }
+    </>
   );
 }
 
