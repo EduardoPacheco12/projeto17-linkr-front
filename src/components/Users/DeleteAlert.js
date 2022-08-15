@@ -38,9 +38,7 @@ export default function DeleteAlert() {
     config: [{ headers: { Authorization: `Bearer ${token}` } }, null],
   });
   const { response, loading, error } = useAxios(config);
-  console.log(response);
-  console.log(loading);
-  console.log(error);
+
   useEffect(() => {
     if(response !== null) {
       setModalLoading(false);

@@ -5,7 +5,6 @@ import DataContext from "../../context/DataContext";
 import { useState, useContext, useEffect } from "react";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
-import DataContext from "../../context/DataContext";
 
 function Navbar() {
   const { pathname } = useLocation();
