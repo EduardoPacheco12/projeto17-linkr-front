@@ -55,7 +55,7 @@ function Posts({ path, method }) {
 
   function TimelineData() {
     if (data !== null && !loading) {
-      if (data.length === 0) {
+      if (data?.length === 0) {
         return <h3>There are no posts yet</h3>;
       } else {
         return (

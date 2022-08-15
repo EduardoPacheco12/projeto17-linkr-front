@@ -69,7 +69,7 @@ export function PostCard({ props }) {
     nameWhoLiked,
   } = props;
   const navigate = useNavigate();
-  const location = useLocation();
+  const { pathname } = useLocation();
   const { setShowModal } = useContext(ModalContext);
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
   const [config, setConfig] = useState({
@@ -93,6 +93,10 @@ export function PostCard({ props }) {
       path: "",
       config: [null, { headers: { Authorization: `Bearer ${token}` } }],
     });
+
+    if (pathname?.includes("users") && searchedUser.username !== username) {
+      setSearchedUser({ username, pictureUrl });
+    }
   }, [response]);
 
   function responseFromLike() {
@@ -115,13 +119,6 @@ export function PostCard({ props }) {
     data.method = "post";
     ReactTooltip.rebuild();
     setConfig(data);
-  }
-
-  if (
-    location.pathname.includes("users") &&
-    searchedUser.username !== username
-  ) {
-    setSearchedUser({ username, pictureUrl });
   }
 
   function selectUser() {
