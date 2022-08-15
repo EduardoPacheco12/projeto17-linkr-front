@@ -12,8 +12,9 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import ReactTooltip from 'react-tooltip';
 
-function AddLike({ addLiked, liked, likesC }) {
+function AddLike({ addLiked, liked, nameWhoLiked , postId}) {
   if (liked)
     return (
       <>
@@ -24,7 +25,10 @@ function AddLike({ addLiked, liked, likesC }) {
             addLiked();
           }}
         />
-        <p>{likesC} likes</p>
+        <p data-tip='tooltip' data-for={`postLikes-${postId}`}>
+        {`${nameWhoLiked.length} ${nameWhoLiked.length === 1 ? "like" : "likes"}`}
+        </p>
+      {nameWhoLiked.length > 0 && <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} like={liked} />}
       </>
     );
   return (
@@ -36,8 +40,11 @@ function AddLike({ addLiked, liked, likesC }) {
           addLiked();
         }}
       />
-      <p>{likesC} likes</p>
-    </>
+      <p data-tip='tooltip' data-for={`postLikes-${postId}`}>
+        {`${nameWhoLiked.length} ${nameWhoLiked.length === 1 ? "like" : "likes"}`}
+        </p>
+      {nameWhoLiked.length > 0 && <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} like={liked} />}
+      </>
   );
 }
 
@@ -51,6 +58,7 @@ export function PostCard({ props }) {
     description,
     metadata,
     usersWhoLiked,
+    nameWhoLiked
   } = props;
   const navigate = useNavigate();
   const location = useLocation();
@@ -91,6 +99,7 @@ export function PostCard({ props }) {
     const data = { ...config };
     data.path = `likes/${id}`;
     data.method = "post";
+    ReactTooltip.rebuild();
     setConfig(data);
   }
 
@@ -140,7 +149,7 @@ export function PostCard({ props }) {
           onClick={selectUser}
         />
         <LikeContainer>
-          <AddLike addLiked={addLiked} likesC={likesC} liked={liked}></AddLike>
+          <AddLike addLiked={addLiked} nameWhoLiked={nameWhoLiked} liked={liked} postId={id}></AddLike>
         </LikeContainer>
       </LikePictureContainer>
       <PostDataContainer>
@@ -150,6 +159,28 @@ export function PostCard({ props }) {
       </PostDataContainer>
       <AuxButtons />
     </Post>
+  );
+}
+
+const ToolTip = ({ postId, nameWhoLiked, like }) => {
+  return (
+    <ReactTooltip
+      id={`postLikes-${postId}`}
+      place="bottom"
+      effect="solid"
+      backgroundColor={"rgba(255, 255, 255, 0.9)"}
+      textColor={"#505050"}
+    >
+      {
+        (nameWhoLiked.length === 1 && like) ? <span>You</span>
+          : (nameWhoLiked.length === 1 && !like) ? <span>{nameWhoLiked[0]}</span>
+            : (nameWhoLiked.length === 2 && like) ? <span>You and {nameWhoLiked[0]}</span>
+              : (nameWhoLiked.length === 2 && !like) ? <span>{nameWhoLiked[0]} and {nameWhoLiked[1]}</span>
+                : (nameWhoLiked.length > 2 && like) ? <span>You, {nameWhoLiked[0]} and other {nameWhoLiked.length - 2} people</span>
+                  : (nameWhoLiked.length > 2 && !like) ? <span>{nameWhoLiked[0]}, {nameWhoLiked[1]} and other {nameWhoLiked.length - 2} people</span>
+                    : ''
+      }
+    </ReactTooltip>
   );
 }
 
