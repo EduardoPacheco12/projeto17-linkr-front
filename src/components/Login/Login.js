@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import GlobalStyle from "../../assets/globalStyles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
@@ -14,6 +14,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState('');
+  const { setUserData } = useContext(DataContext)
   const { token: userToken } = useLocalstorage({ key: 'linkrToken', value: token })
   const { response, loading, error } = useAxios(config);
 
@@ -21,6 +22,7 @@ export default function Login() {
     handleError();
     if(response !== null && !loading) {
       setToken(response.data);
+      setUserData(response.data)
       setEmail("");
       setPassword("");
     }
