@@ -3,6 +3,8 @@ import HashtagCard from "../shared/HashtagCard";
 import SearchedUserContext from "../../context/SearchedUserContext";
 import ModalContext from "../../context/ModalContext";
 import MetaData from "../Timeline/Metadata";
+import ReactTooltip from 'react-tooltip';
+import PostContext from "../../context/PostContext";
 import { IoMdTrash } from "react-icons/io";
 import { BsPencilFill } from "react-icons/bs";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -12,7 +14,6 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import ReactTooltip from 'react-tooltip';
 
 function AddLike({ addLiked, liked, nameWhoLiked , postId}) {
   if (liked)
@@ -75,8 +76,19 @@ export function PostCard({ props }) {
   const [likesC, setLike] = useState(Number(likes) || 0);
   const { response, loading, error } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
+  const { postId } = useContext(PostContext)
+
 
   useEffect(() => {
+    responseFromLike();
+    setConfig({
+      method: "",
+      path: "",
+      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
+    });
+  }, [response]);
+
+  function responseFromLike() {
     if (response !== null) {
       if (response.status === 201) {
         setLiked(true);
@@ -88,13 +100,8 @@ export function PostCard({ props }) {
         setLike(Number(likesC - 1));
       }
     }
-    setConfig({
-      method: "",
-      path: "",
-      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
-    });
-  }, [response]);
-
+  }
+  
   function addLiked() {
     const data = { ...config };
     data.path = `likes/${id}`;

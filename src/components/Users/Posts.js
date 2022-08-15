@@ -20,7 +20,7 @@ function Posts({ path, method }) {
   const [data, setData] = useState(null);
   const { contextData, setContextData } = useContext(DataContext);
   const { userId } = useContext(SearchedUserContext);
-  const { newPost, setNewPost } = useContext(PostContext);
+  const { newPost, setNewPost, setPostId } = useContext(PostContext);
 
   useEffect(() => {
     handleError();
@@ -39,6 +39,7 @@ function Posts({ path, method }) {
     if (response !== null && !loading) {
       setData(response.data);
       setContextData(response.data);
+      setPostId(response.data.id)
     }
 
     setConfig({
