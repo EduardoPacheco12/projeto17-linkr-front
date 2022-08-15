@@ -60,6 +60,7 @@ const MenuContent = styled.div`
   align-items: center;
   width: 1440px;
   height: 82px;
+  position: relative;
 `;
 
 const BrandName = styled.h1`

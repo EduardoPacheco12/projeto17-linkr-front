@@ -1,16 +1,16 @@
 import { useContext } from "react";
 import { useNavigate } from "react-router-dom";
 import styled from "styled-components";
-import LogoutContext from "../../context/LogoutContext";
+import DataContext from "../../context/DataContext";
 
 function LogoutButton() {
     const navigate = useNavigate();
-    const { setLogout } = useContext(LogoutContext);
+    const { setLogout } = useContext(DataContext);
 
     function returnLoginScreen() {
         localStorage.removeItem("linkrToken");
-        navigate("/");
         setLogout(false);
+        navigate("/");
     }
 
     return (
@@ -30,8 +30,9 @@ const Box = styled.div `
     background-color: #171717;
     justify-content: center;
     align-items: center;
-    border-radius: 0px 0px 0px 20px;
-    z-index:1;
+    border-radius: 0px 0px 20px 20px;
+    z-index:2;
+
     p {
         font-family: 'Lato';
         font-weight: 700;
@@ -42,6 +43,10 @@ const Box = styled.div `
     }
     &:hover {
       cursor: pointer;
+    }
+
+    @media screen and (max-width: 900px){
+      border-radius: 0px 0px 0px 20px;
     }
 `;
 
