@@ -1,4 +1,4 @@
-import { useContext } from "react";
+import { useContext, useEffect } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import Posts from "./Posts";
@@ -11,9 +11,12 @@ function UsersView() {
   const { searchedUser, userId, setUserId } = useContext(SearchedUserContext);
   const { setLogout } = useContext(LogoutContext);
 
-  if(userId !== id) {
-    setUserId(id);
-  }
+  useEffect(() => {
+    if(userId !== id) {
+      setUserId(id);
+    }
+  }, [userId])
+
 
   function hideLogout() {
     setLogout(false);

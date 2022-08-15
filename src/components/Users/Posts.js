@@ -17,27 +17,31 @@ function Posts({ path, method }) {
 
   const { response, error, loading } = useAxios(config);
   const [data, setData] = useState(null);
-  const { contextData, setContextData } = useContext(DataContext);
+  const { setContextData } = useContext(DataContext);
   const { userId } = useContext(SearchedUserContext);
   const { newPost, setNewPost } = useContext(PostContext);
 
   useEffect(() => {
     handleError();
-
+    // if (contextData !== null) {
+    //   setData(contextData);
+    //   setContextData(null);
+    //   setNewPost(undefined);
+    // } 
+    if (data !== null) {
+      setContextData(data);
+      setNewPost(false);
+    } 
     if (response !== null && !loading) {
-      setData(response.data);
-      setContextData(response.data);
-      setNewPost(false)
+      const data = response.data
+      setData(data);
     }
-    if (contextData !== null) {
-      setData(contextData);
-      setContextData(null);
-    }
-
-    if(!loading && (path !== config.path || newPost)) {
-      setConfig({ ...config, path, method })
-    }
-  }, [ response, loading, userId, newPost ]);
+    setConfig({
+      method: "",
+      path: "",
+      config: { headers: { Authorization: `Bearer ${token}` } },
+    });
+  }, [response, loading, userId]);
 
   function handleError() {
     if (!loading) {
@@ -51,7 +55,7 @@ function Posts({ path, method }) {
 
   function TimelineData() {
     if (data !== null && !loading) {
-      if (data.length === 0) {
+      if (data?.length === 0) {
         return <h3>There are no posts yet</h3>;
       } else {
         return (
@@ -86,7 +90,5 @@ const PostsList = styled.ul`
     width: 100%;
   }
 `;
-
-
 
 export default Posts;
