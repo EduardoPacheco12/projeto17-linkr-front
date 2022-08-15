@@ -1,16 +1,18 @@
 import styled from "styled-components";
 import Publish from "./Publish";
 import Trends from "../Users/Trends";
+import Posts from "../Users/Posts";
+import LogoutContext from "../../context/LogoutContext";
 import { useContext, useEffect, useState } from "react";
 import { useLocation } from "react-router-dom";
 import { PostTrendContainer } from "../Users/UsersView";
-import Posts from "../Users/Posts";
-import LogoutContext from "../../context/LogoutContext";
 
 function Timeline() {
   const { pathname } = useLocation();
-  const [isTimeline, ] = useState(pathname === "/timeline" ? true : false);
+  const [isTimeline, setIsTimeline] = useState(pathname === "/timeline" ? true : false);
   const { setLogout } = useContext(LogoutContext);
+
+  useEffect(() => setIsTimeline(pathname === "/timeline" ? true : false) , [pathname]);
 
   const Title = () =>
     isTimeline ? (

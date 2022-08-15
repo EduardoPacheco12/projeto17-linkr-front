@@ -1,17 +1,20 @@
-import { useState, useContext } from "react";
 import styled from "styled-components";
 import SearchUser from "./SearchUser";
 import LogoutButton from "./LogoutButton";
+import DataContext from "../../context/DataContext";
+import { useState, useContext, useEffect } from "react";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
-import { useLocalstorage } from "../../hooks/useLocalstorage";
 import DataContext from "../../context/DataContext";
 
 function Navbar() {
   const { pathname } = useLocation();
-  const [ showNavbar, ] = useState((pathname === "/" || pathname === "/sign-up") ? false : true);
-  const { logout, setLogout } = useContext(DataContext);
-  const { pictureUrl } = useLocalstorage({ key: "linkrToken" });
+  const { logout, setLogout, userData } = useContext(DataContext);
+  const [showNavbar, setShowNavbar] = useState((pathname === "/" || pathname === "/sign-up") ? false : true);
+
+  useEffect(() => {
+    setShowNavbar((pathname === "/" || pathname === "/sign-up") ? false : true)
+  }, [pathname, userData]);
 
   function showLogout() {
     setLogout(!logout); 
@@ -24,7 +27,7 @@ function Navbar() {
         <BrandName>linkr</BrandName>
         <UserMenu onClick={showLogout}>
           { !logout ? <AiOutlineDown fontSize="30px" color="#FFFFFF" /> : <AiOutlineUp fontSize="30px" color="#FFFFFF" />}
-          <img src={pictureUrl} alt="foca" />
+          <img src={userData?.pictureUrl} alt="foca" />
         </UserMenu>
         { !logout ? <></> : <LogoutButton/> }
       </MenuContent>

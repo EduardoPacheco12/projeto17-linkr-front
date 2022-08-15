@@ -1,7 +1,6 @@
 import { useState, useEffect } from "react";
 
 export function useLocalstorage({ key = 'linkrToken', value = ''}) {
-
   const [localData, setLocalData] = useState(() => getLocalData());
   
   function getLocalData() {
@@ -14,10 +13,11 @@ export function useLocalstorage({ key = 'linkrToken', value = ''}) {
 
   useEffect(() => {
     if(value !== '') {
-      setLocalData(value);
       localStorage.setItem(key, JSON.stringify(value));
-    } 
-  }, [key, localData, value])
+      setLocalData({...value});
+    }
+    // eslint-disable-next-line
+  }, [value])
   
   return localData
 }
