@@ -137,7 +137,7 @@ export function PostCard({ props }) {
 
   const CreatorButtons = () => (
     <div>
-      <h3>{username}</h3>
+      <h3 onClick={selectUser}>{username}</h3>
       {userId === creatorId ? (
         <EditDeleteButtons>
           <BsPencilFill
@@ -341,6 +341,7 @@ const PostDataContainer = styled.div`
     width: 100%;
     font-size: 20px;
     word-wrap: break-word;
+    cursor: pointer;
   }
 
   p {
