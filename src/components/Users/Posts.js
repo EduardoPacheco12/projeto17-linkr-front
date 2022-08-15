@@ -28,7 +28,14 @@ function Posts({ path, method }) {
       setData(contextData);
       setContextData(null);
       setNewPost(undefined);
-    }
+    } 
+    // else {
+    //   setConfig({
+    //     method: 'get',
+    //     path: '/timeline',
+    //     config: [{ headers: { Authorization: `Bearer ${token}` } }],
+    //   })
+    // }
     if (response !== null && !loading) {
       setData(response.data);
       setContextData(response.data);
