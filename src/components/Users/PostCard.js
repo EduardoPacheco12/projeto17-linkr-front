@@ -3,6 +3,9 @@ import HashtagCard from "../shared/HashtagCard";
 import SearchedUserContext from "../../context/SearchedUserContext";
 import ModalContext from "../../context/ModalContext";
 import MetaData from "../Timeline/Metadata";
+import ReactTooltip from "react-tooltip";
+import PostContext from "../../context/PostContext";
+import EditPostCard from "./EditPostCard";
 import { IoMdTrash } from "react-icons/io";
 import { BsPencilFill } from "react-icons/bs";
 import { FaRegHeart, FaHeart } from "react-icons/fa";
@@ -12,11 +15,8 @@ import { useNavigate, useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import ReactTooltip from 'react-tooltip';
-import EditPostCard from "./EditPostCard";
-import PostContext from "../../context/PostContext";
 
-function AddLike({ addLiked, liked, nameWhoLiked , postId}) {
+function AddLike({ addLiked, liked, nameWhoLiked, postId, likes }) {
   if (liked)
     return (
       <>
@@ -27,10 +27,12 @@ function AddLike({ addLiked, liked, nameWhoLiked , postId}) {
             addLiked();
           }}
         />
-        <p data-tip='tooltip' data-for={`postLikes-${postId}`}>
-        {`${nameWhoLiked.length} ${nameWhoLiked.length === 1 ? "like" : "likes"}`}
+        <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
+          {`${likes} ${nameWhoLiked.length === 1 ? "like" : "likes"}`}
         </p>
-      {nameWhoLiked.length > 0 && <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} like={liked} />}
+        {nameWhoLiked.length > 0 && (
+          <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} like={liked} />
+        )}
       </>
     );
   return (
@@ -42,11 +44,15 @@ function AddLike({ addLiked, liked, nameWhoLiked , postId}) {
           addLiked();
         }}
       />
-      <p data-tip='tooltip' data-for={`postLikes-${postId}`}>
-        {`${nameWhoLiked?.length} ${nameWhoLiked?.length === 1 ? "like" : "likes"}`}
-        </p>
-      {nameWhoLiked?.length > 0 && <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} like={liked} />}
-      </>
+      <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
+        {`${nameWhoLiked?.length} ${
+          nameWhoLiked?.length === 1 ? "like" : "likes"
+        }`}
+      </p>
+      {nameWhoLiked?.length > 0 && (
+        <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} like={liked} />
+      )}
+    </>
   );
 }
 
@@ -60,11 +66,11 @@ export function PostCard({ props }) {
     description,
     metadata,
     usersWhoLiked,
-    nameWhoLiked
+    nameWhoLiked,
   } = props;
   const navigate = useNavigate();
-  const location = useLocation();
-  const { showModal, setShowModal } = useContext(ModalContext);
+  const { pathname } = useLocation();
+  const { setShowModal } = useContext(ModalContext);
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
   const [config, setConfig] = useState({
     method: "",
@@ -75,13 +81,25 @@ export function PostCard({ props }) {
     usersWhoLiked?.includes(userId) ? true : false || false
   );
   const [likesC, setLike] = useState(Number(likes) || 0);
-  const [ canEditPost, setCanEditPost ] = useState(false);
-  const { response, loading, error } = useAxios(config);
+  const [canEditPost, setCanEditPost] = useState(false);
+  const { response } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
-  let settings;
 
   useEffect(() => {
+    responseFromLike();
+    setConfig({
+      method: "",
+      path: "",
+      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
+    });
+
+    if (pathname?.includes("users") && searchedUser.username !== username) {
+      setSearchedUser({ username, pictureUrl });
+    }
+  }, [response]);
+
+  function responseFromLike() {
     if (response !== null) {
       if (response.status === 201) {
         setLiked(true);
@@ -93,12 +111,7 @@ export function PostCard({ props }) {
         setLike(Number(likesC - 1));
       }
     }
-    setConfig({
-      method: "",
-      path: "",
-      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
-    });
-  }, [response]);
+  }
 
   function addLiked() {
     const data = { ...config };
@@ -106,19 +119,6 @@ export function PostCard({ props }) {
     data.method = "post";
     ReactTooltip.rebuild();
     setConfig(data);
-  }
-
-  if (
-    location.pathname.includes("users") &&
-    searchedUser.username !== username
-  ) {
-    setSearchedUser({ username, pictureUrl });
-  }
-
-  if(userId === creatorId) {
-    settings = true;
-  } else {
-    settings = false;
   }
 
   function selectUser() {
@@ -135,6 +135,35 @@ export function PostCard({ props }) {
     setCanEditPost(!canEditPost);
   }
 
+  const CreatorButtons = () => (
+    <div>
+      <h3>{username}</h3>
+      {userId === creatorId ? (
+        <EditDeleteButtons>
+          <BsPencilFill
+            style={{ marginRight: "10px" }}
+            fontSize="20px"
+            onClick={editPost}
+          />
+          <IoMdTrash fontSize="25px" onClick={deletePost} />
+        </EditDeleteButtons>
+      ) : (
+        <></>
+      )}
+    </div>
+  );
+
+  const EditPostUI = () =>
+    canEditPost ? (
+      <EditPostCard
+        postDescription={description}
+        postId={id}
+        setCanEditPost={setCanEditPost}
+      />
+    ) : (
+      <p>{description && <HashtagCard text={description} />}</p>
+    );
+
   return (
     <Post>
       <LikePictureContainer>
@@ -144,34 +173,18 @@ export function PostCard({ props }) {
           onClick={selectUser}
         />
         <LikeContainer>
-          <AddLike addLiked={addLiked} nameWhoLiked={nameWhoLiked} liked={liked} postId={id}></AddLike>
+          <AddLike
+            addLiked={addLiked}
+            nameWhoLiked={nameWhoLiked}
+            likes={likesC}
+            liked={liked}
+            postId={id}
+          ></AddLike>
         </LikeContainer>
       </LikePictureContainer>
       <PostDataContainer>
-          <div>
-              <h3>{username}</h3>
-              {
-              settings
-              ?
-              <EditDeleteButtons>
-                <BsPencilFill style={{ marginRight: "10px"}} fontSize="20px" onClick={ editPost } />
-                <IoMdTrash  fontSize="25px" onClick={ deletePost } />
-              </EditDeleteButtons>
-              :
-              <></>
-            }
-          </div>
-          {
-            canEditPost
-            ?
-            <EditPostCard
-              postDescription={ description }
-              postId={ id }
-              setCanEditPost={ setCanEditPost }
-            />
-            :
-            <p>{description && <HashtagCard text={description} />}</p>
-          }
+        <CreatorButtons />
+        <EditPostUI />
         <MetaData metadata={metadata} />
       </PostDataContainer>
     </Post>
@@ -187,18 +200,31 @@ const ToolTip = ({ postId, nameWhoLiked, like }) => {
       backgroundColor={"rgba(255, 255, 255, 0.9)"}
       textColor={"#505050"}
     >
-      {
-        (nameWhoLiked.length === 1 && like) ? <span>You</span>
-          : (nameWhoLiked.length === 1 && !like) ? <span>{nameWhoLiked[0]}</span>
-            : (nameWhoLiked.length === 2 && like) ? <span>You and {nameWhoLiked[0]}</span>
-              : (nameWhoLiked.length === 2 && !like) ? <span>{nameWhoLiked[0]} and {nameWhoLiked[1]}</span>
-                : (nameWhoLiked.length > 2 && like) ? <span>You, {nameWhoLiked[0]} and other {nameWhoLiked.length - 2} people</span>
-                  : (nameWhoLiked.length > 2 && !like) ? <span>{nameWhoLiked[0]}, {nameWhoLiked[1]} and other {nameWhoLiked.length - 2} people</span>
-                    : ''
-      }
+      {nameWhoLiked.length === 1 && like ? (
+        <span>You</span>
+      ) : nameWhoLiked.length === 1 && !like ? (
+        <span>{nameWhoLiked[0]}</span>
+      ) : nameWhoLiked.length === 2 && like ? (
+        <span>You and {nameWhoLiked[0]}</span>
+      ) : nameWhoLiked.length === 2 && !like ? (
+        <span>
+          {nameWhoLiked[0]} and {nameWhoLiked[1]}
+        </span>
+      ) : nameWhoLiked.length > 2 && like ? (
+        <span>
+          You, {nameWhoLiked[0]} and other {nameWhoLiked.length - 2} people
+        </span>
+      ) : nameWhoLiked.length > 2 && !like ? (
+        <span>
+          {nameWhoLiked[0]}, {nameWhoLiked[1]} and other{" "}
+          {nameWhoLiked.length - 2} people
+        </span>
+      ) : (
+        ""
+      )}
     </ReactTooltip>
   );
-}
+};
 
 export function SkeletonLoading() {
   return (
@@ -319,7 +345,7 @@ const PostDataContainer = styled.div`
     overflow: hidden;
     text-overflow: ellipsis;
     display: -webkit-box;
-    -webkit-line-clamp: 3; 
+    -webkit-line-clamp: 3;
     -webkit-box-orient: vertical;
   }
 
@@ -347,5 +373,5 @@ const EditDeleteButtons = styled.div`
   display: flex;
   justify-content: space-between;
   align-items: center;
-  color: #FFFFFF;
+  color: #ffffff;
 `;

@@ -76,16 +76,12 @@ const Content = styled.div`
   h4 {
     font-family: "Oswald";
     font-weight: 700;
-    font-size: 44px;
+    font-size: 43px;
     color: white;
   }
 
   @media screen and (max-width: 950px) {
     width: 100%;
-
-    h4 {
-      margin: 20px 0 0 18px;
-    }
   }
 `;
 
