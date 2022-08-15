@@ -10,7 +10,7 @@ import PostContext from "../../context/PostContext";
 function Trends() {
   const navigate = useNavigate();
   const { token } = useLocalstorage({ key: 'linkrToken' });
-  const [config, setConfig] = useState({ method: 'get', path: 'hashtag', config: { headers: { Authorization: `Bearer ${token}` } }});
+  const [config, ] = useState({ method: 'get', path: 'hashtag', config: { headers: { Authorization: `Bearer ${token}` } }});
   const [data, setData] = useState(null);
   const { response, error, loading } = useAxios(config);
   const { newPost, setNewPost } = useContext(PostContext);

@@ -7,14 +7,12 @@ import MetaData from "../Timeline/Metadata";
 import DataContext from "../../context/DataContext";
 import SearchedUserContext from "../../context/SearchedUserContext";
 import PostContext from "../../context/PostContext";
-import { FaRegHeart } from "react-icons/fa";
-import { useAxios } from "../../hooks/useAxios";
+import ModalContext from "../../context/ModalContext";
 import { useContext, useEffect, useState } from "react";
-import { useNavigate, useLocation } from "react-router-dom";
-import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
-import "react-loading-skeleton/dist/skeleton.css";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { addOrRemoveLike, getLikes } from "../../services/api";
+import { useAxios } from "../../hooks/useAxios";
+import { PostCard, SkeletonLoading } from "./PostCard";
 
 function PostCard({ props }) {
   const navigate = useNavigate();
@@ -151,8 +149,13 @@ export function SkeletonLoading() {
 }
 
 function Posts({ path, method }) {
-  const { token } = useLocalstorage({ key: 'linkrToken' });
-  const [config, setConfig] = useState({ method: method, path: path, config: [{ headers: { Authorization: `Bearer ${token}` } }]});
+  const { token } = useLocalstorage({ key: "linkrToken" });
+  const [config, setConfig] = useState({
+    method: method,
+    path: path,
+    config: [{ headers: { Authorization: `Bearer ${token}` } }],
+  });
+
   const { response, error, loading } = useAxios(config);
   const [data, setData] = useState(null);
   const { contextData, setContextData } = useContext(DataContext);
@@ -192,9 +195,11 @@ function Posts({ path, method }) {
       if (data.length === 0) {
         return <h3>There are no posts yet</h3>;
       } else {
-        return data?.map((item, index) => (
-          <PostCard key={index} id={item.id} props={item}/>
-        ));
+        return (
+          data?.map((item, index) => (
+            <PostCard key={index} id={item.id} props={item} />
+          )) || <SkeletonLoading />
+        );
       }
     }
     return <SkeletonLoading />;

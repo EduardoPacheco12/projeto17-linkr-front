@@ -11,7 +11,6 @@ export const getLikes = async (postId) => {
 }
   
 export const addOrRemoveLike = async (postId, token) => {
-
     const toogleLike = await api.post(`/likes/${postId}`,{}, {headers:{Authorization: `Bearer ${token}`}  });
     return toogleLike;
 }

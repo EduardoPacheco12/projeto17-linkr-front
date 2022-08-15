@@ -1,25 +1,20 @@
-import { useState, useEffect, useContext } from "react";
 import styled from "styled-components";
 import SearchUser from "./SearchUser";
 import LogoutButton from "./LogoutButton";
+import DataContext from "../../context/DataContext";
+import { useState, useContext, useEffect } from "react";
 import { AiOutlineDown, AiOutlineUp } from "react-icons/ai";
 import { useLocation } from "react-router-dom";
-import { useLocalstorage } from "../../hooks/useLocalstorage";
-import LogoutContext from "../../context/LogoutContext";
+import DataContext from "../../context/DataContext";
 
 function Navbar() {
-  const [ showNavbar, setShowNavbar ] = useState(false);
-  const { logout, setLogout } = useContext(LogoutContext);
-  const location = useLocation();
-  const { pictureUrl } = useLocalstorage({ key: "linkrToken" });
+  const { pathname } = useLocation();
+  const { logout, setLogout, userData } = useContext(DataContext);
+  const [showNavbar, setShowNavbar] = useState((pathname === "/" || pathname === "/sign-up") ? false : true);
 
   useEffect(() => {
-    if(location.pathname === "/" || location.pathname === "/sign-up") {
-      setShowNavbar(false)
-    } else {
-      setShowNavbar(true)
-    }
-  }, [location.pathname]);
+    setShowNavbar((pathname === "/" || pathname === "/sign-up") ? false : true)
+  }, [pathname, userData]);
 
   function showLogout() {
     setLogout(!logout); 
@@ -31,10 +26,10 @@ function Navbar() {
       <MenuContent>
         <BrandName>linkr</BrandName>
         <UserMenu onClick={showLogout}>
-          {logout === false ? <AiOutlineDown fontSize="30px" color="#FFFFFF" /> : <AiOutlineUp fontSize="30px" color="#FFFFFF" />}
-          <img src={pictureUrl} alt="foca" />
+          { !logout ? <AiOutlineDown fontSize="30px" color="#FFFFFF" /> : <AiOutlineUp fontSize="30px" color="#FFFFFF" />}
+          <img src={userData?.pictureUrl} alt="foca" />
         </UserMenu>
-        {logout === false ? <></> : <LogoutButton/>}
+        { !logout ? <></> : <LogoutButton/> }
       </MenuContent>
     </MenuContainer>
     <SearchUser />

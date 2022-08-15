@@ -1,6 +1,6 @@
 import styled from "styled-components";
 import GlobalStyle from "../../assets/globalStyles";
-import { useState, useEffect } from "react";
+import { useState, useEffect, useContext } from "react";
 import { Link, useNavigate } from "react-router-dom";
 import { ThreeDots } from "react-loader-spinner";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
@@ -14,6 +14,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState('');
+  const { setUserData } = useContext(DataContext)
   const { token: userToken } = useLocalstorage({ key: 'linkrToken', value: token })
   const { response, loading, error } = useAxios(config);
 
@@ -21,6 +22,7 @@ export default function Login() {
     handleError();
     if(response !== null && !loading) {
       setToken(response.data);
+      setUserData(response.data)
       setEmail("");
       setPassword("");
     }
@@ -77,7 +79,7 @@ export default function Login() {
           <input
             type="email"
             placeholder="e-mail"
-            disabled={loading === true ? true : false}
+            disabled={loading ? true : false}
             onChange={(e) => setEmail(e.target.value)}
             value={email}
             required
@@ -86,13 +88,13 @@ export default function Login() {
             type="password"
             placeholder="password"
             max="20"
-            disabled={loading === true ? true : false}
+            disabled={loading ? true : false}
             onChange={(e) => setPassword(e.target.value)}
             value={password}
             required
           />
-          <button type="submit" disabled={loading === true ? true : false}>
-            {loading === true ? (
+          <button type="submit" disabled={loading ? true : false}>
+            {loading ? (
               <ThreeDots color="#FFFFFF" height={80} width={80} />
             ) : (
               "Log In"
