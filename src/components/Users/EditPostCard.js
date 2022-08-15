@@ -1,16 +1,41 @@
-import { useState } from "react";
+import { useState, useEffect, useRef, useContext } from "react";
 import styled from "styled-components";
 import { useAxios } from "../../hooks/useAxios";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
+import PostContext from "../../context/PostContext";
+import useIsMounted from "../shared/useIsMounted";
 
-function EditPostCard({ postDescription, postId }) {
-  const token = useLocalstorage({ key: 'linkrToken' });
+function EditPostCard({ postDescription, postId, setCanEditPost }) {
+  const { token } = useLocalstorage({ key: 'linkrToken' });
   const [ description, setDescription ] = useState(postDescription);
   const [ config, setConfig ] = useState({ path: "", method: "", config: null});
   const { response, error, loading } = useAxios(config);
+  const { setNewPost } = useContext(PostContext);
+  const textareaRef = useRef(null);
+  const isMountedRef = useIsMounted();
+
+  useEffect(() => {
+    textareaRef.current.focus();
+
+    if(isMountedRef && !loading && response !== null) {
+      setNewPost(true);
+    } else if(error) {
+      alert("Não foi possível salvar as alterações");
+    }
+  }, [ response, loading, error, isMountedRef ]);
+
+  function readKey(e) {
+    const key = e.key;
+
+    if(key.toLowerCase() === "escape") {
+      setCanEditPost(false);
+    } else if(key.toLowerCase() === "enter") {
+      sendDescription();
+    }
+  }
 
   function sendDescription() {
-    const path = `/posts/${ postId }`;
+    const path = `posts/${ postId }`;
 
     const header = {
       headers: {
@@ -19,14 +44,22 @@ function EditPostCard({ postDescription, postId }) {
     };
 
     const body = {
-      description
+      description: description.trim()
     }
 
-    setConfig({ path , method: "patch", config: [header, body]});
+    setConfig({ path , method: "patch", config: [ body, header ]});
   }
 
   return (
-    <PostTextArea value={ description } rows="3" onChange={ e => setDescription(e.target.value) } />
+    <PostTextArea
+      ref={ textareaRef }
+      value={ description }
+      disabled={ loading }
+      rows="3"
+      onChange={ e => setDescription(e.target.value) }
+      onKeyUp={ readKey }
+      onFocus={(e)=> e.currentTarget.setSelectionRange(description.length, description.length)}
+    />
   );
 }
 
@@ -47,6 +80,11 @@ const PostTextArea = styled.textarea`
   -moz-box-shadow: none;
   box-shadow: none;
   resize: none;
+
+  :disabled {
+    background-color: #C9C9C9;
+    border: 1px solid #A84E32;
+  }
 
   ::-webkit-scrollbar {
     width: 10px;

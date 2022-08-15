@@ -17,7 +17,7 @@ export default function App() {
   const [ searchedUser, setSearchedUser ] = useState({});
   const [ userId, setUserId ] = useState(null);
   const [logout, setLogout] = useState(false);
-  const [ newPost, setNewPost ] = useState(undefined);
+  const [ newPost, setNewPost ] = useState(false);
 
   return (
     <SearchedUserContext.Provider value={{ searchedUser, setSearchedUser, userId, setUserId}} >

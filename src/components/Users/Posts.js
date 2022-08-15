@@ -66,18 +66,32 @@ function PostCard({ props }) {
         </LikeContainer>
       </LikePictureContainer>
       <PostDataContainer>
-        <h3>{username}</h3>
+        <div>
+          <h3>{username}</h3>
+          {
+            settings
+            ?
+            <EditDeleteButtons>
+              <BsPencilFill style={{ marginRight: "10px"}} fontSize="20px" onClick={ editPost } />
+              <IoMdTrash  fontSize="25px" onClick={ deletePost } />
+            </EditDeleteButtons>
+            :
+            <></>
+          }
+        </div>
         {
           canEditPost
           ?
-          <EditPostCard postDescription={ description } postId={ id } />
+          <EditPostCard
+            postDescription={ description }
+            postId={ id }
+            setCanEditPost={ setCanEditPost }
+          />
           :
           <p>{description && <HashtagCard text={description} />}</p>
         }
         <MetaData metadata={metadata} />
       </PostDataContainer>
-      {settings === true ? <BsPencilFill style={{ position: "absolute", right: "60px", top: "15px"}} fontSize="20px" color="#FFFFFF" onClick={ editPost } /> : null}
-      {settings === true ? <IoMdTrash style={{ position: "absolute", right: "20px", top: "15px"}} fontSize="25px" color="#FFFFFF" onClick={deletePost} /> : null}
     </Post>
   );
 
@@ -147,20 +161,21 @@ function Posts({ path, method }) {
 
   useEffect(() => {
     handleError();
+
     if (response !== null && !loading) {
       setData(response.data);
       setContextData(response.data);
+      setNewPost(false)
     }
     if (contextData !== null) {
       setData(contextData);
       setContextData(null);
-      setNewPost(undefined)
     }
 
-    if(path !== config.path || newPost !== undefined) {
+    if(!loading && (path !== config.path || newPost)) {
       setConfig({ ...config, path, method })
     }
-  }, [response, loading, userId, newPost ]);
+  }, [ response, loading, userId, newPost ]);
 
   function handleError() {
     if (!loading) {
@@ -210,6 +225,7 @@ const PostsList = styled.ul`
 
 const Post = styled.li`
   display: flex;
+  justify-content: space-around;
   width: 100%;
   flex-grow: 1;
   border-radius: 16px;
@@ -220,6 +236,7 @@ const Post = styled.li`
   position: relative;
 
   @media screen and (max-width: 900px) {
+    width: 100vw;
     border-radius: 0;
     padding: 10px 0 14px 0;
   }
@@ -268,23 +285,37 @@ const LikeContainer = styled.div`
 
 const PostDataContainer = styled.div`
   display: flex;
+  width: 80%;
   height: 100%;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;
   padding: 0 20px;
 
-  h3 {
+  > div {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
     width: 100%;
-    font-size: 20px;
   }
 
+  div > h3 {
+    width: 100%;
+    font-size: 20px;
+    word-wrap: break-word;
+  }
+  
   p {
     width: 100%;
     font-size: 18px;
     margin: 18px 0 16px 0;
     color: #b7b7b7;
     font-weight: 300;
+    word-wrap: break-word;
+    overflow: hidden;
+   text-overflow: ellipsis;
+   display: -webkit-box;
+   -webkit-line-clamp: 3; 
+   -webkit-box-orient: vertical;
   }
 
   @media screen and (max-width: 900px) {
@@ -305,6 +336,13 @@ const PostDataContainer = styled.div`
       cursor: pointer;
     }
   }
+`;
+
+const EditDeleteButtons = styled.div`
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  color: #FFFFFF;
 `;
 
 export default Posts;

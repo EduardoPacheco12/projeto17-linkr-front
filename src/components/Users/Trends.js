@@ -1,10 +1,11 @@
 import styled from "styled-components";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
-import { useEffect, useState } from "react";
+import { useEffect, useState, useContext } from "react";
 import { useAxios } from "../../hooks/useAxios";
 import { useNavigate } from "react-router-dom";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import PostContext from "../../context/PostContext";
 
 function Trends() {
   const navigate = useNavigate();
@@ -12,13 +13,25 @@ function Trends() {
   const [config, setConfig] = useState({ method: 'get', path: 'hashtag', config: { headers: { Authorization: `Bearer ${token}` } }});
   const [data, setData] = useState(null);
   const { response, error, loading } = useAxios(config);
+  const { newPost, setNewPost } = useContext(PostContext);
 
   useEffect(() => {
+
     handleError();
     if(response !== null) {
       setData(response.data);
-    } 
-  }, [response, loading])
+      setNewPost(false);
+    }
+
+    if(newPost && !loading) {
+      setConfig(
+        {
+          method: 'get',
+          path: 'hashtag',
+          config: { headers: { Authorization: `Bearer ${token}` } }
+        });
+    }
+  }, [ response, loading, newPost ])
 
   function handleError() {
     if (!loading) {
