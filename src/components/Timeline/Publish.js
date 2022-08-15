@@ -23,7 +23,7 @@ function Publish() {
     if (response !== null) {
       setLink("");
       setDescription("");
-      setNewPost(response.data);
+      setNewPost(true);
     }
   }, [response, loading, token]);
 
@@ -99,7 +99,6 @@ function Publish() {
 
 const Container = styled.div`
   width: 612px;
-  height: 209px;
   padding: 16px 20px;
   display: flex;
   gap: 18px;
@@ -115,7 +114,10 @@ const Container = styled.div`
   }
 
   @media screen and (max-width: 900px) {
-    width: 100%;
+    width: 100vw;
+    border-radius: 0;
+
+    img { display: none }
   }
 `;
 
@@ -141,14 +143,11 @@ const Form = styled.form`
     padding: 8px 12px;
     width: 100%;
     box-sizing: border-box;
+    border: none;
   }
   input:disabled,
   textarea:disabled {
     border: 1px solid #a84e32;
-  }
-
-  input {
-    height: 30px;
   }
 
   input[type="submit"] {
@@ -168,6 +167,13 @@ const Form = styled.form`
   }
   textarea {
     height: 66px;
+    overflow: auto;
+    outline: none;
+    
+    -webkit-box-shadow: none;
+    -moz-box-shadow: none;
+    box-shadow: none;
+    resize: none;
   }
 `;
 
