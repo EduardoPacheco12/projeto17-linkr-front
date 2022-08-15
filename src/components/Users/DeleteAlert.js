@@ -32,17 +32,18 @@ export default function DeleteAlert() {
   const { postId } = useContext(PostContext);
   const [ modalLoading, setModalLoading] = useState(false);
   const { token } = useLocalstorage({ key: "linkrToken" });
+  const { setNewPost } = useContext(PostContext); 
   const [config, setConfig] = useState({
     method: "",
     path: "",
     config: [{ headers: { Authorization: `Bearer ${token}` } }, null],
   });
   const { response, loading, error } = useAxios(config);
-
   useEffect(() => {
     if(response !== null) {
       setModalLoading(false);
       setShowModal(false);
+      setNewPost(true);
     }
     if(error !== null) {
       alert("Your post cannot be deleted, please try again");
@@ -58,7 +59,7 @@ export default function DeleteAlert() {
     setConfig({ 
       path: `posts/${postId}`, 
       method: "delete", 
-      config: [ { headers: { Authorization: `Bearer ${token}` } }, null] 
+      config: [{ headers: { Authorization: `Bearer ${token}` } }, null] 
     });
   }
 
@@ -82,7 +83,6 @@ export default function DeleteAlert() {
     </ReactModal>
   )
 }
-
 
 const Text = styled.p `
   text-align: center;
