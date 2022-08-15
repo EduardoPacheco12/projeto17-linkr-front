@@ -20,11 +20,12 @@ export default function App() {
   const [ userId, setUserId ] = useState(null);
   const [logout, setLogout] = useState(false);
   const [ newPost, setNewPost ] = useState(undefined);
+  const [ postId, setPostId ] = useState(0);
 
   return (
     <SearchedUserContext.Provider value={{ searchedUser, setSearchedUser, userId, setUserId}} >
       <LogoutContext.Provider value={ { logout, setLogout }} >
-        <PostContext.Provider value={{ newPost, setNewPost }} >
+        <PostContext.Provider value={{ newPost, setNewPost, postId, setPostId }} >
           <ModalContextProvider>
             <DeleteAlert/>
             <BrowserRouter>

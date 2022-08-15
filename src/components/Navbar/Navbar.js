@@ -7,7 +7,6 @@ import { useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import DataContext from "../../context/DataContext";
 
-
 function Navbar() {
   const { pathname } = useLocation();
   const [ showNavbar, ] = useState((pathname === "/" || pathname === "/sign-up") ? false : true);

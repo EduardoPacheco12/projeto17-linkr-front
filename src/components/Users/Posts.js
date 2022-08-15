@@ -9,7 +9,6 @@ import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
-import { useLocalstorage } from "../../hooks/useLocalstorage";
 import PostContext from "../../context/PostContext";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
@@ -57,6 +56,7 @@ function PostCard({ props }) {
   } = props;
   const navigate = useNavigate();
   const { showModal, setShowModal } = useContext(ModalContext);
+  const { setPostId } = useContext(PostContext);
   const location = useLocation();
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
   const [config, setConfig] = useState({
@@ -132,6 +132,7 @@ function PostCard({ props }) {
 
   function deletePost() {
     setShowModal(true);
+    setPostId(id);
   }
 
   return (
@@ -289,6 +290,7 @@ const LikePictureContainer = styled.div`
   justify-content: flex-start;
   min-height: 100%;
   margin-left: 18px;
+  max-width: 15vw;
   box-sizing: border-box;
 
   img {
@@ -328,7 +330,7 @@ const PostDataContainer = styled.div`
   height: 100%;
   flex-direction: column;
   align-items: flex-start;
-  width: 100%;
+  width: 85vw;
   padding: 0 20px;
 
   h3 {
