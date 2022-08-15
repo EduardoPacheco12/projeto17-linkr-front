@@ -27,7 +27,7 @@ export default function App() {
       <LogoutContext.Provider value={ { logout, setLogout }} >
         <PostContext.Provider value={{ newPost, setNewPost, postId, setPostId }} >
           <ModalContextProvider>
-            <DeleteAlert/>
+            <DeleteAlert />
             <BrowserRouter>
             <DataContextProvider >
               <Navbar />
