@@ -11,12 +11,9 @@ import PostContext from "../../context/PostContext";
 export default function DeleteAlert() {
   const customStyles= {
     content: {
-      width: "30vw",
-      height: "26vh",
-      left: "37vw",
-      right: "37vw",
-      top: "40vh",
-      bottom: "40vh",
+      maxWidth: "600px",
+      maxHeight: "264px",
+      margin: "auto",
       backgroundColor: "#333333",
       borderRadius: "25px",
       display: "flex",
@@ -25,6 +22,8 @@ export default function DeleteAlert() {
       alignItems: "center"
     },
     overlay: {
+      display: "flex",
+      alignItems: "center",
       zIndex: 4,
     }
   }
@@ -96,7 +95,14 @@ const Text = styled.p `
 `
 
 const Buttons = styled.div `
+  display: flex;
+  justify-content: space-around;
+  flex-wrap: wrap;
+  width: 80%;
+
   button {
+    margin: 10px;
+    width: 134px;
     border-radius: 5px;
     font-family: 'Lato';
     font-weight: 700;
@@ -106,14 +112,12 @@ const Buttons = styled.div `
 `;
 
 const GoBack = styled.button `
-  margin-right: 7px;
   background-color: #FFFFFF;
   border: 1px solid #FFFFFF;
   color: #1877F2;
 `;
 
 const Delete = styled.button `
-  margin-left: 7px;
   background-color: #1877F2;
   border: 1px solid #1877F2;
   color: #FFFFFF;

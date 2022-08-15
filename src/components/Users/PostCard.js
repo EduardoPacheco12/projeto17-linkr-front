@@ -136,45 +136,53 @@ export function PostCard({ props }) {
   }
 
   return (
-    <Post>
-      <LikePictureContainer>
-        <img
-          src={pictureUrl}
-          alt={username && `${username}'s profile`}
-          onClick={selectUser}
-        />
-        <LikeContainer>
-          <AddLike addLiked={addLiked} nameWhoLiked={nameWhoLiked} liked={liked} postId={id}></AddLike>
-        </LikeContainer>
-      </LikePictureContainer>
-      <PostDataContainer>
-          <div>
-              <h3>{username}</h3>
-              {
-              settings
+    <>
+    {
+      id === null
+      ?
+      <h3>There are no posts yet</h3>
+      :
+      <Post>
+        <LikePictureContainer>
+          <img
+            src={pictureUrl}
+            alt={username && `${username}'s profile`}
+            onClick={selectUser}
+          />
+          <LikeContainer>
+            <AddLike addLiked={addLiked} nameWhoLiked={nameWhoLiked} liked={liked} postId={id}></AddLike>
+          </LikeContainer>
+        </LikePictureContainer>
+        <PostDataContainer>
+            <div>
+                <h3>{username}</h3>
+                {
+                settings
+                ?
+                <EditDeleteButtons>
+                  <BsPencilFill style={{ marginRight: "10px"}} fontSize="20px" onClick={ editPost } />
+                  <IoMdTrash  fontSize="25px" onClick={ deletePost } />
+                </EditDeleteButtons>
+                :
+                <></>
+              }
+            </div>
+            {
+              canEditPost
               ?
-              <EditDeleteButtons>
-                <BsPencilFill style={{ marginRight: "10px"}} fontSize="20px" onClick={ editPost } />
-                <IoMdTrash  fontSize="25px" onClick={ deletePost } />
-              </EditDeleteButtons>
+              <EditPostCard
+                postDescription={ description }
+                postId={ id }
+                setCanEditPost={ setCanEditPost }
+              />
               :
-              <></>
+              <p>{description && <HashtagCard text={description} />}</p>
             }
-          </div>
-          {
-            canEditPost
-            ?
-            <EditPostCard
-              postDescription={ description }
-              postId={ id }
-              setCanEditPost={ setCanEditPost }
-            />
-            :
-            <p>{description && <HashtagCard text={description} />}</p>
-          }
-        <MetaData metadata={metadata} />
-      </PostDataContainer>
-    </Post>
+          <MetaData metadata={metadata} />
+        </PostDataContainer>
+      </Post>
+    }
+    </>
   );
 }
 
