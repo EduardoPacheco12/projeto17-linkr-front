@@ -16,45 +16,6 @@ import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 
-function AddLike({ addLiked, liked, nameWhoLiked, postId, likes }) {
-  if (liked)
-    return (
-      <>
-        <FaHeart
-          color={"red"}
-          fontSize={"20px"}
-          onClick={() => {
-            addLiked();
-          }}
-        />
-        <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
-          {`${likes} ${nameWhoLiked.length === 1 ? "like" : "likes"}`}
-        </p>
-        {nameWhoLiked.length > 0 && (
-          <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} like={liked} />
-        )}
-      </>
-    );
-  return (
-    <>
-      <FaRegHeart
-        color={"while"}
-        fontSize={"20px"}
-        onClick={() => {
-          addLiked();
-        }}
-      />
-      <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
-        {`${nameWhoLiked?.length} ${
-          nameWhoLiked?.length === 1 ? "like" : "likes"
-        }`}
-      </p>
-      {nameWhoLiked?.length > 0 && (
-        <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} like={liked} />
-      )}
-    </>
-  );
-}
 
 export function PostCard({ props }) {
   const {
@@ -80,13 +41,14 @@ export function PostCard({ props }) {
   const [liked, setLiked] = useState(
     usersWhoLiked?.includes(userId) ? true : false || false
   );
+  const userIndex = usersWhoLiked?.indexOf(userId)
   const [likesC, setLike] = useState(Number(likes) || 0);
   const [canEditPost, setCanEditPost] = useState(false);
   const { response } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
-
   useEffect(() => {
+    
     responseFromLike();
     setConfig({
       method: "",
@@ -97,6 +59,7 @@ export function PostCard({ props }) {
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
+
   }, [response]);
 
   function responseFromLike() {
@@ -112,13 +75,13 @@ export function PostCard({ props }) {
       }
     }
   }
-
   function addLiked() {
     const data = { ...config };
     data.path = `likes/${id}`;
     data.method = "post";
     ReactTooltip.rebuild();
     setConfig(data);
+
   }
 
   function selectUser() {
@@ -185,6 +148,7 @@ export function PostCard({ props }) {
             likes={likesC}
             liked={liked}
             postId={id}
+            userIndex={userIndex}
           ></AddLike>
         </LikeContainer>
       </LikePictureContainer>
@@ -199,7 +163,58 @@ export function PostCard({ props }) {
   );
 }
 
-const ToolTip = ({ postId, nameWhoLiked, like }) => {
+
+function AddLike(props) {
+  const { addLiked, liked, nameWhoLiked, postId, likes, userIndex} = props
+  if (liked)
+    return (
+      <>
+        <FaHeart
+          color={"red"}
+          fontSize={"20px"}
+          onClick={() => {
+            addLiked();
+          }}
+        />
+        <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
+          {`${likes} ${likes=== 1 ? "like" : "likes"}`}
+        </p>
+        {likes > 0 && (
+          <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} likes={likes} like={liked} userIndex={userIndex}/>
+        )}
+      </>
+    );
+  return (
+    <>
+      <FaRegHeart
+        color={"while"}
+        fontSize={"20px"}
+        onClick={() => {
+          addLiked();
+        }}
+      />
+      <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
+          {`${likes} ${likes=== 1 ? "like" : "likes"}`}
+        </p>
+        {likes > 0 && (
+          <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} likes={likes} like={liked} userIndex={userIndex}/>
+        )}
+      </>
+  );
+}
+
+const ToolTip = (props) => {
+  const { postId, nameWhoLiked, like, likes, userIndex } = props
+  let newArrayNames = [];
+  if(userIndex >= 0){
+    for (let i = 0; i < nameWhoLiked.length; i++) {
+      if(i!== userIndex){
+        newArrayNames.push(nameWhoLiked[i])
+      }
+    }
+  }else{
+    newArrayNames = nameWhoLiked;
+  }
   return (
     <ReactTooltip
       id={`postLikes-${postId}`}
@@ -208,31 +223,19 @@ const ToolTip = ({ postId, nameWhoLiked, like }) => {
       backgroundColor={"rgba(255, 255, 255, 0.9)"}
       textColor={"#505050"}
     >
-      {nameWhoLiked.length === 1 && like ? (
-        <span>You</span>
-      ) : nameWhoLiked.length === 1 && !like ? (
-        <span>{nameWhoLiked[0]}</span>
-      ) : nameWhoLiked.length === 2 && like ? (
-        <span>You and {nameWhoLiked[0]}</span>
-      ) : nameWhoLiked.length === 2 && !like ? (
-        <span>
-          {nameWhoLiked[0]} and {nameWhoLiked[1]}
-        </span>
-      ) : nameWhoLiked.length > 2 && like ? (
-        <span>
-          You, {nameWhoLiked[0]} and other {nameWhoLiked.length - 2} people
-        </span>
-      ) : nameWhoLiked.length > 2 && !like ? (
-        <span>
-          {nameWhoLiked[0]}, {nameWhoLiked[1]} and other{" "}
-          {nameWhoLiked.length - 2} people
-        </span>
-      ) : (
-        ""
-      )}
+      {
+        (likes === 1 && like) ? <span>You</span>
+          : (likes === 1 && !like) ? <span>{newArrayNames[0]}</span>
+            : (likes === 2 && like) ? <span>You and {newArrayNames }</span>
+              : (likes === 2 && !like) ? <span>{newArrayNames[0]} and {newArrayNames[1]}</span>
+                : (likes > 2 && like) ? <span>You, {newArrayNames[0]} and other {likes - 2} people</span>
+                  : (likes > 2 && !like) ? <span>{newArrayNames[0]}, {newArrayNames[1]} and other {likes - 2} people</span>
+                    : ''
+      }
     </ReactTooltip>
   );
 };
+
 
 export function SkeletonLoading() {
   return (
@@ -261,6 +264,7 @@ export function SkeletonLoading() {
     </SkeletonTheme>
   );
 }
+
 
 const Post = styled.li`
   display: flex;
