@@ -75,7 +75,6 @@ export function PostCard({ props }) {
       }
     }
   }
-  console.log(userIndex)
   function addLiked() {
     const data = { ...config };
     data.path = `likes/${id}`;
@@ -166,7 +165,6 @@ export function PostCard({ props }) {
 
 
 function AddLike(props) {
-  console.log("likeadd", props)
   const { addLiked, liked, nameWhoLiked, postId, likes, userIndex} = props
   if (liked)
     return (
@@ -217,7 +215,6 @@ const ToolTip = (props) => {
   }else{
     newArrayNames = nameWhoLiked;
   }
-  console.log(newArrayNames)
   return (
     <ReactTooltip
       id={`postLikes-${postId}`}
