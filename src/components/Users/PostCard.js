@@ -3,6 +3,7 @@ import HashtagCard from "../shared/HashtagCard";
 import SearchedUserContext from "../../context/SearchedUserContext";
 import ModalContext from "../../context/ModalContext";
 import MetaData from "../Timeline/Metadata";
+import ViewComment from "./ViewComment";
 import ReactTooltip from "react-tooltip";
 import PostContext from "../../context/PostContext";
 import EditPostCard from "./EditPostCard";
@@ -106,9 +107,10 @@ export function PostCard({ props }) {
           <BsPencilFill
             style={{ marginRight: "10px" }}
             fontSize="20px"
+            cursor={"pointer"}
             onClick={editPost}
           />
-          <IoMdTrash fontSize="25px" onClick={deletePost} />
+          <IoMdTrash fontSize="25px" cursor={"pointer"} onClick={deletePost} />
         </EditDeleteButtons>
       ) : (
         <></>
@@ -151,6 +153,7 @@ export function PostCard({ props }) {
             userIndex={userIndex}
           ></AddLike>
         </LikeContainer>
+        <ViewComment />
       </LikePictureContainer>
       <PostDataContainer>
         <CreatorButtons />
@@ -172,6 +175,7 @@ function AddLike(props) {
         <FaHeart
           color={"red"}
           fontSize={"20px"}
+          cursor={"pointer"}
           onClick={() => {
             addLiked();
           }}
@@ -189,13 +193,14 @@ function AddLike(props) {
       <FaRegHeart
         color={"while"}
         fontSize={"20px"}
+        cursor={"pointer"}
         onClick={() => {
           addLiked();
         }}
       />
       <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
-          {`${likes} ${likes=== 1 ? "like" : "likes"}`}
-        </p>
+        {`${likes} ${likes=== 1 ? "like" : "likes"}`}
+      </p>
         {likes > 0 && (
           <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} likes={likes} like={liked} userIndex={userIndex}/>
         )}
