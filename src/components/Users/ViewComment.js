@@ -2,11 +2,12 @@ import styled from "styled-components";
 import { BsChatDots } from "react-icons/bs";
 
 
-export default function ViewComment() {
+export default function ViewComment(props) {
+    const { comments, setShowComments, showComments } = props;
     return (
         <Chat>
-            <BsChatDots color={"while"} fontSize={"20px"} cursor={"pointer"}/>
-            <p>0 comments</p>
+            <BsChatDots color={"while"} fontSize={"20px"} cursor={"pointer"} onClick={() => {setShowComments(!showComments)}}/>
+            <p>{`${comments} ${comments=== 1 ? "comment" : "comments"}`}</p>
         </Chat>
         
     )

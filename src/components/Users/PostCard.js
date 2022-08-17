@@ -25,6 +25,7 @@ export function PostCard({ props }) {
     pictureUrl,
     username,
     likes,
+    comments,
     description,
     metadata,
     usersWhoLiked,
@@ -45,6 +46,8 @@ export function PostCard({ props }) {
   const userIndex = usersWhoLiked?.indexOf(userId)
   const [likesC, setLike] = useState(Number(likes) || 0);
   const [canEditPost, setCanEditPost] = useState(false);
+  const [showComments, setShowComments] = useState(false);
+  console.log(showComments);
   const { response } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
@@ -136,31 +139,34 @@ export function PostCard({ props }) {
       ?
       <h3>There are no posts yet</h3>
       :
-      <Post>
-      <LikePictureContainer>
-        <img
-          src={pictureUrl}
-          alt={username && `${username}'s profile`}
-          onClick={selectUser}
-        />
-        <LikeContainer>
-          <AddLike
-            addLiked={addLiked}
-            nameWhoLiked={nameWhoLiked}
-            likes={likesC}
-            liked={liked}
-            postId={id}
-            userIndex={userIndex}
-          ></AddLike>
-        </LikeContainer>
-        <ViewComment />
-      </LikePictureContainer>
-      <PostDataContainer>
-        <CreatorButtons />
-        <EditPostUI />
-        <MetaData metadata={metadata} />
-      </PostDataContainer>
-    </Post>
+      <>
+        <Post>
+          <LikePictureContainer>
+            <img
+              src={pictureUrl}
+              alt={username && `${username}'s profile`}
+              onClick={selectUser}
+            />
+            <LikeContainer>
+              <AddLike
+                addLiked={addLiked}
+                nameWhoLiked={nameWhoLiked}
+                likes={likesC}
+                liked={liked}
+                postId={id}
+                userIndex={userIndex}
+              ></AddLike>
+            </LikeContainer>
+            <ViewComment comments={comments} setShowComments={setShowComments} showComments={showComments}/>
+          </LikePictureContainer>
+          <PostDataContainer>
+            <CreatorButtons />
+            <EditPostUI />
+            <MetaData metadata={metadata} />
+          </PostDataContainer>
+        </Post>
+        
+      </>
     }
     </>
   );
