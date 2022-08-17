@@ -36,6 +36,7 @@ function Posts({ path, method }) {
       const data = response.data
       setData(data);
     }
+
     setConfig({
       method: "",
       path: "",
