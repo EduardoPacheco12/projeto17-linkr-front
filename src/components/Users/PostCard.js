@@ -4,6 +4,7 @@ import SearchedUserContext from "../../context/SearchedUserContext";
 import ModalContext from "../../context/ModalContext";
 import MetaData from "../Timeline/Metadata";
 import ViewComment from "./ViewComment";
+import Comments from "./Comments";
 import ReactTooltip from "react-tooltip";
 import PostContext from "../../context/PostContext";
 import EditPostCard from "./EditPostCard";
@@ -165,7 +166,7 @@ export function PostCard({ props }) {
             <MetaData metadata={metadata} />
           </PostDataContainer>
         </Post>
-        
+        <Comments showComments={showComments}/>
       </>
     }
     </>
@@ -286,7 +287,6 @@ const Post = styled.li`
   color: #ffffff;
   background-color: #171717;
   padding: 18px 0;
-  margin-bottom: 10px;
   position: relative;
 
   @media screen and (max-width: 900px) {
