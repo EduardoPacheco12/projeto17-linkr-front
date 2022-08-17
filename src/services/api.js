@@ -5,12 +5,12 @@ export const api = axios.create({
 });
 
 
-export const getLikes = async (postId) => {
-    const likes = await api.get(`/likes/${postId}`);
-    return likes;
+export const getRepost = async (postId, token) => {
+    const repost = await api.get(`/repost/${postId}`, { headers: { Authorization: `Bearer ${token}` } }, {});
+    return repost;
 }
   
-export const addOrRemoveLike = async (postId, token) => {
-    const toogleLike = await api.post(`/likes/${postId}`,{}, {headers:{Authorization: `Bearer ${token}`}  });
-    return toogleLike;
+export const rePoster = async (postId, token) => {
+    const reposter = await api.post(`/repost/${postId}`,{}, {headers:{Authorization: `Bearer ${token}`}  });
+    return reposter.status;
 }

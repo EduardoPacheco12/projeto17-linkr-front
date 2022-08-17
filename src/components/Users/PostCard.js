@@ -8,13 +8,15 @@ import PostContext from "../../context/PostContext";
 import EditPostCard from "./EditPostCard";
 import { IoMdTrash } from "react-icons/io";
 import { BsPencilFill } from "react-icons/bs";
-import { FaRegHeart, FaHeart } from "react-icons/fa";
+import { FaRegHeart, FaHeart} from "react-icons/fa";
+import { RiShareForwardLine, RiShareForwardFill} from "react-icons/ri";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
+import { getRepost, rePoster } from "../../services/api";
 
 
 export function PostCard({ props }) {
@@ -31,7 +33,7 @@ export function PostCard({ props }) {
   } = props;
   const navigate = useNavigate();
   const { pathname } = useLocation();
-  const { setShowModal } = useContext(ModalContext);
+  const { setShowModal, setShareModal } = useContext(ModalContext);
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
   const [config, setConfig] = useState({
     method: "",
@@ -41,15 +43,17 @@ export function PostCard({ props }) {
   const [liked, setLiked] = useState(
     usersWhoLiked?.includes(userId) ? true : false || false
   );
+  const [shared, setShared] = useState(false);
   const userIndex = usersWhoLiked?.indexOf(userId)
   const [likesC, setLike] = useState(Number(likes) || 0);
   const [canEditPost, setCanEditPost] = useState(false);
+  const [shareCount, setCount] = useState(0);
   const { response } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
   useEffect(() => {
-    
     responseFromLike();
+    getCountShare();
     setConfig({
       method: "",
       path: "",
@@ -59,7 +63,6 @@ export function PostCard({ props }) {
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
-
   }, [response]);
 
   function responseFromLike() {
@@ -75,6 +78,7 @@ export function PostCard({ props }) {
       }
     }
   }
+
   function addLiked() {
     const data = { ...config };
     data.path = `likes/${id}`;
@@ -82,6 +86,20 @@ export function PostCard({ props }) {
     ReactTooltip.rebuild();
     setConfig(data);
 
+  }
+  function getCountShare() {
+    const response = getRepost(id, token)
+    response.then((e)=>{
+      setCount(Number(e.data.count))
+      setShared(e.data.shared)
+    }).catch(error =>{
+      console.log(error)
+    })
+  }
+
+  function sharePost() {
+    setPostId(id);
+    setShareModal(true);
   }
 
   function selectUser() {
@@ -149,7 +167,8 @@ export function PostCard({ props }) {
             liked={liked}
             postId={id}
             userIndex={userIndex}
-          ></AddLike>
+          ></AddLike >
+          <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
         </LikeContainer>
       </LikePictureContainer>
       <PostDataContainer>
@@ -162,13 +181,39 @@ export function PostCard({ props }) {
     </>
   );
 }
-
+function Share({sharePost, shareCount, shared}){
+  
+  if(shared)
+  return (<div>
+    
+    <RiShareForwardFill 
+    color={"red"}
+    onClick={() => {
+      sharePost();
+    }}
+    />
+    <p>{shareCount} re-posts</p>
+    </div>
+  );return (
+    <div>
+    
+    <RiShareForwardLine 
+    onClick={() => {
+      sharePost();
+    }}
+    />
+    <p>{shareCount} re-posts</p>
+    </div>
+  )
+  
+   
+}
 
 function AddLike(props) {
   const { addLiked, liked, nameWhoLiked, postId, likes, userIndex} = props
   if (liked)
     return (
-      <>
+      <div>
         <FaHeart
           color={"red"}
           fontSize={"20px"}
@@ -182,10 +227,10 @@ function AddLike(props) {
         {likes > 0 && (
           <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} likes={likes} like={liked} userIndex={userIndex}/>
         )}
-      </>
+      </div>
     );
   return (
-    <>
+    <div>
       <FaRegHeart
         color={"while"}
         fontSize={"20px"}
@@ -199,7 +244,7 @@ function AddLike(props) {
         {likes > 0 && (
           <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} likes={likes} like={liked} userIndex={userIndex}/>
         )}
-      </>
+      </div>
   );
 }
 
@@ -314,7 +359,7 @@ const LikeContainer = styled.div`
   align-items: center;
   margin-top: 20px;
   box-sizing: border-box;
-
+  gap: 10px;
   p {
     margin-top: 6px;
     text-align: center;
@@ -323,6 +368,12 @@ const LikeContainer = styled.div`
 
   svg {
     color: #fff;
+  }
+
+  div{
+    display: flex;
+    flex-direction: column;
+    align-items: center;
   }
 `;
 
