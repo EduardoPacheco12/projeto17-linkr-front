@@ -18,7 +18,6 @@ import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { getRepost, rePoster } from "../../services/api";
 
-
 export function PostCard({ props }) {
   const {
     id,
@@ -51,6 +50,7 @@ export function PostCard({ props }) {
   const { response } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
+
   useEffect(() => {
     responseFromLike();
     getCountShare();
@@ -59,7 +59,6 @@ export function PostCard({ props }) {
       path: "",
       config: [null, { headers: { Authorization: `Bearer ${token}` } }],
     });
-
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
@@ -85,8 +84,8 @@ export function PostCard({ props }) {
     data.method = "post";
     ReactTooltip.rebuild();
     setConfig(data);
-
   }
+
   function getCountShare() {
     const response = getRepost(id, token)
     response.then((e)=>{
@@ -169,9 +168,9 @@ export function PostCard({ props }) {
             userIndex={userIndex}
           ></AddLike >
           <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
-        </LikeContainer>
-      </LikePictureContainer>
-      <PostDataContainer>
+        </LikeContainer >
+      </LikePictureContainer >
+      <PostDataContainer >
         <CreatorButtons />
         <EditPostUI />
         <MetaData metadata={metadata} />
@@ -181,6 +180,7 @@ export function PostCard({ props }) {
     </>
   );
 }
+
 function Share({sharePost, shareCount, shared}){
   
   if(shared)
@@ -309,7 +309,6 @@ export function SkeletonLoading() {
     </SkeletonTheme>
   );
 }
-
 
 const Post = styled.li`
   display: flex;

@@ -25,11 +25,11 @@ function Timeline() {
     isTimeline ? (
       <>
         <Publish />
-        <Posts path={"timeline"} method={"get"} />
+        <Posts path={"timeline"} />
       </>
     ) : (
       <TrendsPosts>
-        <Posts path={pathname.replace("/", "")} method={"get"} />
+        <Posts path={pathname.replace("/", "")} />
       </TrendsPosts>
     );
 
