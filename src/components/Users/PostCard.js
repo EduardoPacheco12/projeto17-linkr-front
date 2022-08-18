@@ -55,23 +55,25 @@ export function PostCard({ props }) {
   const [canEditPost, setCanEditPost] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [shareCount, setCount] = useState(0);
-  const { response } = useAxios(config);
+  const { response, error, loading } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
 
   useEffect(() => {
-    responseFromLike();
-    getCountShare();
-    setConfig({
-      method: "",
-      path: "",
-      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
-    });
+    if(response !== null && !loading) {
+      responseFromLike();
+    }
+    //getCountShare();
+    // setConfig({
+    //   method: "",
+    //   path: "",
+    //   config: [null, { headers: { Authorization: `Bearer ${token}` } }],
+    // });
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
-  }, [response]);
-  console.log("reposterID", reposterId, reposterName)
+  }, [response, error, loading]);
+
   function responseFromLike() {
     if (response !== null) {
       if (response.status === 201) {

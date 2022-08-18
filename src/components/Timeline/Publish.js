@@ -147,6 +147,10 @@ const Form = styled.form`
     border: 1px solid #a84e32;
   }
 
+  textarea {
+    resize: none;
+  }
+
   input {
     height: 30px;
   }

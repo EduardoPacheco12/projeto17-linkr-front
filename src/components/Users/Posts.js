@@ -8,7 +8,7 @@ import { useAxios } from "../../hooks/useAxios";
 import { PostCard, SkeletonLoading } from "./PostCard";
 import { ThreeDots } from "react-loader-spinner";
 
-function Posts({ path }) {
+function Posts({ path, emptyData, setEmptyData }) {
   const { token } = useLocalstorage({ key: "linkrToken" });
   const [page, setPage] = useState(1);
   const [config, setConfig] = useState({});
@@ -32,30 +32,46 @@ function Posts({ path }) {
   }, [loading, postsLeft]);
 
   useEffect(() => {
+    console.log("portiole")
     const newConfig = {
       method: 'get',
       path: path,
       config: [{ headers: { Authorization: `Bearer ${token}` } }],
       query: `?page=${page}`,
     };
-    setConfig(newConfig)
+
+    setConfig(newConfig);
   }, [page])
 
   useEffect(() => {
     if(!loading) {
-      if (data.length !== 0) {
+      if (data?.length !== 0) {
         setContextData(data);
         setNewPost(false);
-      } 
+      }
+
       if (response !== null) {
         setPostsLeft(Number(response?.data[0]?.tableLength) - response?.data?.length)
         setData((data) => [...data, ...response.data]);
       }
+
+      if(emptyData) {
+        setData([]);
+        setEmptyData(false);
+      }
     }
+
     handleError();
-    // if(path !== method.path) {
-    //   return setConfig({ ...config, path, method });
-    // }
+
+    if(path !== config.path) {
+      const header = {
+        headers: {
+          Authorization: `Bearer ${ token }`
+        }
+      }
+
+      setConfig({ config: [ header ], path, method: "get" });
+    }
   }, [response, loading, userId]);
 
   function handleError() {
@@ -76,9 +92,14 @@ function Posts({ path }) {
   );
 
   function TimelineData() {
-    if (data === null) return <SkeletonLoading />; 
-    if (data?.length === 0) return <h3>There are no posts yet</h3>;
-    return <PostItems />;
+    if (data !== null && !loading) {
+      return (
+        data?.map((item, index) => (
+          <PostCard key={index} id={item.id} props={item} />
+        )) || <SkeletonLoading />
+      );
+    }
+    return <SkeletonLoading />;
   }
 
   return (
