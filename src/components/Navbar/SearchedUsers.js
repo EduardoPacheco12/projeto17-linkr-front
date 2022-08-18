@@ -1,5 +1,6 @@
 import styled from "styled-components";
 import { useNavigate } from "react-router-dom";
+import { BsDot } from "react-icons/bs";
 
 function SearchedUsers({ usersSearched, setSearchInput }) {
   const navigate = useNavigate();
@@ -19,6 +20,16 @@ function SearchedUsers({ usersSearched, setSearchInput }) {
               onClick={ () => selectUser(user.id)}>
               <img  src={ user.pictureUrl } alt={ user.username } />
               <h3>{ user.username }</h3>
+              {
+                user.follower
+                ?
+                <>
+                  <BsDot color="#C5C5C5" />
+                  <p>following</p>
+                </>
+                :
+                <></>
+              }
             </UserIndentification>
           );
         })
@@ -48,6 +59,13 @@ const UserIndentification = styled.li`
   h3 {
     font-size: 20px;
     color: #515151;
+    word-wrap: break-word;
+  }
+
+  p {
+    font-size: 20px;
+    font-family: "Lato";
+    color: #C5C5C5;
   }
 `;
 

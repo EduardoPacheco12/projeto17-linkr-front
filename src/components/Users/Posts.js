@@ -53,6 +53,9 @@ function Posts({ path }) {
       }
     }
     handleError();
+    // if(path !== method.path) {
+    //   return setConfig({ ...config, path, method });
+    // }
   }, [response, loading, userId]);
 
   function handleError() {

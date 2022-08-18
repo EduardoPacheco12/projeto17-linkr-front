@@ -46,7 +46,7 @@ function UsersView() {
           {
             userId !== userData?.id && userId !== null
             ?
-             <FollowButton searchedUserId={ userId } />
+             <FollowButton searchedUserId={ id } />
             :
              <></>
           }
@@ -98,7 +98,6 @@ const UserDataContainer = styled.div`
   justify-content: center;
   align-items: center;
   margin-top: 30px;
-  padding: 0 20px;
   
   img {
     width: 50px;
@@ -112,9 +111,10 @@ const UserDataContainer = styled.div`
     font-size: 44px;
     font-weight: bold;
   }
-
+  
   @media screen and (max-width: 900px) {
     margin: 20px 0 0 10px;
+    padding: 0 18px;
 
     h2 {
       font-size: 34px;

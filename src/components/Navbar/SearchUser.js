@@ -5,11 +5,13 @@ import { DebounceInput } from "react-debounce-input";
 import { GoSearch } from "react-icons/go";
 import SearchedUsers from "./SearchedUsers";
 import { useLocation } from "react-router-dom";
+import { useLocalstorage } from "../../hooks/useLocalstorage";
 
 function SearchUser() {
   const [ usersSearched, setUsersSearched ] = useState([]);
   const [ searchInput, setSearchInput ] = useState("");
   const [ showSearchBar, setShowSearchBar ] = useState(false);
+  const { token } = useLocalstorage({ key: "linkrToken" });
   const location = useLocation();
 
   useEffect(() => {
@@ -25,8 +27,17 @@ function SearchUser() {
     setSearchInput(e.target.value);
 
     if(e.target.value.length >= MIN_CARACTERS_TO_SEARCH) {
+      const config = {
+        headers: {
+          Authorization: `Bearer ${ token }`
+        }
+      };
+
       try {
-        const searchData = await axios.get(`${ process.env.REACT_APP_BACKEND_URI }/users/?name=${ e.target.value }`);
+        const searchData = await axios.get(
+          `${ process.env.REACT_APP_BACKEND_URI }/users/?name=${ e.target.value }`,
+          config
+        );
         setUsersSearched(searchData.data);
       } catch(err) {
         console.log(err);

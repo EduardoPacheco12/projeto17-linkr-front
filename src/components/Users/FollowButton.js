@@ -10,16 +10,16 @@ function FollowButton ({ searchedUserId }) {
   const { response, error, loading } = useAxios(config);
 
   useEffect(() => {
-    if(!config.path) {
+    if(!config.path?.includes(searchedUserId)) {
       const path = `follow/${searchedUserId}`;
 
-    const header = {
-      headers: {
-        Authorization: `Bearer ${ token }`
+      const header = {
+        headers: {
+          Authorization: `Bearer ${ token }`
+        }
       }
-    }
 
-    setConfig({ path, method:"get", config: [ header ]});
+      setConfig({ path, method:"get", config: [ header ]});
     }
     
     if(response !== null && !loading) {
@@ -29,9 +29,10 @@ function FollowButton ({ searchedUserId }) {
     if(error !== null && !loading) {
       alert("Não foi possível realizar a operação")
     } 
-  }, [ response, error, loading ]);
+  }, [ response, error, loading, searchedUserId ]);
 
   function followUnfollow() {
+    console.log("enviou")
     const path = `follow/${searchedUserId}`;
 
     const header = {
