@@ -52,7 +52,7 @@ export function PostCard({ props }) {
   const [shared, setShared] = useState(false);
   const userIndex = usersWhoLiked?.indexOf(userId)
   const [likesC, setLike] = useState(Number(likes) || 0);
-  const [canEditPost, setCanEditPost] = useState(false);<<<<<<< comments
+  const [canEditPost, setCanEditPost] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [shareCount, setCount] = useState(0);
   const { response } = useAxios(config);
