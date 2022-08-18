@@ -3,6 +3,8 @@ import HashtagCard from "../shared/HashtagCard";
 import SearchedUserContext from "../../context/SearchedUserContext";
 import ModalContext from "../../context/ModalContext";
 import MetaData from "../Timeline/Metadata";
+import ViewComment from "./ViewComment";
+import Comments from "./Comments";
 import ReactTooltip from "react-tooltip";
 import PostContext from "../../context/PostContext";
 import EditPostCard from "./EditPostCard";
@@ -27,6 +29,7 @@ export function PostCard({ props }) {
     pictureUrl,
     username,
     likes,
+    comments,
     description,
     metadata,
     usersWhoLiked,
@@ -50,6 +53,7 @@ export function PostCard({ props }) {
   const userIndex = usersWhoLiked?.indexOf(userId)
   const [likesC, setLike] = useState(Number(likes) || 0);
   const [canEditPost, setCanEditPost] = useState(false);
+  const [showComments, setShowComments] = useState(false);
   const [shareCount, setCount] = useState(0);
   const { response } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
@@ -127,9 +131,10 @@ export function PostCard({ props }) {
           <BsPencilFill
             style={{ marginRight: "10px" }}
             fontSize="20px"
+            cursor={"pointer"}
             onClick={editPost}
           />
-          <IoMdTrash fontSize="25px" onClick={deletePost} />
+          <IoMdTrash fontSize="25px" cursor={"pointer"} onClick={deletePost} />
         </EditDeleteButtons>
       ) : (
         <></>
@@ -150,60 +155,74 @@ export function PostCard({ props }) {
 
   return (
     <>
-    {
-      id === null? <h3>There are no posts yet</h3>
-      : !reposterId?<Post>
-      <LikePictureContainer>
-        <img
-          src={pictureUrl}
-          alt={username && `${username}'s profile`}
-          onClick={selectUser}
-        />
-        <LikeContainer>
-          <AddLike
-            addLiked={addLiked}
-            nameWhoLiked={nameWhoLiked}
-            likes={likesC}
-            liked={liked}
-            postId={id}
-            userIndex={userIndex}
-          ></AddLike >
-          <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
-        </LikeContainer>
-      </LikePictureContainer>
-      <PostDataContainer>
-        <CreatorButtons />
-        <EditPostUI />
-        <MetaData metadata={metadata} />
-      </PostDataContainer>
-    </Post>:<>
-      <RePoster><img src={Reposted} alt={reposterName}/>Re-posted by {reposterId == userId? 'You' : reposterName}</RePoster>
-      <Post>
-      <LikePictureContainer>
-        <img
-          src={pictureUrl}
-          alt={username && `${username}'s profile`}
-          onClick={selectUser}
-        />
-        <LikeContainer>
-          <AddLike
-            addLiked={addLiked}
-            nameWhoLiked={nameWhoLiked}
-            likes={likesC}
-            liked={liked}
-            postId={id}
-            userIndex={userIndex}
-          ></AddLike >
-          <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
-        </LikeContainer>
-      </LikePictureContainer>
-      <PostDataContainer>
-        <CreatorButtons />
-        <EditPostUI />
-        <MetaData metadata={metadata} />
-      </PostDataContainer>
-    </Post></>
-    }
+      {
+        id === null
+        ? 
+          <h3>There are no posts yet</h3>
+        : 
+          !reposterId
+          ? 
+            <>
+              <Post>
+                <LikePictureContainer>
+                  <img
+                    src={pictureUrl}
+                    alt={username && `${username}'s profile`}
+                    onClick={selectUser}
+                  />
+                  <LikeContainer>
+                    <AddLike
+                      addLiked={addLiked}
+                      nameWhoLiked={nameWhoLiked}
+                      likes={likesC}
+                      liked={liked}
+                      postId={id}
+                      userIndex={userIndex}
+                    ></AddLike >
+                    <ViewComment comments={comments} setShowComments={setShowComments} showComments={showComments}/>
+                    <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
+                  </LikeContainer>
+                </LikePictureContainer>
+                <PostDataContainer>
+                  <CreatorButtons />
+                  <EditPostUI />
+                  <MetaData metadata={metadata} />
+                </PostDataContainer>
+              </Post>
+              <Comments showComments={showComments}/>
+            </>
+          :
+            <>
+              <RePoster><img src={Reposted} alt={reposterName}/>Re-posted by {reposterId == userId? 'You' : reposterName}</RePoster>
+              <Post>
+                <LikePictureContainer>
+                  <img
+                    src={pictureUrl}
+                    alt={username && `${username}'s profile`}
+                    onClick={selectUser}
+                  />
+                  <LikeContainer>
+                    <AddLike
+                      addLiked={addLiked}
+                      nameWhoLiked={nameWhoLiked}
+                      likes={likesC}
+                      liked={liked}
+                      postId={id}
+                      userIndex={userIndex}
+                    ></AddLike >
+                    <ViewComment comments={comments} setShowComments={setShowComments} showComments={showComments}/>
+                    <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
+                  </LikeContainer>
+                </LikePictureContainer>
+                <PostDataContainer>
+                  <CreatorButtons />
+                  <EditPostUI />
+                  <MetaData metadata={metadata} />
+                </PostDataContainer>
+              </Post>
+              <Comments showComments={showComments}/>
+            </>
+      }
     </>
   );
 }
@@ -235,6 +254,7 @@ function AddLike(props) {
         <FaHeart
           color={"red"}
           fontSize={"20px"}
+          cursor={"pointer"}
           onClick={() => {
             addLiked();
           }}
@@ -252,13 +272,14 @@ function AddLike(props) {
       <FaRegHeart
         color={"while"}
         fontSize={"20px"}
+        cursor={"pointer"}
         onClick={() => {
           addLiked();
         }}
       />
       <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
-          {`${likes} ${likes=== 1 ? "like" : "likes"}`}
-        </p>
+        {`${likes} ${likes=== 1 ? "like" : "likes"}`}
+      </p>
         {likes > 0 && (
           <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} likes={likes} like={liked} userIndex={userIndex}/>
         )}
@@ -338,7 +359,6 @@ const Post = styled.li`
   color: #ffffff;
   background-color: #171717;
   padding: 18px 0;
-  margin-bottom: 10px;
   position: relative;
 
   @media screen and (max-width: 900px) {

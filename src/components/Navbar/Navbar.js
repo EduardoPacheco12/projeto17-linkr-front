@@ -25,7 +25,7 @@ function Navbar() {
       <MenuContent>
         <BrandName>linkr</BrandName>
         <UserMenu onClick={showLogout}>
-          { !logout ? <AiOutlineDown fontSize="30px" color="#FFFFFF" /> : <AiOutlineUp fontSize="30px" color="#FFFFFF" />}
+          { !logout ? <AiOutlineDown fontSize="30px" color="#FFFFFF" cursor="pointer"/> : <AiOutlineUp fontSize="30px" color="#FFFFFF" cursor="pointer"/>}
           <img src={userData?.pictureUrl} alt="foca" />
         </UserMenu>
         { !logout ? <></> : <LogoutButton/> }
@@ -87,6 +87,7 @@ const UserMenu = styled.div`
     height: 54px;
     margin-left: 12px;
     border-radius: 50%;
+    cursor: pointer;
   }
 
   @media screen and (max-width: 600px){
