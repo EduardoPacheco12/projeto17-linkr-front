@@ -12,8 +12,8 @@ function Publish() {
   const { setNewPost } = useContext(PostContext);
   const { token, pictureUrl, username } = useLocalstorage({ key: "linkrToken" });
   const { response, loading, error } = useAxios(config);
+  
   const navigate = useNavigate();
-
   useEffect(() => {
     handleError();
     if (!token) {
@@ -26,7 +26,7 @@ function Publish() {
       setNewPost(response.data);
     }
   }, [response, loading, token]);
-
+  
   function handleError() {
     if (!loading) {
       if (error?.response.status) {

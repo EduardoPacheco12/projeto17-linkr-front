@@ -39,7 +39,7 @@ function UsersView() {
                 ?
                 `${ searchedUser.username }'s posts`
                 :
-                "Carregando"
+                "Loading..."
               }
             </h2>
           </UserDataContainer>
@@ -52,7 +52,7 @@ function UsersView() {
           }
         </div>
         <PostTrendContainer>
-          <Posts path={ `posts/${ id }` } method={ "get" } />
+          <Posts path={`posts/${ id }`} />
           <Trends />
         </PostTrendContainer>
       </MainContent>
