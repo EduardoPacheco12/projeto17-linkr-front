@@ -17,6 +17,7 @@ import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
 import { getRepost, rePoster } from "../../services/api";
+import Reposted from '../../assets/repost.svg';
 
 
 export function PostCard({ props }) {
@@ -30,6 +31,8 @@ export function PostCard({ props }) {
     metadata,
     usersWhoLiked,
     nameWhoLiked,
+    reposterId,
+    reposterName
   } = props;
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -64,7 +67,7 @@ export function PostCard({ props }) {
       setSearchedUser({ username, pictureUrl });
     }
   }, [response]);
-
+  console.log("reposterID", reposterId, reposterName)
   function responseFromLike() {
     if (response !== null) {
       if (response.status === 201) {
@@ -148,10 +151,33 @@ export function PostCard({ props }) {
   return (
     <>
     {
-      id === null
-      ?
-      <h3>There are no posts yet</h3>
-      :
+      id === null? <h3>There are no posts yet</h3>
+      : !reposterId?<Post>
+      <LikePictureContainer>
+        <img
+          src={pictureUrl}
+          alt={username && `${username}'s profile`}
+          onClick={selectUser}
+        />
+        <LikeContainer>
+          <AddLike
+            addLiked={addLiked}
+            nameWhoLiked={nameWhoLiked}
+            likes={likesC}
+            liked={liked}
+            postId={id}
+            userIndex={userIndex}
+          ></AddLike >
+          <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
+        </LikeContainer>
+      </LikePictureContainer>
+      <PostDataContainer>
+        <CreatorButtons />
+        <EditPostUI />
+        <MetaData metadata={metadata} />
+      </PostDataContainer>
+    </Post>:<>
+      <RePoster><img src={Reposted} alt={reposterName}/>Re-posted by {reposterId == userId? 'You' : reposterName}</RePoster>
       <Post>
       <LikePictureContainer>
         <img
@@ -176,7 +202,7 @@ export function PostCard({ props }) {
         <EditPostUI />
         <MetaData metadata={metadata} />
       </PostDataContainer>
-    </Post>
+    </Post></>
     }
     </>
   );
@@ -184,24 +210,16 @@ export function PostCard({ props }) {
 function Share({sharePost, shareCount, shared}){
   
   if(shared)
-  return (<div>
-    
-    <RiShareForwardFill 
-    color={"red"}
-    onClick={() => {
-      sharePost();
-    }}
-    />
+  return (<div className="reposter">
+    <img src={Reposted} width={10} height={10} alt={sharePost} />
     <p>{shareCount} re-posts</p>
     </div>
   );return (
-    <div>
+    <div className="reposter">
     
-    <RiShareForwardLine 
-    onClick={() => {
+    <img src={Reposted} width={10} height={10} alt={sharePost} style={{opacity:"0.7"}} onClick={() => {
       sharePost();
-    }}
-    />
+    }}/>
     <p>{shareCount} re-posts</p>
     </div>
   )
@@ -346,6 +364,14 @@ const LikePictureContainer = styled.div`
     cursor: pointer;
   }
 
+  .reposter{
+    img{
+    width: 20px;
+      height: 12px;
+      border-radius: 0%;
+    }
+  }
+
   @media screen and (max-width: 900px) {
     width: 40px;
     height: auto;
@@ -375,6 +401,17 @@ const LikeContainer = styled.div`
     flex-direction: column;
     align-items: center;
   }
+`;
+const RePoster = styled.div`
+  width: 100%;
+  background-color: #1E1E1E;
+  border-radius: 16px 16px 0px 0px;
+  color: #ffffff;
+  height: 38px;
+  padding: 13px 11px;
+  font-size:11px;
+  margin-bottom: -11px;
+  
 `;
 
 const PostDataContainer = styled.div`
