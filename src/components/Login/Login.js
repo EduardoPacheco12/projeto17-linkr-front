@@ -14,7 +14,7 @@ export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
   const [token, setToken] = useState('');
-  const { setUserData } = useContext(DataContext)
+  const { setUserData } = useContext(DataContext);
   const { token: userToken } = useLocalstorage({ key: 'linkrToken', value: token })
   const { response, loading, error } = useAxios(config);
 

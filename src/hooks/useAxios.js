@@ -11,16 +11,16 @@ const methods = {
   patch: axios.patch,
 };
 
-export function useAxios({ path = '', method = '', config = null }) {
+export function useAxios({ path = '', method = '', config = null, query = '' }) {
   const [response, setResponse] = useState(null);
   const [error, setError] = useState(null);
   const [loading, setLoading] = useState(false);
 
   const axiosMethod = async () => {
     try {
-      setLoading(true)
+      setLoading(true);
       const axios = methods[method];
-      const response = await axios(`${BASE_URL}/${path}`, config?.[0], config?.[1]);
+      const response = await axios(`${BASE_URL}/${path}${query}`, config?.[0], config?.[1]);
       setResponse(response);
     } catch (err) {
       setError(err);
@@ -32,11 +32,11 @@ export function useAxios({ path = '', method = '', config = null }) {
   };
 
   useEffect(() => {
-    if(!(method === '')) {
+    if(method !== '') {
       axiosMethod();
     }
     // eslint-disable-next-line
-  }, [ path, method, config ]);
+  }, [ path, method, config, query ]);
 
   return { response, error, loading };
 }

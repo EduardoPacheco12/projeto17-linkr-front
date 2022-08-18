@@ -3,20 +3,22 @@ import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import Posts from "./Posts";
 import Trends from "./Trends";
+import FollowButton from "./FollowButton";
 import SearchedUserContext from "../../context/SearchedUserContext";
 import LogoutContext from "../../context/LogoutContext";
+import DataContext from "../../context/DataContext";
 
 function UsersView() {
   const { id } = useParams();
   const { searchedUser, userId, setUserId } = useContext(SearchedUserContext);
+  const { userData } = useContext(DataContext);
   const { setLogout } = useContext(LogoutContext);
 
   useEffect(() => {
     if(userId !== id) {
-      setUserId(id);
+      setUserId(Number(id));
     }
-  }, [userId])
-
+  }, [ id ]);
 
   function hideLogout() {
     setLogout(false);
@@ -25,23 +27,32 @@ function UsersView() {
   return (
     <MainContainer onClick={hideLogout}>
       <MainContent>
-        <UserDataContainer>
-          <img
-            src={ searchedUser.pictureUrl ? searchedUser.pictureUrl : "" }
-            alt={ searchedUser.username ? searchedUser.username : "" }
-          />
-          <h2>
-            {
-              searchedUser.username
-              ?
-              `${ searchedUser.username }'s posts`
-              :
-              "Carregando"
-            }
-          </h2>
-        </UserDataContainer>
+        <div>
+          <UserDataContainer>
+            <img
+              src={ searchedUser.pictureUrl ? searchedUser.pictureUrl : "" }
+              alt={ searchedUser.username ? searchedUser.username : "" }
+            />
+            <h2>
+              {
+                searchedUser.username
+                ?
+                `${ searchedUser.username }'s posts`
+                :
+                "Loading..."
+              }
+            </h2>
+          </UserDataContainer>
+          {
+            userId !== userData?.id && userId !== null
+            ?
+             <FollowButton searchedUserId={ id } />
+            :
+             <></>
+          }
+        </div>
         <PostTrendContainer>
-          <Posts path={ `posts/${ id }` } method={ "get" } />
+          <Posts path={`posts/${ id }`} />
           <Trends />
         </PostTrendContainer>
       </MainContent>
@@ -68,6 +79,14 @@ const MainContent = styled.div`
   width: 900px;
   margin: 84px;
 
+  > div:first-child {
+    display: flex;
+    justify-content: space-between;
+    flex-wrap: wrap;
+    width: 100%;
+    margin-top: 60px;
+  }
+
   @media screen and (max-width: 900px) {
     width: 100%;
     margin: 144px 0 40px 0 ;
@@ -78,7 +97,7 @@ const UserDataContainer = styled.div`
   display: flex;
   justify-content: center;
   align-items: center;
-  margin: 60px 0 0 20px;
+  margin-top: 30px;
   
   img {
     width: 50px;
@@ -92,9 +111,10 @@ const UserDataContainer = styled.div`
     font-size: 44px;
     font-weight: bold;
   }
-
+  
   @media screen and (max-width: 900px) {
     margin: 20px 0 0 10px;
+    padding: 0 18px;
 
     h2 {
       font-size: 34px;

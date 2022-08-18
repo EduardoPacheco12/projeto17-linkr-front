@@ -12,6 +12,7 @@ import { ModalContextProvider } from "../context/ModalContext";
 import { CommentContextProvider } from "../context/CommentContext";
 import PostContext from "../context/PostContext";
 import DeleteAlert from "./Users/DeleteAlert";
+import ShareAlert from "./Users/ShareAlert";
 
 import "../assets/reset.css";
 import "../assets/style.css";
@@ -28,6 +29,7 @@ export default function App() {
       <LogoutContext.Provider value={ { logout, setLogout }} >
         <PostContext.Provider value={{ newPost, setNewPost, postId, setPostId }} >
           <ModalContextProvider>
+            <ShareAlert />
             <DeleteAlert />
             <BrowserRouter>
             <DataContextProvider >
