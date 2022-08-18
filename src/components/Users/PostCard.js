@@ -40,6 +40,7 @@ export function PostCard({ props }) {
   const { pathname } = useLocation();
   const { setShowModal, setShareModal } = useContext(ModalContext);
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
+  const [ dataComments, setDataComments ] = useState([]);
   const [config, setConfig] = useState({
     method: "",
     path: "",
@@ -188,7 +189,7 @@ export function PostCard({ props }) {
                   <MetaData metadata={metadata} />
                 </PostDataContainer>
               </Post>
-              <Comments showComments={showComments}/>
+              <Comments dataComments={dataComments} showComments={showComments}/>
             </>
           :
             <>
@@ -219,7 +220,7 @@ export function PostCard({ props }) {
                   <MetaData metadata={metadata} />
                 </PostDataContainer>
               </Post>
-              <Comments showComments={showComments}/>
+              <Comments dataComments={dataComments} showComments={showComments}/>
             </>
       }
     </>
