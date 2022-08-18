@@ -1,19 +1,27 @@
 import styled from "styled-components";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { TbSend } from "react-icons/tb";
+import { useContext } from "react";
+import CommentContext from "../../context/CommentContext";
 
 
 function Comment(props) {
+    console.log(props);
+    const { creatorPostId, text, user, userId, pictureUser } = props.props;
+    let identification = "";
+    if(creatorPostId === userId) {
+        identification = "• post's author"
+    }
     return(
         <UserComment>
             <User>
-                <img src="https://i.pinimg.com/736x/25/78/61/25786134576ce0344893b33a051160b1.jpg" alt="" />
+                <img src={pictureUser} alt="" />
                 <Info>
                     <UserInfo>
-                        <Name>João Avatares</Name>
-                        <Identification>• post's author</Identification>
+                        <Name>{user}</Name>
+                        <Identification>{identification}</Identification>
                     </UserInfo>
-                    <Message>Adorei esse post, ajuda muito a usar Material UI com React!Adorei esse post, ajuda muito a usar Material UI com React!Adorei esse post, ajuda muito a usar Material UI com React!Adorei esse post, ajuda muito a usar Material UI com React!</Message>
+                    <Message>{text}</Message>
                 </Info>
             </User>
             <span></span>
@@ -22,7 +30,7 @@ function Comment(props) {
 }
 
 export default function Comments(props) {
-    const { showComments } = props;
+    const { showComments, dataComments } = props;
     const { pictureUrl } = useLocalstorage( {key: "linkrToken"} );
     return(
         <>
@@ -30,9 +38,7 @@ export default function Comments(props) {
                 showComments === true 
                 ?
                 <CommentsContainer>
-                    <Comment/>
-                    <Comment/>
-                    <Comment/>
+                    {dataComments.map((item, index) => <Comment key={index} props={item} />)}
                     <UserText>
                         <img src={pictureUrl} alt="" />
                         <input type="text" placeholder="write a comment..."/>

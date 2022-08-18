@@ -36,6 +36,7 @@ export function PostCard({ props }) {
   const { pathname } = useLocation();
   const { setShowModal } = useContext(ModalContext);
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
+  const [ dataComments, setDataComments ] = useState([]);
   const [config, setConfig] = useState({
     method: "",
     path: "",
@@ -48,7 +49,6 @@ export function PostCard({ props }) {
   const [likesC, setLike] = useState(Number(likes) || 0);
   const [canEditPost, setCanEditPost] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  console.log(showComments);
   const { response } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
@@ -158,7 +158,7 @@ export function PostCard({ props }) {
                 userIndex={userIndex}
               ></AddLike>
             </LikeContainer>
-            <ViewComment comments={comments} setShowComments={setShowComments} showComments={showComments}/>
+            <ViewComment id={id} comments={comments} setShowComments={setShowComments} showComments={showComments} setDataComments={setDataComments}/>
           </LikePictureContainer>
           <PostDataContainer>
             <CreatorButtons />
@@ -166,7 +166,7 @@ export function PostCard({ props }) {
             <MetaData metadata={metadata} />
           </PostDataContainer>
         </Post>
-        <Comments showComments={showComments}/>
+        <Comments dataComments={dataComments} showComments={showComments}/>
       </>
     }
     </>
