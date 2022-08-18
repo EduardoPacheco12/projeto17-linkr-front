@@ -36,6 +36,11 @@ function Posts({ path, method }) {
       const data = response.data
       setData(data);
     }
+
+    if(path !== method.path) {
+      return setConfig({ ...config, path, method });
+    }
+
     setConfig({
       method: "",
       path: "",
@@ -55,15 +60,11 @@ function Posts({ path, method }) {
 
   function TimelineData() {
     if (data !== null && !loading) {
-      if (data?.length === 0) {
-        return <h3>There are no posts yet</h3>;
-      } else {
-        return (
-          data?.map((item, index) => (
-            <PostCard key={index} id={item.id} props={item} />
-          )) || <SkeletonLoading />
-        );
-      }
+      return (
+        data?.map((item, index) => (
+          <PostCard key={index} id={item.id} props={item} />
+        )) || <SkeletonLoading />
+      );
     }
     return <SkeletonLoading />;
   }
