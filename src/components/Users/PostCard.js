@@ -34,6 +34,7 @@ export function PostCard({ props }) {
     nameWhoLiked,
     reposterId,
     reposterName,
+    shares
   } = props;
   const navigate = useNavigate();
   const { pathname } = useLocation();
@@ -53,19 +54,16 @@ export function PostCard({ props }) {
   const [likesC, setLike] = useState(Number(likes) || 0);
   const [canEditPost, setCanEditPost] = useState(false);
   const [showComments, setShowComments] = useState(false);
-  const [shareCount, setCount] = useState(0);
+  const [shareCount, ] = useState(0);
   const { response, loading } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
   const noPostsMessage = pathname.includes("timeline") ? "No posts found from your friends" : "There are no posts yet";
 
   useEffect(() => {
-    console.log(config);
-    console.log(response);
     if (response !== null && !loading) {
       responseFromLike();
     }
-
     if(id) getCountShare();
 
     setConfig({
@@ -102,7 +100,6 @@ export function PostCard({ props }) {
     const data = { ...config };
     data.path = `likes/${id}`;
     data.method = "post";
-    console.log(data);
     ReactTooltip.rebuild();
     setConfig(data);
   }
@@ -111,7 +108,7 @@ export function PostCard({ props }) {
     const response = getRepost(id, token);
     response
       .then((e) => {
-        setCount(Number(e.data.count));
+        // setCount(Number(e.data.count));
         setShared(e.data.shared);
       })
       .catch((error) => {
@@ -204,7 +201,7 @@ export function PostCard({ props }) {
               />
               <Share
                 sharePost={sharePost}
-                shareCount={shareCount}
+                shareCount={shares}
                 shared={shared}
               />
             </LikeContainer>
