@@ -38,7 +38,6 @@ export default function Comments(props) {
     config: [null, { headers: { Authorization: `Bearer ${token}` } }],
   });
   const { response, loading, error } = useAxios(config);
-  console.log(response, loading, error);
 
   useEffect(() => {
     if(response !== null) {

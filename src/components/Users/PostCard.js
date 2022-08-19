@@ -22,7 +22,6 @@ import { getRepost, rePoster } from "../../services/api";
 import Reposted from '../../assets/repost.svg';
 
 export function PostCard({ props }) {
-  console.log(props);
   const {
     id,
     creatorId,
@@ -59,12 +58,15 @@ export function PostCard({ props }) {
   const { response, error, loading } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
+  const noPostsMessage = pathname.includes("timeline") ? "No posts found from your friends" : "There are no posts yet";
 
   useEffect(() => {
     if(response !== null && !loading) {
       responseFromLike();
     }
-    getCountShare();
+
+    if(id) getCountShare();
+
     setConfig({
       method: "",
       path: "",
@@ -160,8 +162,8 @@ export function PostCard({ props }) {
     <>
       {
         id === null
-        ? 
-          <h3>There are no posts yet</h3>
+        ?
+          <h3>{ noPostsMessage }</h3>
         : 
           !reposterId
           ? 
