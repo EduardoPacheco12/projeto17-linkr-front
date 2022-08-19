@@ -56,6 +56,7 @@ function Posts({ path, emptyData, setEmptyData }) {
     };
 
     setConfig(newConfig);
+  // eslint-disable-next-line
   }, [page])
 
   useEffect(() => {
@@ -64,29 +65,22 @@ function Posts({ path, emptyData, setEmptyData }) {
         setContextData(data);
         setNewPost(false);
       }
-
       if (response !== null) {
         setPostsLeft(Number(response?.data[0]?.tableLength) - response?.data?.length)
         setData((data) => [...data, ...response.data]);
       }
-
-      if(emptyData) {
-        setData([]);
-        setEmptyData(false);
-      }
     }
 
     handleError();
-
     if(path !== config.path) {
       const header = {
         headers: {
           Authorization: `Bearer ${ token }`
         }
       }
-
       setConfig({ config: [ header ], path, method: "get" });
     }
+  // eslint-disable-next-line
   }, [response, loading, userId]);
 
   function handleError() {

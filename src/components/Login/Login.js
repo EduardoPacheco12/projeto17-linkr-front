@@ -29,6 +29,7 @@ export default function Login() {
     if(userToken) {
       navigate('/timeline');
     }
+  // eslint-disable-next-line
   } , [response, loading, userToken]);
 
   function handleError() {

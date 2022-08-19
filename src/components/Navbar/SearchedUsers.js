@@ -18,7 +18,7 @@ function SearchedUsers({ usersSearched, setSearchInput }) {
             <UserIndentification
               key={ index }
               onClick={ () => selectUser(user.id)}>
-              <img  src={ user.pictureUrl } alt={ user.username } />
+              <img  src={ user.pictureUrl } alt={'profile'} />
               <h3>{ user.username }</h3>
               {
                 user.follower

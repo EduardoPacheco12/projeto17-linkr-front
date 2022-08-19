@@ -25,6 +25,7 @@ function Publish() {
       setDescription("");
       setNewPost(response.data);
     }
+  // eslint-disable-next-line
   }, [response, loading, token]);
   
   function handleError() {

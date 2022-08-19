@@ -31,6 +31,7 @@ function Trends() {
           config: { headers: { Authorization: `Bearer ${token}` } }
         });
     }
+  // eslint-disable-next-line
   }, [ response, loading, newPost ])
 
   function handleError() {

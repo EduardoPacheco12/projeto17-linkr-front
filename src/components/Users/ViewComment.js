@@ -12,7 +12,7 @@ export default function ViewComment(props) {
       path: "",
       config: [{ headers: { Authorization: `Bearer ${token}` } }, null],
     });
-  const { response, loading, error } = useAxios(config);
+  const { response, error } = useAxios(config);
 
   useEffect(() => {
     if(response !== null) {
@@ -22,7 +22,8 @@ export default function ViewComment(props) {
       alert("Unable to access comments for this post, please try again");
       setShowComments(false);
     }
-  }, [response, error]);
+  // eslint-disable-next-line
+}, [response, error]);
 
   useEffect(() => {
     if(showComments === true) {
@@ -32,6 +33,7 @@ export default function ViewComment(props) {
         config: [{ headers: { Authorization: `Bearer ${token}` } }, null],
       })
     }
+  // eslint-disable-next-line
   }, [showComments])
 
   function openComments() {
@@ -41,7 +43,7 @@ export default function ViewComment(props) {
   return (
     <Chat>
         <BsChatDots color={"while"} fontSize={"20px"} cursor={"pointer"} onClick={openComments}/>
-        <p>{`${comments} ${comments == 1 ? "comment" : "comments"}`}</p>
+        <p>{`${comments} ${comments === 1 ? "comment" : "comments"}`}</p>
     </Chat>
   )
 }
