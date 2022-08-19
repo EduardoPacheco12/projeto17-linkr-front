@@ -20,6 +20,7 @@ function UsersView() {
       setUserId(Number(id));
       setEmptyData(true);
     }
+  // eslint-disable-next-line
   }, [ id ]);
 
   function hideLogout() {
@@ -33,7 +34,7 @@ function UsersView() {
           <UserDataContainer>
             <img
               src={ searchedUser.pictureUrl ? searchedUser.pictureUrl : "" }
-              alt={ searchedUser.username ? searchedUser.username : "" }
+              alt={ searchedUser.username ? searchedUser.username : "picture" }
             />
             <h2>
               {

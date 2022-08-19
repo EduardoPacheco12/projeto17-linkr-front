@@ -10,16 +10,15 @@ import PostContext from "../../context/PostContext";
 import EditPostCard from "./EditPostCard";
 import { IoMdTrash } from "react-icons/io";
 import { BsPencilFill } from "react-icons/bs";
-import { FaRegHeart, FaHeart} from "react-icons/fa";
-import { RiShareForwardLine, RiShareForwardFill} from "react-icons/ri";
+import { FaRegHeart, FaHeart } from "react-icons/fa";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { getRepost, rePoster } from "../../services/api";
-import Reposted from '../../assets/repost.svg';
+import { getRepost } from "../../services/api";
+import Reposted from "../../assets/repost.svg";
 
 export function PostCard({ props }) {
   const {
@@ -34,13 +33,13 @@ export function PostCard({ props }) {
     usersWhoLiked,
     nameWhoLiked,
     reposterId,
-    reposterName
+    reposterName,
   } = props;
   const navigate = useNavigate();
   const { pathname } = useLocation();
   const { setShowModal, setShareModal } = useContext(ModalContext);
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
-  const [ dataComments, setDataComments ] = useState([]);
+  const [dataComments, setDataComments] = useState([]);
   const [config, setConfig] = useState({
     method: "",
     path: "",
@@ -50,20 +49,25 @@ export function PostCard({ props }) {
     usersWhoLiked?.includes(userId) ? true : false || false
   );
   const [shared, setShared] = useState(false);
-  const userIndex = usersWhoLiked?.indexOf(userId)
+  const userIndex = usersWhoLiked?.indexOf(userId);
   const [likesC, setLike] = useState(Number(likes) || 0);
   const [canEditPost, setCanEditPost] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [shareCount, setCount] = useState(0);
-  const { response, error, loading } = useAxios(config);
+  const { response, loading } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
+  const noPostsMessage = pathname.includes("timeline") ? "No posts found from your friends" : "There are no posts yet";
 
   useEffect(() => {
-    if(response !== null && !loading) {
+    console.log(config);
+    console.log(response);
+    if (response !== null && !loading) {
       responseFromLike();
     }
-    getCountShare();
+
+    if(id) getCountShare();
+
     setConfig({
       method: "",
       path: "",
@@ -72,7 +76,8 @@ export function PostCard({ props }) {
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
-  }, [response]);
+    // eslint-disable-next-line
+  }, [loading]);
 
   function responseFromLike() {
     if (response !== null) {
@@ -85,6 +90,11 @@ export function PostCard({ props }) {
         usersWhoLiked?.filter((i) => i === userId);
         setLike(Number(likesC - 1));
       }
+      setConfig({
+        method: "",
+        path: "",
+        config: [null, { headers: { Authorization: `Bearer ${token}` } }],
+      });
     }
   }
 
@@ -92,18 +102,21 @@ export function PostCard({ props }) {
     const data = { ...config };
     data.path = `likes/${id}`;
     data.method = "post";
+    console.log(data);
     ReactTooltip.rebuild();
     setConfig(data);
   }
 
   function getCountShare() {
-    const response = getRepost(id, token)
-    response.then((e)=>{
-      setCount(Number(e.data.count))
-      setShared(e.data.shared)
-    }).catch(error =>{
-      console.log(error)
-    })
+    const response = getRepost(id, token);
+    response
+      .then((e) => {
+        setCount(Number(e.data.count));
+        setShared(e.data.shared);
+      })
+      .catch((error) => {
+        console.log(error);
+      });
   }
 
   function sharePost() {
@@ -155,102 +168,92 @@ export function PostCard({ props }) {
       <p>{description && <HashtagCard text={description} />}</p>
     );
 
+  const RepostComponent = () =>
+    reposterId ? (
+      <RePoster>
+        <img src={Reposted} alt={reposterName} />
+        Re-posted by {reposterId === userId ? "You" : reposterName}
+      </RePoster>
+    ) : (
+      <></>
+    );
+
+  const Render = () => {
+    if (id === null) return <h3>{ noPostsMessage }</h3>;
+    return (
+      <>
+        <RepostComponent />
+        <Post>
+          <LikePictureContainer>
+            <img src={pictureUrl} alt={`profile`} onClick={selectUser} />
+            <LikeContainer>
+              <AddLike
+                addLiked={addLiked}
+                nameWhoLiked={nameWhoLiked}
+                likes={likesC}
+                liked={liked}
+                postId={id}
+                userIndex={userIndex}
+              ></AddLike>
+              <ViewComment
+                id={id}
+                comments={comments}
+                setShowComments={setShowComments}
+                showComments={showComments}
+                setDataComments={setDataComments}
+              />
+              <Share
+                sharePost={sharePost}
+                shareCount={shareCount}
+                shared={shared}
+              />
+            </LikeContainer>
+          </LikePictureContainer>
+          <PostDataContainer>
+            <CreatorButtons />
+            <EditPostUI />
+            <MetaData metadata={metadata} />
+          </PostDataContainer>
+        </Post>
+        <Comments
+          id={id}
+          dataComments={dataComments}
+          showComments={showComments}
+        />
+      </>
+    );
+  };
+
+  return <Render />;
+}
+
+function Share({ sharePost, shareCount, shared }) {
+  if (shared)
+    return (
+      <div className="reposter">
+        <img src={Reposted} width={10} height={10} alt={"reposted"} />
+        <p>{shareCount} re-posts</p>
+      </div>
+    );
   return (
-    <>
-      {
-        id === null
-        ? 
-          <h3>There are no posts yet</h3>
-        : 
-          !reposterId
-          ? 
-            <>
-              <Post>
-                <LikePictureContainer>
-                  <img
-                    src={pictureUrl}
-                    alt={username && `${username}'s profile`}
-                    onClick={selectUser}
-                  />
-                  <LikeContainer>
-                    <AddLike
-                      addLiked={addLiked}
-                      nameWhoLiked={nameWhoLiked}
-                      likes={likesC}
-                      liked={liked}
-                      postId={id}
-                      userIndex={userIndex}
-                    ></AddLike >
-                    <ViewComment id={id} comments={comments} setShowComments={setShowComments} showComments={showComments} setDataComments={setDataComments}/>
-                    <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
-                  </LikeContainer>
-                </LikePictureContainer>
-                <PostDataContainer>
-                  <CreatorButtons />
-                  <EditPostUI />
-                  <MetaData metadata={metadata} />
-                </PostDataContainer>
-              </Post>
-              <Comments id={id} dataComments={dataComments} showComments={showComments} setShowComments={setShowComments}/>
-            </>
-          :
-            <>
-              <RePoster><img src={Reposted} alt={reposterName}/>Re-posted by {reposterId == userId? 'You' : reposterName}</RePoster>
-              <Post>
-                <LikePictureContainer>
-                  <img
-                    src={pictureUrl}
-                    alt={username && `${username}'s profile`}
-                    onClick={selectUser}
-                  />
-                  <LikeContainer>
-                    <AddLike
-                      addLiked={addLiked}
-                      nameWhoLiked={nameWhoLiked}
-                      likes={likesC}
-                      liked={liked}
-                      postId={id}
-                      userIndex={userIndex}
-                    ></AddLike >
-                    <ViewComment id={id} comments={comments} setShowComments={setShowComments} showComments={showComments} setDataComments={setDataComments}/>
-                    <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
-                  </LikeContainer>
-                </LikePictureContainer>
-                <PostDataContainer>
-                  <CreatorButtons />
-                  <EditPostUI />
-                  <MetaData metadata={metadata} />
-                </PostDataContainer>
-              </Post>
-              <Comments id={id} dataComments={dataComments} showComments={showComments} setShowComments={setShowComments}/>
-            </>
-      }
-    </>
+    <div className="reposter">
+      <img
+        src={Reposted}
+        width={10}
+        height={10}
+        alt={"reposted"}
+        style={{ opacity: "0.7" }}
+        onClick={() => {
+          sharePost();
+        }}
+      />
+      <p>{shareCount} re-posts</p>
+    </div>
   );
 }
 
-function Share({sharePost, shareCount, shared}){
-  
-  if(shared)
-  return (<div className="reposter">
-    <img src={Reposted} width={10} height={10} alt={sharePost} />
-    <p>{shareCount} re-posts</p>
-    </div>
-  );return (
-    <div className="reposter">
-    
-    <img src={Reposted} width={10} height={10} alt={sharePost} style={{opacity:"0.7"}} onClick={() => {
-      sharePost();
-    }}/>
-    <p>{shareCount} re-posts</p>
-    </div>
-  )
-  
-   
-}
-
 function AddLike(props) {
-  const { addLiked, liked, nameWhoLiked, postId, likes, userIndex} = props
+  const { addLiked, liked, nameWhoLiked, postId, likes, userIndex } = props;
   if (liked)
     return (
       <div>
@@ -263,10 +266,16 @@ function AddLike(props) {
           }}
         />
         <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
-          {`${likes} ${likes=== 1 ? "like" : "likes"}`}
+          {`${likes} ${likes === 1 ? "like" : "likes"}`}
         </p>
         {likes > 0 && (
-          <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} likes={likes} like={liked} userIndex={userIndex}/>
+          <ToolTip
+            postId={postId}
+            nameWhoLiked={nameWhoLiked}
+            likes={likes}
+            like={liked}
+            userIndex={userIndex}
+          />
         )}
       </div>
     );
@@ -281,25 +290,31 @@ function AddLike(props) {
         }}
       />
       <p data-tip="tooltip" data-for={`postLikes-${postId}`}>
-        {`${likes} ${likes=== 1 ? "like" : "likes"}`}
+        {`${likes} ${likes === 1 ? "like" : "likes"}`}
       </p>
-        {likes > 0 && (
-          <ToolTip postId={postId} nameWhoLiked={nameWhoLiked} likes={likes} like={liked} userIndex={userIndex}/>
-        )}
-      </div>
+      {likes > 0 && (
+        <ToolTip
+          postId={postId}
+          nameWhoLiked={nameWhoLiked}
+          likes={likes}
+          like={liked}
+          userIndex={userIndex}
+        />
+      )}
+    </div>
   );
 }
 
 const ToolTip = (props) => {
-  const { postId, nameWhoLiked, like, likes, userIndex } = props
+  const { postId, nameWhoLiked, like, likes, userIndex } = props;
   let newArrayNames = [];
-  if(userIndex >= 0){
+  if (userIndex >= 0) {
     for (let i = 0; i < nameWhoLiked.length; i++) {
-      if(i!== userIndex){
-        newArrayNames.push(nameWhoLiked[i])
+      if (i !== userIndex) {
+        newArrayNames.push(nameWhoLiked[i]);
       }
     }
-  }else{
+  } else {
     newArrayNames = nameWhoLiked;
   }
   return (
@@ -310,19 +325,30 @@ const ToolTip = (props) => {
       backgroundColor={"rgba(255, 255, 255, 0.9)"}
       textColor={"#505050"}
     >
-      {
-        (likes === 1 && like) ? <span>You</span>
-          : (likes === 1 && !like) ? <span>{newArrayNames[0]}</span>
-            : (likes === 2 && like) ? <span>You and {newArrayNames }</span>
-              : (likes === 2 && !like) ? <span>{newArrayNames[0]} and {newArrayNames[1]}</span>
-                : (likes > 2 && like) ? <span>You, {newArrayNames[0]} and other {likes - 2} people</span>
-                  : (likes > 2 && !like) ? <span>{newArrayNames[0]}, {newArrayNames[1]} and other {likes - 2} people</span>
-                    : ''
-      }
+      {likes === 1 && like ? (
+        <span>You</span>
+      ) : likes === 1 && !like ? (
+        <span>{newArrayNames[0]}</span>
+      ) : likes === 2 && like ? (
+        <span>You and {newArrayNames}</span>
+      ) : likes === 2 && !like ? (
+        <span>
+          {newArrayNames[0]} and {newArrayNames[1]}
+        </span>
+      ) : likes > 2 && like ? (
+        <span>
+          You, {newArrayNames[0]} and other {likes - 2} people
+        </span>
+      ) : likes > 2 && !like ? (
+        <span>
+          {newArrayNames[0]}, {newArrayNames[1]} and other {likes - 2} people
+        </span>
+      ) : (
+        ""
+      )}
     </ReactTooltip>
   );
 };
-
 
 export function SkeletonLoading() {
   return (
@@ -386,9 +412,9 @@ const LikePictureContainer = styled.div`
     cursor: pointer;
   }
 
-  .reposter{
-    img{
-    width: 20px;
+  .reposter {
+    img {
+      width: 20px;
       height: 12px;
       border-radius: 0%;
     }
@@ -418,7 +444,7 @@ const LikeContainer = styled.div`
     color: #fff;
   }
 
-  div{
+  div {
     display: flex;
     flex-direction: column;
     align-items: center;
@@ -426,14 +452,13 @@ const LikeContainer = styled.div`
 `;
 const RePoster = styled.div`
   width: 100%;
-  background-color: #1E1E1E;
+  background-color: #1e1e1e;
   border-radius: 16px 16px 0px 0px;
   color: #ffffff;
   height: 38px;
   padding: 13px 11px;
-  font-size:11px;
+  font-size: 11px;
   margin-bottom: -11px;
-  
 `;
 
 const PostDataContainer = styled.div`

@@ -42,7 +42,7 @@ export default function Comments(props) {
     path: "",
     config: [null, { headers: { Authorization: `Bearer ${token}` } }],
   });
-  const { response, loading, error } = useAxios(config);
+  const { response, error } = useAxios(config);
 
   useEffect(() => {
     if(response !== null) {

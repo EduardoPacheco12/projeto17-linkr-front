@@ -29,6 +29,7 @@ function FollowButton ({ searchedUserId }) {
     if(error !== null && !loading) {
       alert("Não foi possível realizar a operação")
     } 
+  // eslint-disable-next-line
   }, [ response, error, loading, searchedUserId ]);
 
   function followUnfollow() {
