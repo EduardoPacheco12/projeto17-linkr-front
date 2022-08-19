@@ -57,6 +57,7 @@ export function PostCard({ props }) {
   const { response, loading } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
+  const noPostsMessage = pathname.includes("timeline") ? "No posts found from your friends" : "There are no posts yet";
 
   useEffect(() => {
     console.log(config);
@@ -64,7 +65,14 @@ export function PostCard({ props }) {
     if (response !== null && !loading) {
       responseFromLike();
     }
-    getCountShare();
+
+    if(id) getCountShare();
+
+    setConfig({
+      method: "",
+      path: "",
+      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
+    });
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
@@ -171,7 +179,7 @@ export function PostCard({ props }) {
     );
 
   const Render = () => {
-    if (id === null) return <h3>There are no posts yet</h3>;
+    if (id === null) return <h3>{ noPostsMessage }</h3>;
     return (
       <>
         <RepostComponent />
@@ -217,6 +225,7 @@ export function PostCard({ props }) {
   };
 
   return <Render />;
+
 }
 
 function Share({ sharePost, shareCount, shared }) {

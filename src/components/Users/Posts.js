@@ -7,6 +7,7 @@ import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useAxios } from "../../hooks/useAxios";
 import { PostCard, SkeletonLoading } from "./PostCard";
 import { ThreeDots } from "react-loader-spinner";
+import { useLocation } from "react-router-dom";
 
 function Posts({ path, emptyData, setEmptyData }) {
   const { token } = useLocalstorage({ key: "linkrToken" });
@@ -18,6 +19,21 @@ function Posts({ path, emptyData, setEmptyData }) {
   const { userId } = useContext(SearchedUserContext);
   const { setNewPost } = useContext(PostContext);
   const [postsLeft, setPostsLeft] = useState(0);
+  const { pathname } = useLocation();
+  const noPostsMessage = (
+    pathname.includes("timeline") 
+    ? 
+    "You don't follow anyone yet. Search for new friends!"
+    :
+    "There are no posts yet"
+  );
+  const noPostsLoadMessage = (
+    data[0]?.id !== null
+    ?
+    "There are no more posts to load"
+    :
+    ""
+  )
 
   const observer = useRef();
   const lastPostRef = useCallback(node => {
@@ -79,14 +95,22 @@ function Posts({ path, emptyData, setEmptyData }) {
 
   const PostItems = () => (
     <>
-      {data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />)}
-      <Observer ref={lastPostRef}>{postsLeft > 0 ? <ThreeDots color="#FFFFFF" height={80} width={80} /> : <h3>There are no more posts to load</h3>}</Observer>
+      {data.map((item, index) => <PostCard key={index} id={item.id} props={item} />)}
+      <Observer ref={lastPostRef}>
+        {
+          postsLeft > 0
+          ?
+          <ThreeDots color="#FFFFFF" height={80} width={80} />
+          :
+          <h3>{ noPostsLoadMessage }</h3>
+        }
+      </Observer>
     </>
   );
 
   function TimelineData() {
-    if (loading && data.length === 0) return <SkeletonLoading />; 
-    if (data.length === 0) return <h3>There are no posts yet</h3>;
+    if (data === null && loading) return <SkeletonLoading />; 
+    if (data.length === 0) return <h3>{ noPostsMessage }</h3>;
     return <PostItems />;
   }
 
