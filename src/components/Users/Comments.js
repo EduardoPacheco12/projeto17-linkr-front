@@ -33,7 +33,7 @@ function Comment(props) {
 }
 
 export default function Comments(props) {
-  const { showComments, setShowComments, dataComments, id } = props;
+  const { showComments, setShowComments, setDataComments, dataComments, id } = props;
   const { pictureUrl } = useLocalstorage( {key: "linkrToken"} );
   const { token } = useLocalstorage( {key: "linkrToken"} );
   const [text, setText] = useState("");
@@ -48,6 +48,7 @@ export default function Comments(props) {
     if(response !== null) {
       setText("");
       setShowComments(false);
+      setDataComments(null);
     }
     if(error !== null) {
       alert("Unable to send your comment, please try again");
@@ -70,7 +71,7 @@ export default function Comments(props) {
         showComments === true 
         ?
         <CommentsContainer>
-          {dataComments.map((item, index) => <Comment key={index} props={item} />)}
+          {dataComments?.map((item, index) => <Comment key={index} props={item} />)}
           <UserText>
             <img src={pictureUrl} alt="" />
             <input type="text" placeholder="write a comment..." onChange={(e) => setText(e.target.value)} value={text} required/>

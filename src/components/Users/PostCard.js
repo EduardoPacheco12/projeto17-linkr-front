@@ -40,7 +40,7 @@ export function PostCard({ props }) {
   const { pathname } = useLocation();
   const { setShowModal, setShareModal } = useContext(ModalContext);
   const { token, id: userId } = useLocalstorage({ key: "linkrToken" });
-  const [dataComments, setDataComments] = useState([]);
+  const [dataComments, setDataComments] = useState(null);
   const [config, setConfig] = useState({
     method: "",
     path: "",
@@ -96,6 +96,7 @@ export function PostCard({ props }) {
     }
   }
 
+
   function addLiked() {
     const data = { ...config };
     data.path = `likes/${id}`;
@@ -112,7 +113,6 @@ export function PostCard({ props }) {
         setShared(e.data.shared);
       })
       .catch((error) => {
-        console.log(error);
       });
   }
 
@@ -195,8 +195,9 @@ export function PostCard({ props }) {
               <ViewComment
                 id={id}
                 comments={comments}
-                setShowComments={setShowComments}
+                dataComments={dataComments}
                 showComments={showComments}
+                setShowComments={setShowComments}
                 setDataComments={setDataComments}
               />
               <Share
@@ -216,6 +217,8 @@ export function PostCard({ props }) {
           id={id}
           dataComments={dataComments}
           showComments={showComments}
+          setShowComments={setShowComments}
+          setDataComments={setDataComments}
         />
       </>
     );

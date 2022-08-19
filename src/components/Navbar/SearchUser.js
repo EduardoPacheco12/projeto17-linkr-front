@@ -40,7 +40,6 @@ function SearchUser() {
         );
         setUsersSearched(searchData.data);
       } catch(err) {
-        console.log(err);
       }
     }
   }
