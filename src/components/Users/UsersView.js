@@ -34,7 +34,7 @@ function UsersView() {
           <UserDataContainer>
             <img
               src={ searchedUser.pictureUrl ? searchedUser.pictureUrl : "" }
-              alt={ searchedUser.username ? searchedUser.username : "" }
+              alt={ searchedUser.username ? searchedUser.username : "picture" }
             />
             <h2>
               {
