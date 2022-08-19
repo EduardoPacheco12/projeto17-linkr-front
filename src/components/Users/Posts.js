@@ -70,6 +70,10 @@ function Posts({ path, emptyData, setEmptyData }) {
         setPostsLeft(Number(response?.data[0]?.tableLength) - response?.data?.length)
         setData((data) => [...data, ...response.data]);
       }
+      if(emptyData) {
+        setData([]);
+        setEmptyData(false);
+      }
     }
 
     handleError();
@@ -110,7 +114,7 @@ function Posts({ path, emptyData, setEmptyData }) {
   );
 
   function TimelineData() {
-    if (data === null && loading) return <SkeletonLoading />; 
+    if (loading && data.length === 0) return <SkeletonLoading />; 
     if (data.length === 0) return <h3>{ noPostsMessage }</h3>;
     return <PostItems />;
   }
