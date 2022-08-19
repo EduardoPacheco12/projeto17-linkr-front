@@ -65,11 +65,6 @@ export function PostCard({ props }) {
       responseFromLike();
     }
     getCountShare();
-    setConfig({
-      method: "",
-      path: "",
-      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
-    });
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
@@ -171,7 +166,7 @@ export function PostCard({ props }) {
     );
 
   const Render = () => {
-    if (id === null) return <SkeletonLoading />;
+    if (id === null) return <h3>There are no posts yet</h3>;
     return (
       <>
         <RepostComponent />
