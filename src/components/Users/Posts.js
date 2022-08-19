@@ -6,6 +6,7 @@ import { useCallback, useContext, useEffect, useRef, useState } from "react";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useAxios } from "../../hooks/useAxios";
 import { PostCard, SkeletonLoading } from "./PostCard";
+import NewPostsAlert from "../shared/NewPostsAlert";
 import { ThreeDots } from "react-loader-spinner";
 import { useLocation } from "react-router-dom";
 
@@ -33,7 +34,7 @@ function Posts({ path, emptyData, setEmptyData }) {
     "There are no more posts to load"
     :
     ""
-  )
+  );
 
   const observer = useRef();
   const lastPostRef = useCallback(node => {
@@ -116,6 +117,7 @@ function Posts({ path, emptyData, setEmptyData }) {
 
   return (
     <PostsList>
+      { pathname === "/timeline" ? <NewPostsAlert lastPost={ data[0] } /> : <></> }
       <TimelineData />
     </PostsList>
   );
