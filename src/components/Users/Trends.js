@@ -82,7 +82,7 @@ function Trends() {
 
 const TrendBorder = styled.div`
   display: flex;
-  max-width: 300px;
+  width: 300px;
   flex-grow: 1;
   flex-direction: column;
   background-color: #171717;

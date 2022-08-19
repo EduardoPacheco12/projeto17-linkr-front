@@ -42,7 +42,7 @@ export default function Comments(props) {
     path: "",
     config: [null, { headers: { Authorization: `Bearer ${token}` } }],
   });
-  const { response, error } = useAxios(config);
+  const { response, loading, error } = useAxios(config);
 
   useEffect(() => {
     if(response !== null) {
@@ -95,6 +95,9 @@ const CommentsContainer = styled.div `
   margin-bottom: 10px;
   display: flex;
   flex-direction: column;
+  @media screen and (max-width: 900px) {
+    width: 100vw;
+  }
 `
 
 const UserText = styled.div `
@@ -111,7 +114,7 @@ const UserText = styled.div `
     margin-right: 15px;
   }
   input {
-    width: 510px;
+    width: 50vw;
     height: 35px;
     background-color: #252525;
     border-radius: 8px;
@@ -133,36 +136,53 @@ const UserText = styled.div `
       color: #575757;
     }
   }
+  @media screen and (max-width: 900px) {
+    input {
+      width: 80vw;
+    }
+  }
 `;
 
 const Send = styled(TbSend) `
     position: absolute;
-    right: 35px;
+    right: 4vw;
     cursor: pointer;
+    @media screen and (max-width: 900px) {
+      right: 7vw;
+    }
 `;
 
 const UserComment = styled.li `
-    margin-top: 20px;
-    display: flex;
-    flex-direction: column;
+  margin-top: 20px;
+  display: flex;
+  flex-direction: column;
+  img {
+      width: 35px;
+      height: 35px;
+      border-radius: 50%;
+      margin-right: 10px;
+      margin-left: 3vw;
+      margin-bottom: 15px;
+  }
+  span {
+      height: 1px;
+      width: 53vw;
+      background-color: #353535;
+      margin-left: 3vw;
+  }
+  @media screen and (max-width: 900px) {
     img {
-        width: 35px;
-        height: 35px;
-        border-radius: 50%;
-        margin-right: 10px;
-        margin-left: 25px;
-        margin-bottom: 15px;
+      margin-left: 6vw;
     }
     span {
-        height: 1px;
-        width: 560px;
-        background-color: #353535;
-        margin-left: 25px;
+      width: 85vw;
+      margin-left: 6vw;
     }
+  }
 `;
 
 const User = styled.div `
-
+  display: flex;
 `;
 
 const UserInfo = styled.div `
