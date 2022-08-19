@@ -225,7 +225,6 @@ export function PostCard({ props }) {
   };
 
   return <Render />;
-
 }
 
 function Share({ sharePost, shareCount, shared }) {

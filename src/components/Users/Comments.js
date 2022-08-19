@@ -5,11 +5,16 @@ import { useEffect, useState } from "react";
 import { useAxios } from "../../hooks/useAxios";
 
 function Comment(props) {
-  const { creatorPostId, text, user, userId, pictureUser } = props.props;
+  const { creatorPostId, text, user, userId, pictureUser, follows } = props.props;
   let identification = "";
   if(creatorPostId === userId) {
-    identification = "• post's author"
+    identification = "• post's author";
   }
+  const following = follows.map((response) => {
+    if(response === userId) {
+      identification = "• following";
+    }
+  });
   return(
     <UserComment>
       <User>
@@ -28,7 +33,7 @@ function Comment(props) {
 }
 
 export default function Comments(props) {
-  const { showComments, dataComments, id } = props;
+  const { showComments, setShowComments, dataComments, id } = props;
   const { pictureUrl } = useLocalstorage( {key: "linkrToken"} );
   const { token } = useLocalstorage( {key: "linkrToken"} );
   const [text, setText] = useState("");
@@ -39,10 +44,10 @@ export default function Comments(props) {
   });
   const { response, error } = useAxios(config);
 
-
   useEffect(() => {
     if(response !== null) {
       setText("");
+      setShowComments(false);
     }
     if(error !== null) {
       alert("Unable to send your comment, please try again");
