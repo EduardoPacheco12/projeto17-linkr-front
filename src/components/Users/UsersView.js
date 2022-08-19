@@ -1,4 +1,4 @@
-import { useContext, useEffect } from "react";
+import { useContext, useEffect, useState } from "react";
 import styled from "styled-components";
 import { useParams } from "react-router-dom";
 import Posts from "./Posts";
@@ -13,10 +13,12 @@ function UsersView() {
   const { searchedUser, userId, setUserId } = useContext(SearchedUserContext);
   const { userData } = useContext(DataContext);
   const { setLogout } = useContext(LogoutContext);
+  const [ emptyData, setEmptyData ] = useState(false);
 
   useEffect(() => {
     if(userId !== id) {
       setUserId(Number(id));
+      setEmptyData(true);
     }
   }, [ id ]);
 
@@ -52,7 +54,7 @@ function UsersView() {
           }
         </div>
         <PostTrendContainer>
-          <Posts path={`posts/${ id }`} />
+          <Posts path={`posts/${ id }`} emptyData={ emptyData } setEmptyData={ setEmptyData } />
           <Trends />
         </PostTrendContainer>
       </MainContent>

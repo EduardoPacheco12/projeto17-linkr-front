@@ -56,12 +56,14 @@ export function PostCard({ props }) {
   const [canEditPost, setCanEditPost] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [shareCount, setCount] = useState(0);
-  const { response } = useAxios(config);
+  const { response, error, loading } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
 
   useEffect(() => {
-    responseFromLike();
+    if(response !== null && !loading) {
+      responseFromLike();
+    }
     getCountShare();
     setConfig({
       method: "",
@@ -72,6 +74,7 @@ export function PostCard({ props }) {
       setSearchedUser({ username, pictureUrl });
     }
   }, [response]);
+
   function responseFromLike() {
     if (response !== null) {
       if (response.status === 201) {

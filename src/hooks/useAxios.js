@@ -31,6 +31,7 @@ export function useAxios({ path = '', method = '', config = null, query = '' }) 
     }
   };
 
+
   useEffect(() => {
     if(method !== '') {
       axiosMethod();
