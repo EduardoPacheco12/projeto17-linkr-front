@@ -16,7 +16,7 @@ function Posts({ path, emptyData, setEmptyData }) {
   const [data, setData] = useState([]);
   const { setContextData } = useContext(DataContext);
   const { userId } = useContext(SearchedUserContext);
-  const { newPost, setNewPost } = useContext(PostContext);
+  const { setNewPost } = useContext(PostContext);
   const [postsLeft, setPostsLeft] = useState(0);
 
   const observer = useRef();
@@ -32,7 +32,6 @@ function Posts({ path, emptyData, setEmptyData }) {
   }, [loading, postsLeft]);
 
   useEffect(() => {
-    console.log("portiole")
     const newConfig = {
       method: 'get',
       path: path,
@@ -92,14 +91,9 @@ function Posts({ path, emptyData, setEmptyData }) {
   );
 
   function TimelineData() {
-    if (data !== null && !loading) {
-      return (
-        data?.map((item, index) => (
-          <PostCard key={index} id={item.id} props={item} />
-        )) || <SkeletonLoading />
-      );
-    }
-    return <SkeletonLoading />;
+    if (data === null || loading) return <SkeletonLoading />; 
+    if (data.length === 0) return <h3>There are no posts yet</h3>;
+    return <PostItems />;
   }
 
   return (

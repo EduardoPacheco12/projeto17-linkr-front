@@ -63,12 +63,12 @@ export function PostCard({ props }) {
     if(response !== null && !loading) {
       responseFromLike();
     }
-    //getCountShare();
-    // setConfig({
-    //   method: "",
-    //   path: "",
-    //   config: [null, { headers: { Authorization: `Bearer ${token}` } }],
-    // });
+    getCountShare();
+    setConfig({
+      method: "",
+      path: "",
+      config: [null, { headers: { Authorization: `Bearer ${token}` } }],
+    });
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
