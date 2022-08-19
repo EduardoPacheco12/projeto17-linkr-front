@@ -195,7 +195,7 @@ export function PostCard({ props }) {
             </>
           :
             <>
-              <RePoster><img src={Reposted} alt={reposterName}/>Re-posted by {reposterId == userId? 'You' : reposterName}</RePoster>
+              <RePoster><img src={Reposted} alt={reposterName}/>Re-posted by {reposterId === userId? 'You' : reposterName}</RePoster>
               <Post>
                 <LikePictureContainer>
                   <img
