@@ -32,7 +32,6 @@ function FollowButton ({ searchedUserId }) {
   }, [ response, error, loading, searchedUserId ]);
 
   function followUnfollow() {
-    console.log("enviou")
     const path = `follow/${searchedUserId}`;
 
     const header = {

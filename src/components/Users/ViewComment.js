@@ -47,7 +47,7 @@ export default function ViewComment(props) {
 }
 
 const Chat = styled.div `
-  margin-top: 15px;
+  margin-top: 5px;
   display: flex;
   flex-direction: column;
   align-items: center;
