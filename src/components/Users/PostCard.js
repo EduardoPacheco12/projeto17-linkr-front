@@ -22,7 +22,6 @@ import { getRepost, rePoster } from "../../services/api";
 import Reposted from '../../assets/repost.svg';
 
 export function PostCard({ props }) {
-  console.log(props);
   const {
     id,
     creatorId,
@@ -192,7 +191,7 @@ export function PostCard({ props }) {
                   <MetaData metadata={metadata} />
                 </PostDataContainer>
               </Post>
-              <Comments id={id} dataComments={dataComments} showComments={showComments}/>
+              <Comments id={id} dataComments={dataComments} showComments={showComments} setShowComments={setShowComments}/>
             </>
           :
             <>
@@ -223,7 +222,7 @@ export function PostCard({ props }) {
                   <MetaData metadata={metadata} />
                 </PostDataContainer>
               </Post>
-              <Comments id={id} dataComments={dataComments} showComments={showComments}/>
+              <Comments id={id} dataComments={dataComments} showComments={showComments} setShowComments={setShowComments}/>
             </>
       }
     </>
