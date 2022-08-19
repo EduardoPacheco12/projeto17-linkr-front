@@ -82,6 +82,11 @@ export function PostCard({ props }) {
         usersWhoLiked?.filter((i) => i === userId);
         setLike(Number(likesC - 1));
       }
+      setConfig({
+        method: "",
+        path: "",
+        config: [null, { headers: { Authorization: `Bearer ${token}` } }],
+      });
     }
   }
 
