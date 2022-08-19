@@ -5,14 +5,14 @@ import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useAxios } from "../../hooks/useAxios";
 
 export default function ViewComment(props) {
-  const { comments, setShowComments, showComments, id, setDataComments } = props;
+  const { comments, dataComments, showComments, setShowComments, id, setDataComments } = props;
   const { token } = useLocalstorage( {key: "linkrToken"} );
   const [config, setConfig] = useState({
       method: "",
       path: "",
       config: [{ headers: { Authorization: `Bearer ${token}` } }, null],
     });
-  const { response, error } = useAxios(config);
+  const { response, loading, error } = useAxios(config);
 
   useEffect(() => {
     if(response !== null) {
@@ -20,13 +20,12 @@ export default function ViewComment(props) {
     }
     if(error !== null) {
       alert("Unable to access comments for this post, please try again");
-      setShowComments(false);
     }
   // eslint-disable-next-line
-}, [response, error]);
+}, [loading, error]);
 
   useEffect(() => {
-    if(showComments === true) {
+    if(showComments && dataComments === null) {
       setConfig({
         method: "get",
         path: `comments/${id}`,
