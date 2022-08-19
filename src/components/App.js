@@ -9,7 +9,6 @@ import SearchedUserContext from "../context/SearchedUserContext";
 import LogoutContext from "../context/LogoutContext";
 import { DataContextProvider } from "../context/DataContext";
 import { ModalContextProvider } from "../context/ModalContext";
-import { CommentContextProvider } from "../context/CommentContext";
 import PostContext from "../context/PostContext";
 import DeleteAlert from "./Users/DeleteAlert";
 import ShareAlert from "./Users/ShareAlert";

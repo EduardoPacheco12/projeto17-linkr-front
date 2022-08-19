@@ -22,6 +22,7 @@ import { getRepost, rePoster } from "../../services/api";
 import Reposted from '../../assets/repost.svg';
 
 export function PostCard({ props }) {
+  console.log(props);
   const {
     id,
     creatorId,
@@ -71,7 +72,6 @@ export function PostCard({ props }) {
       setSearchedUser({ username, pictureUrl });
     }
   }, [response]);
-  console.log("reposterID", reposterId, reposterName)
   function responseFromLike() {
     if (response !== null) {
       if (response.status === 201) {
@@ -179,7 +179,7 @@ export function PostCard({ props }) {
                       postId={id}
                       userIndex={userIndex}
                     ></AddLike >
-                    <ViewComment comments={comments} setShowComments={setShowComments} showComments={showComments}/>
+                    <ViewComment id={id} comments={comments} setShowComments={setShowComments} showComments={showComments} setDataComments={setDataComments}/>
                     <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
                   </LikeContainer>
                 </LikePictureContainer>
@@ -189,7 +189,7 @@ export function PostCard({ props }) {
                   <MetaData metadata={metadata} />
                 </PostDataContainer>
               </Post>
-              <Comments dataComments={dataComments} showComments={showComments}/>
+              <Comments id={id} dataComments={dataComments} showComments={showComments}/>
             </>
           :
             <>
@@ -210,7 +210,7 @@ export function PostCard({ props }) {
                       postId={id}
                       userIndex={userIndex}
                     ></AddLike >
-                    <ViewComment comments={comments} setShowComments={setShowComments} showComments={showComments}/>
+                    <ViewComment id={id} comments={comments} setShowComments={setShowComments} showComments={showComments} setDataComments={setDataComments}/>
                     <Share sharePost={sharePost} shareCount={shareCount} shared={shared}/>
                   </LikeContainer>
                 </LikePictureContainer>
@@ -220,7 +220,7 @@ export function PostCard({ props }) {
                   <MetaData metadata={metadata} />
                 </PostDataContainer>
               </Post>
-              <Comments dataComments={dataComments} showComments={showComments}/>
+              <Comments id={id} dataComments={dataComments} showComments={showComments}/>
             </>
       }
     </>
