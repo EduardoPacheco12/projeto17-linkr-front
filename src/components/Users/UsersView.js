@@ -20,6 +20,7 @@ function UsersView() {
       setUserId(Number(id));
       setEmptyData(true);
     }
+  // eslint-disable-next-line
   }, [ id ]);
 
   function hideLogout() {

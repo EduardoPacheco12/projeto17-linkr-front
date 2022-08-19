@@ -11,14 +11,13 @@ import EditPostCard from "./EditPostCard";
 import { IoMdTrash } from "react-icons/io";
 import { BsPencilFill } from "react-icons/bs";
 import { FaRegHeart, FaHeart} from "react-icons/fa";
-import { RiShareForwardLine, RiShareForwardFill} from "react-icons/ri";
 import { useAxios } from "../../hooks/useAxios";
 import { useContext, useEffect, useState } from "react";
 import { useNavigate, useLocation } from "react-router-dom";
 import { useLocalstorage } from "../../hooks/useLocalstorage";
 import Skeleton, { SkeletonTheme } from "react-loading-skeleton";
 import "react-loading-skeleton/dist/skeleton.css";
-import { getRepost, rePoster } from "../../services/api";
+import { getRepost } from "../../services/api";
 import Reposted from '../../assets/repost.svg';
 
 export function PostCard({ props }) {
@@ -55,7 +54,7 @@ export function PostCard({ props }) {
   const [canEditPost, setCanEditPost] = useState(false);
   const [showComments, setShowComments] = useState(false);
   const [shareCount, setCount] = useState(0);
-  const { response, error, loading } = useAxios(config);
+  const { response, loading } = useAxios(config);
   const { searchedUser, setSearchedUser } = useContext(SearchedUserContext);
   const { setPostId } = useContext(PostContext);
 
@@ -72,6 +71,7 @@ export function PostCard({ props }) {
     if (pathname?.includes("users") && searchedUser.username !== username) {
       setSearchedUser({ username, pictureUrl });
     }
+  // eslint-disable-next-line
   }, [response]);
 
   function responseFromLike() {

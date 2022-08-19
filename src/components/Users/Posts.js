@@ -7,10 +7,8 @@ import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useAxios } from "../../hooks/useAxios";
 import { PostCard, SkeletonLoading } from "./PostCard";
 import { ThreeDots } from "react-loader-spinner";
-import { useLocation } from "react-router-dom";
 
 function Posts({ path, emptyData, setEmptyData }) {
-  const { pathname } = useLocation();
   const { token } = useLocalstorage({ key: "linkrToken" });
   const [page, setPage] = useState(1);
   const [config, setConfig] = useState({});
@@ -42,15 +40,8 @@ function Posts({ path, emptyData, setEmptyData }) {
     };
 
     setConfig(newConfig);
+  // eslint-disable-next-line
   }, [page])
-
-  useEffect(() => {
-    // setData([]);
-    // console.log(pathname);
-    // if(emptyData) {
-    //   setEmptyData(false);
-    // }
-  } , [pathname])
 
   useEffect(() => {
     if(!loading) {
@@ -73,6 +64,7 @@ function Posts({ path, emptyData, setEmptyData }) {
       }
       setConfig({ config: [ header ], path, method: "get" });
     }
+  // eslint-disable-next-line
   }, [response, loading, userId]);
 
   function handleError() {

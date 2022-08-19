@@ -22,6 +22,7 @@ function EditPostCard({ postDescription, postId, setCanEditPost }) {
     } else if(error) {
       alert("Não foi possível salvar as alterações");
     }
+  // eslint-disable-next-line
   }, [ response, loading, error, isMountedRef ]);
 
   function readKey(e) {

@@ -37,7 +37,7 @@ export default function DeleteAlert() {
     path: "",
     config: [{ headers: { Authorization: `Bearer ${token}` } }, null],
   });
-  const { response, loading, error } = useAxios(config);
+  const { response, error } = useAxios(config);
   useEffect(() => {
     if(response !== null) {
       setModalLoading(false);
@@ -50,6 +50,7 @@ export default function DeleteAlert() {
       setShowModal(false);
 
     }
+  // eslint-disable-next-line
   }, [response, error]);
   
 
