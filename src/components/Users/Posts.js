@@ -101,7 +101,7 @@ function Posts({ path, emptyData, setEmptyData }) {
 
   const PostItems = () => (
     <>
-      {data?.map((item, index) => <PostCard key={index} id={item.id} props={item} />)}
+      {data.map((item, index) => <PostCard key={index} id={item.id} props={item} />)}
       <Observer ref={lastPostRef}>
         {
           postsLeft > 0
@@ -115,7 +115,7 @@ function Posts({ path, emptyData, setEmptyData }) {
   );
 
   function TimelineData() {
-    if (data === null || loading) return <SkeletonLoading />; 
+    if (data === null && loading) return <SkeletonLoading />; 
     if (data.length === 0) return <h3>{ noPostsMessage }</h3>;
     return <PostItems />;
   }
