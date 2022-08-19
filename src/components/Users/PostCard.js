@@ -22,7 +22,6 @@ import { getRepost, rePoster } from "../../services/api";
 import Reposted from '../../assets/repost.svg';
 
 export function PostCard({ props }) {
-  console.log(props);
   const {
     id,
     creatorId,

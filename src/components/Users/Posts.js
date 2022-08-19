@@ -7,8 +7,10 @@ import { useLocalstorage } from "../../hooks/useLocalstorage";
 import { useAxios } from "../../hooks/useAxios";
 import { PostCard, SkeletonLoading } from "./PostCard";
 import { ThreeDots } from "react-loader-spinner";
+import { useLocation } from "react-router-dom";
 
 function Posts({ path, emptyData, setEmptyData }) {
+  const { pathname } = useLocation();
   const { token } = useLocalstorage({ key: "linkrToken" });
   const [page, setPage] = useState(1);
   const [config, setConfig] = useState({});
@@ -43,32 +45,32 @@ function Posts({ path, emptyData, setEmptyData }) {
   }, [page])
 
   useEffect(() => {
+    // setData([]);
+    // console.log(pathname);
+    // if(emptyData) {
+    //   setEmptyData(false);
+    // }
+  } , [pathname])
+
+  useEffect(() => {
     if(!loading) {
       if (data?.length !== 0) {
         setContextData(data);
         setNewPost(false);
       }
-
       if (response !== null) {
         setPostsLeft(Number(response?.data[0]?.tableLength) - response?.data?.length)
         setData((data) => [...data, ...response.data]);
       }
-
-      if(emptyData) {
-        setData([]);
-        setEmptyData(false);
-      }
     }
 
     handleError();
-
     if(path !== config.path) {
       const header = {
         headers: {
           Authorization: `Bearer ${ token }`
         }
       }
-
       setConfig({ config: [ header ], path, method: "get" });
     }
   }, [response, loading, userId]);
@@ -91,7 +93,7 @@ function Posts({ path, emptyData, setEmptyData }) {
   );
 
   function TimelineData() {
-    if (data === null || loading) return <SkeletonLoading />; 
+    if (loading && data.length === 0) return <SkeletonLoading />; 
     if (data.length === 0) return <h3>There are no posts yet</h3>;
     return <PostItems />;
   }
